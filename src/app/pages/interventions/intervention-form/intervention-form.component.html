@@ -1,1 +1,145 @@
-<p>intervention-form works!</p>
+<!-- Formulaire Intervention MacSpace -->
+<div class="page-container">
+
+  <!-- En-tête -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">
+        {{ isEditMode ? 'Modifier intervention' : 'Nouvelle intervention' }}
+      </h1>
+      <p class="page-subtitle">
+        {{ isEditMode ? 'Modifiez les informations de l intervention' :
+        'Créez une nouvelle intervention technique' }}
+      </p>
+    </div>
+    <button class="btn-secondary" (click)="annuler()">
+      Annuler
+    </button>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Formulaire -->
+  <form [formGroup]="interventionForm" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+
+      <!-- Informations intervention -->
+      <div class="ms-card">
+        <h3 class="card-title">Informations intervention</h3>
+
+        <!-- Code -->
+        <div class="form-group">
+          <label>Code intervention *</label>
+          <input
+            type="text"
+            formControlName="code"
+            placeholder="Ex: INT001"
+            [class.input-error]="interventionForm.get('code')?.invalid &&
+              interventionForm.get('code')?.touched"
+          />
+          <span class="field-error"
+            *ngIf="interventionForm.get('code')?.invalid &&
+              interventionForm.get('code')?.touched">
+            Le code est obligatoire
+          </span>
+        </div>
+
+        <!-- Date -->
+        <div class="form-group">
+          <label>Date d intervention *</label>
+          <input
+            type="date"
+            formControlName="dateIntervention"
+            [class.input-error]="interventionForm.get('dateIntervention')?.invalid &&
+              interventionForm.get('dateIntervention')?.touched"
+          />
+          <span class="field-error"
+            *ngIf="interventionForm.get('dateIntervention')?.invalid &&
+              interventionForm.get('dateIntervention')?.touched">
+            La date est obligatoire
+          </span>
+        </div>
+
+        <!-- Etat -->
+        <div class="form-group">
+          <label>Etat *</label>
+          <select formControlName="etatIntervention">
+            <option *ngFor="let etat of etats" [value]="etat.value">
+              {{ etat.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Technicien -->
+        <div class="form-group">
+          <label>Technicien *</label>
+          <select
+            formControlName="technicienId"
+            [class.input-error]="interventionForm.get('technicienId')?.invalid &&
+              interventionForm.get('technicienId')?.touched">
+            <option value="">Sélectionner un technicien</option>
+            <option *ngFor="let tech of techniciens" [value]="tech.id">
+              {{ tech.nom }} {{ tech.prenom }}
+            </option>
+          </select>
+          <span class="field-error"
+            *ngIf="interventionForm.get('technicienId')?.invalid &&
+              interventionForm.get('technicienId')?.touched">
+            Le technicien est obligatoire
+          </span>
+        </div>
+
+      </div>
+
+      <!-- Problématique -->
+      <div class="ms-card">
+        <h3 class="card-title">Détails</h3>
+
+        <!-- Problématique -->
+        <div class="form-group">
+          <label>Problématique</label>
+          <textarea
+            formControlName="problematique"
+            placeholder="Décrivez la problématique rencontrée..."
+            rows="6">
+          </textarea>
+        </div>
+
+        <!-- Info -->
+        <div class="info-box">
+          <span class="material-icons">info</span>
+          <p>
+            Les lignes d intervention (produits utilisés)
+            pourront être ajoutées après la création.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Boutons d'action -->
+    <div class="form-actions">
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="annuler()">
+        Annuler
+      </button>
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="interventionForm.invalid || isLoading">
+        <span *ngIf="!isLoading">
+          {{ isEditMode ? 'Modifier' : 'Créer une intervention' }}
+        </span>
+        <span *ngIf="isLoading">Enregistrement...</span>
+      </button>
+    </div>
+
+  </form>
+
+</div>

@@ -1,12 +1,110 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ProduitService } from '../../../core/services/produit.service';
+import { Produit } from '../../../shared/models/produit';
 
+/**
+ * Composant de la liste des produits MacSpace.
+ * Affiche tous les produits avec options de recherche et actions.
+ */
 @Component({
   selector: 'app-produit-list',
-  standalone: true,
-  imports: [],
   templateUrl: './produit-list.component.html',
-  styleUrl: './produit-list.component.scss'
+  styleUrls: ['./produit-list.component.scss']
 })
-export class ProduitListComponent {
+export class ProduitListComponent implements OnInit {
 
+  /** Liste complète des produits */
+  produits: Produit[] = [];
+
+  /** Liste filtrée des produits */
+  produitsFiltres: Produit[] = [];
+
+  /** Indicateur de chargement */
+  isLoading = true;
+
+  /** Terme de recherche */
+  recherche = '';
+
+  /** Message d'erreur */
+  errorMessage = '';
+
+  constructor(
+    private produitService: ProduitService,
+    private router: Router
+  ) {}
+
+  /**
+   * Charge la liste des produits au démarrage.
+   */
+  ngOnInit(): void {
+    this.loadProduits();
+  }
+
+  /**
+   * Charge tous les produits depuis l'API.
+   */
+  loadProduits(): void {
+    this.isLoading = true;
+    this.produitService.findAll().subscribe({
+      next: (produits) => {
+        this.produits = produits;
+        this.produitsFiltres = produits;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Erreur lors du chargement des produits.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  /**
+   * Filtre les produits selon le terme de recherche.
+   *
+   * @param event L'événement de saisie
+   */
+  onRecherche(event: Event): void {
+    const terme = (event.target as HTMLInputElement).value.toLowerCase();
+    this.recherche = terme;
+    this.produitsFiltres = this.produits.filter(produit =>
+      produit.codeProduit.toLowerCase().includes(terme) ||
+      produit.designation.toLowerCase().includes(terme) ||
+      (produit.category?.designation.toLowerCase().includes(terme))
+    );
+  }
+
+  /**
+   * Navigue vers le formulaire de création d'un produit.
+   */
+  nouveauProduit(): void {
+    this.router.navigate(['/produits/nouveau']);
+  }
+
+  /**
+   * Navigue vers le formulaire de modification d'un produit.
+   *
+   * @param id L'identifiant du produit
+   */
+  modifierProduit(id: number): void {
+    this.router.navigate(['/produits/modifier', id]);
+  }
+
+  /**
+   * Supprime un produit après confirmation.
+   *
+   * @param id L'identifiant du produit
+   */
+  supprimerProduit(id: number): void {
+    if (confirm('Voulez-vous vraiment supprimer ce produit ?')) {
+      this.produitService.delete(id).subscribe({
+        next: () => {
+          this.loadProduits();
+        },
+        error: () => {
+          this.errorMessage = 'Impossible de supprimer ce produit.';
+        }
+      });
+    }
+  }
 }

@@ -1,1 +1,198 @@
-<p>produit-form works!</p>
+<!-- Formulaire Produit MacSpace -->
+<div class="page-container">
+
+  <!-- En-tête -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">
+        {{ isEditMode ? 'Modifier le produit' : 'Nouveau produit' }}
+      </h1>
+      <p class="page-subtitle">
+        {{ isEditMode ? 'Modifiez les informations du produit' :
+        'Ajoutez un nouveau produit au catalogue' }}
+      </p>
+    </div>
+    <button class="btn-secondary" (click)="annuler()">
+      Annuler
+    </button>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Formulaire -->
+  <form [formGroup]="produitForm" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+
+      <!-- Informations produit -->
+      <div class="ms-card">
+        <h3 class="card-title">Informations produit</h3>
+
+        <!-- Code produit -->
+        <div class="form-group">
+          <label>Code produit *</label>
+          <input
+            type="text"
+            formControlName="codeProduit"
+            placeholder="EX: PROD001"
+            [class.input-error]="produitForm.get('codeProduit')?.invalid &&
+              produitForm.get('codeProduit')?.touched"
+          />
+          <span class="field-error"
+            *ngIf="produitForm.get('codeProduit')?.invalid &&
+              produitForm.get('codeProduit')?.touched">
+            Le code produit est obligatoire
+          </span>
+        </div>
+
+        <!-- Désignation -->
+        <div class="form-group">
+          <label>Désignation *</label>
+          <input
+            type="text"
+            formControlName="designation"
+            placeholder="Nom du produit"
+            [class.input-error]="produitForm.get('designation')?.invalid &&
+              produitForm.get('designation')?.touched"
+          />
+          <span class="field-error"
+            *ngIf="produitForm.get('designation')?.invalid &&
+              produitForm.get('designation')?.touched">
+            La désignation est obligatoire
+          </span>
+        </div>
+
+        <!-- Catégorie -->
+        <div class="form-group">
+          <label>Catégorie *</label>
+          <select
+            formControlName="categoryId"
+            [class.input-error]="produitForm.get('categoryId')?.invalid &&
+              produitForm.get('categoryId')?.touched">
+            <option value="">Sélectionner une catégorie</option>
+            <option *ngFor="let cat of categories" [value]="cat.id">
+              {{ cat.designation }}
+            </option>
+          </select>
+          <span class="field-error"
+            *ngIf="produitForm.get('categoryId')?.invalid &&
+              produitForm.get('categoryId')?.touched">
+            La catégorie est obligatoire
+          </span>
+        </div>
+
+        <!-- Fournisseur -->
+        <div class="form-group">
+          <label>Fournisseur *</label>
+          <select
+            formControlName="fournisseurId"
+            [class.input-error]="produitForm.get('fournisseurId')?.invalid &&
+              produitForm.get('fournisseurId')?.touched">
+            <option value="">Sélectionner un fournisseur</option>
+            <option *ngFor="let f of fournisseurs" [value]="f.id">
+              {{ f.nom }}
+            </option>
+          </select>
+          <span class="field-error"
+            *ngIf="produitForm.get('fournisseurId')?.invalid &&
+              produitForm.get('fournisseurId')?.touched">
+            Le fournisseur est obligatoire
+          </span>
+        </div>
+
+      </div>
+
+      <!-- Prix -->
+      <div class="ms-card">
+        <h3 class="card-title">Tarification</h3>
+
+        <!-- Prix HT -->
+        <div class="form-group">
+          <label>Prix unitaire HT (€) *</label>
+          <input
+            type="number"
+            formControlName="prixUnitaireHt"
+            placeholder="0.00"
+            step="0.01"
+            min="0"
+            (change)="calculerPrixTtc()"
+            [class.input-error]="produitForm.get('prixUnitaireHt')?.invalid &&
+              produitForm.get('prixUnitaireHt')?.touched"
+          />
+          <span class="field-error"
+            *ngIf="produitForm.get('prixUnitaireHt')?.invalid &&
+              produitForm.get('prixUnitaireHt')?.touched">
+            Le prix HT est obligatoire
+          </span>
+        </div>
+
+        <!-- Taux TVA -->
+        <div class="form-group">
+          <label>Taux TVA (%) *</label>
+          <select
+            formControlName="tauxTva"
+            (change)="calculerPrixTtc()">
+            <option value="">Sélectionner un taux</option>
+            <option value="0">0 %</option>
+            <option value="5.5">5.5 %</option>
+            <option value="10">10 %</option>
+            <option value="20">20 %</option>
+          </select>
+        </div>
+
+        <!-- Prix TTC -->
+        <div class="form-group">
+          <label>Prix unitaire TTC (€) *</label>
+          <input
+            type="number"
+            formControlName="prixUnitaireTtc"
+            placeholder="0.00"
+            step="0.01"
+            min="0"
+            [class.input-error]="produitForm.get('prixUnitaireTtc')?.invalid &&
+              produitForm.get('prixUnitaireTtc')?.touched"
+          />
+          <span class="field-error"
+            *ngIf="produitForm.get('prixUnitaireTtc')?.invalid &&
+              produitForm.get('prixUnitaireTtc')?.touched">
+            Le prix TTC est obligatoire
+          </span>
+        </div>
+
+        <!-- Info calcul automatique -->
+        <div class="info-box">
+          <span class="material-icons">info</span>
+          <p>
+            Le prix TTC est calculé automatiquement à partir
+            du prix HT et du taux de TVA.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Boutons d'action -->
+    <div class="form-actions">
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="annuler()">
+        Annuler
+      </button>
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="produitForm.invalid || isLoading">
+        <span *ngIf="!isLoading">
+          {{ isEditMode ? 'Modifier' : 'Créer le produit' }}
+        </span>
+        <span *ngIf="isLoading">Enregistrement...</span>
+      </button>
+    </div>
+
+  </form>
+
+</div>

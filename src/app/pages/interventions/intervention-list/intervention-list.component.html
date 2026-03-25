@@ -1,1 +1,136 @@
-<p>intervention-list works!</p>
+<!-- Liste des interventions MacSpace -->
+<div class="page-container">
+
+  <!-- En-tête -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Interventions</h1>
+      <p class="page-subtitle">Gérez les interventions techniques Mac Sécurité</p>
+    </div>
+    <button class="btn-primary" (click)="nouvelleIntervention()">
+      <span class="material-icons">add</span>
+      Nouvelle intervention
+    </button>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Filtres -->
+  <div class="filters-bar">
+
+    <!-- Recherche -->
+    <div class="ms-card search-bar">
+      <span class="material-icons search-icon">search</span>
+      <input
+        type="text"
+        placeholder="Rechercher par code, technicien..."
+        (input)="onRecherche($event)"
+      />
+    </div>
+
+    <!-- Filtres par état -->
+    <div class="etat-filters">
+      <button
+        *ngFor="let etat of etats"
+        class="filter-btn"
+        [class.active]="filtreEtat === etat.value"
+        (click)="onFiltreEtat(etat.value)">
+        {{ etat.label }}
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Compteur -->
+  <div class="results-info">
+    {{ interventionsFiltrees.length }} intervention(s) trouvée(s)
+  </div>
+
+  <!-- Chargement -->
+  <div class="loading" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p>Chargement des interventions...</p>
+  </div>
+
+  <!-- Etat vide -->
+  <div class="empty-state ms-card"
+    *ngIf="!isLoading && interventionsFiltrees.length === 0">
+    <span class="material-icons">build_circle</span>
+    <h3>Aucune intervention trouvée</h3>
+    <p>Commencez par créer votre première intervention</p>
+    <button class="btn-primary" (click)="nouvelleIntervention()">
+      <span class="material-icons">add</span>
+      Nouvelle intervention
+    </button>
+  </div>
+
+  <!-- Tableau -->
+  <div class="ms-card table-container"
+    *ngIf="!isLoading && interventionsFiltrees.length > 0">
+    <table class="ms-table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Date</th>
+          <th>Technicien</th>
+          <th>Problématique</th>
+          <th>Etat</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let intervention of interventionsFiltrees">
+          <td>
+            <span class="intervention-code">
+              {{ intervention.code }}
+            </span>
+          </td>
+          <td>{{ formatDate(intervention.dateIntervention || '') }}</td>
+          <td>
+            <div class="technicien-info" *ngIf="intervention.technicien">
+              <div class="technicien-avatar">
+                {{ intervention.technicien.nom?.charAt(0) }}
+                {{ intervention.technicien.prenom?.charAt(0) }}
+              </div>
+              <span>
+                {{ intervention.technicien.nom }}
+                {{ intervention.technicien.prenom }}
+              </span>
+            </div>
+            <span *ngIf="!intervention.technicien">-</span>
+          </td>
+          <td>
+            <span class="problematique">
+              {{ intervention.problematique || '-' }}
+            </span>
+          </td>
+          <td>
+            <span [class]="getBadgeClass(intervention.etatIntervention)">
+              {{ intervention.etatIntervention }}
+            </span>
+          </td>
+          <td>
+            <div class="actions">
+              <button
+                class="btn-action btn-edit"
+                (click)="modifierIntervention(intervention.id!)"
+                title="Modifier">
+                <span class="material-icons">edit</span>
+              </button>
+              <button
+                class="btn-action btn-delete"
+                (click)="supprimerIntervention(intervention.id!)"
+                title="Supprimer">
+                <span class="material-icons">delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

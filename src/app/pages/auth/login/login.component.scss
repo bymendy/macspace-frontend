@@ -11,6 +11,8 @@
 .login-branding {
   flex: 1;
   background-color: var(--ms-dark);
+  background-image: url('https://res.cloudinary.com/dwdkltr38/image/upload/v1774450026/macsecurite_macspace_banner_cnaklp.jpg');
+    background-size: contain no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,6 +20,7 @@
 
   .branding-content {
     max-width: 420px;
+    
   }
 
   /* Logo */

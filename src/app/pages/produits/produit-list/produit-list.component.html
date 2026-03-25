@@ -1,1 +1,110 @@
-<p>produit-list works!</p>
+<!-- Liste des produits MacSpace -->
+<div class="page-container">
+
+  <!-- En-tête -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Produits</h1>
+      <p class="page-subtitle">Gérez votre catalogue de produits de sécurité</p>
+    </div>
+    <button class="btn-primary" (click)="nouveauProduit()">
+      <span class="material-icons">add</span>
+      Nouveau produit
+    </button>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Barre de recherche -->
+  <div class="ms-card search-bar">
+    <span class="material-icons search-icon">search</span>
+    <input
+      type="text"
+      placeholder="Rechercher par code, désignation, catégorie..."
+      (input)="onRecherche($event)"
+    />
+    <span class="results-count">{{ produitsFiltres.length }} résultat(s)</span>
+  </div>
+
+  <!-- Chargement -->
+  <div class="loading" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p>Chargement des produits...</p>
+  </div>
+
+  <!-- Etat vide -->
+  <div class="empty-state ms-card"
+    *ngIf="!isLoading && produitsFiltres.length === 0">
+    <span class="material-icons">inventory_2</span>
+    <h3>Aucun produit trouvé</h3>
+    <p>Commencez par ajouter votre premier produit</p>
+    <button class="btn-primary" (click)="nouveauProduit()">
+      <span class="material-icons">add</span>
+      Nouveau produit
+    </button>
+  </div>
+
+  <!-- Tableau des produits -->
+  <div class="ms-card table-container"
+    *ngIf="!isLoading && produitsFiltres.length > 0">
+    <table class="ms-table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Désignation</th>
+          <th>Catégorie</th>
+          <th>Prix HT</th>
+          <th>TVA</th>
+          <th>Prix TTC</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let produit of produitsFiltres">
+          <td>
+            <span class="produit-code">{{ produit.codeProduit }}</span>
+          </td>
+          <td>
+            <span class="produit-designation">
+              {{ produit.designation }}
+            </span>
+          </td>
+          <td>
+            <span class="badge badge-primary"
+              *ngIf="produit.category">
+              {{ produit.category.designation }}
+            </span>
+            <span *ngIf="!produit.category">-</span>
+          </td>
+          <td>{{ produit.prixUnitaireHt | number:'1.2-2' }} €</td>
+          <td>{{ produit.tauxTva }} %</td>
+          <td>
+            <span class="prix-ttc">
+              {{ produit.prixUnitaireTtc | number:'1.2-2' }} €
+            </span>
+          </td>
+          <td>
+            <div class="actions">
+              <button
+                class="btn-action btn-edit"
+                (click)="modifierProduit(produit.id!)"
+                title="Modifier">
+                <span class="material-icons">edit</span>
+              </button>
+              <button
+                class="btn-action btn-delete"
+                (click)="supprimerProduit(produit.id!)"
+                title="Supprimer">
+                <span class="material-icons">delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

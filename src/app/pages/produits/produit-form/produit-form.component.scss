@@ -1,0 +1,152 @@
+/* ===== Formulaire Produit MacSpace ===== */
+
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ===== En-tête ===== */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--ms-spacing-xl);
+
+  .page-title {
+    font-size: var(--ms-font-size-xxl);
+    font-weight: 700;
+    color: var(--ms-dark);
+    margin-bottom: 4px;
+  }
+
+  .page-subtitle {
+    color: var(--ms-grey-dark);
+    font-size: var(--ms-font-size-base);
+  }
+}
+
+/* ===== Message d'erreur ===== */
+.error-message {
+  background-color: #ffebee;
+  border-left: 4px solid var(--ms-danger);
+  padding: 12px 16px;
+  border-radius: var(--ms-radius-sm);
+  margin-bottom: var(--ms-spacing-lg);
+  color: #c62828;
+  font-size: 14px;
+}
+
+/* ===== Grille formulaire ===== */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ms-spacing-lg);
+  margin-bottom: var(--ms-spacing-lg);
+  animation: fadeInUp 0.4s ease-out;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Titre carte ===== */
+.card-title {
+  font-size: var(--ms-font-size-lg);
+  font-weight: 600;
+  color: var(--ms-dark);
+  margin-bottom: var(--ms-spacing-lg);
+  padding-bottom: var(--ms-spacing-md);
+  border-bottom: 1px solid var(--ms-grey);
+}
+
+/* ===== Groupe de champs ===== */
+.form-group {
+  margin-bottom: var(--ms-spacing-md);
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ms-dark);
+    margin-bottom: 6px;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--ms-grey);
+    border-radius: var(--ms-radius-md);
+    font-size: 14px;
+    color: var(--ms-dark);
+    background-color: var(--ms-white);
+    transition: border-color 0.2s ease;
+    outline: none;
+
+    &:focus {
+      border-color: var(--ms-primary);
+    }
+
+    &.input-error {
+      border-color: var(--ms-danger);
+    }
+
+    &::placeholder {
+      color: var(--ms-grey-dark);
+    }
+  }
+
+  select {
+    cursor: pointer;
+    appearance: auto;
+  }
+
+  .field-error {
+    display: block;
+    color: var(--ms-danger);
+    font-size: 12px;
+    margin-top: 4px;
+  }
+}
+
+/* ===== Info box ===== */
+.info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ms-spacing-sm);
+  background-color: #e3f2fd;
+  padding: var(--ms-spacing-md);
+  border-radius: var(--ms-radius-md);
+  margin-top: var(--ms-spacing-md);
+
+  .material-icons {
+    color: var(--ms-info);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  p {
+    color: #1565c0;
+    font-size: var(--ms-font-size-sm);
+    line-height: 1.5;
+  }
+}
+
+/* ===== Boutons d'action ===== */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ms-spacing-md);
+  padding-top: var(--ms-spacing-md);
+}
+
+/* ===== Animations ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
