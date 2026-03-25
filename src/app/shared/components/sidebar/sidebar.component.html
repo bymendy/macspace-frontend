@@ -1,1 +1,47 @@
-<p>sidebar works!</p>
+<!-- Barre de navigation latérale MacSpace -->
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+  <!-- En-tête de la sidebar -->
+  <div class="sidebar-header">
+    <div class="sidebar-logo" *ngIf="!isCollapsed">
+      <img
+        src="https://res.cloudinary.com/dwdkltr38/image/upload/v1774436576/logo-macsecurite_macspace_l8sxy0.png"
+        alt="Logo Mac Sécurité"
+        class="sidebar-logo-img"
+      />
+    </div>
+    <button class="toggle-btn" (click)="toggleSidebar()">
+      <span class="material-icons">
+        {{ isCollapsed ? "menu" : "menu_open" }}
+      </span>
+    </button>
+  </div>
+
+  <!-- Navigation principale -->
+  <nav class="sidebar-nav">
+    <ul>
+      <li *ngFor="let item of navItems">
+        <a
+          [routerLink]="item.route"
+          class="nav-item"
+          [class.active]="isActive(item.route)"
+          [title]="isCollapsed ? item.label : ''"
+        >
+          <span class="material-icons nav-icon">{{ item.icon }}</span>
+          <span class="nav-label" *ngIf="!isCollapsed">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Pied de la sidebar -->
+  <div class="sidebar-footer">
+    <button
+      class="logout-btn"
+      (click)="logout()"
+      [title]="isCollapsed ? 'Déconnexion' : ''"
+    >
+      <span class="material-icons">logout</span>
+      <span class="nav-label" *ngIf="!isCollapsed">Déconnexion</span>
+    </button>
+  </div>
+</aside>

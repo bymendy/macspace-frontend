@@ -1,7 +1,7 @@
 /**
- * Configuration de l'environnement de développement pour MacSpace.
+ * Configuration de l'environnement de production pour MacSpace.
  */
 export const environment = {
-  production: false,
+  production: true,
   apiUrl: 'http://localhost:8080/gestiondestock/v1'
 };

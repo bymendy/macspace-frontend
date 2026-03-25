@@ -1,0 +1,34 @@
+/* Header MacSpace */
+.header {
+  height: var(--ms-header-height);
+  background-color: var(--ms-white);
+  border-bottom: 1px solid var(--ms-grey);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--ms-spacing-lg);
+  box-shadow: var(--ms-shadow-sm);
+
+  .page-title {
+    font-size: var(--ms-font-size-lg);
+    font-weight: 600;
+    color: var(--ms-dark);
+  }
+
+  .btn-logout {
+    background: none;
+    border: 1.5px solid var(--ms-primary);
+    color: var(--ms-primary);
+    padding: 8px 16px;
+    border-radius: var(--ms-radius-md);
+    cursor: pointer;
+    font-size: var(--ms-font-size-sm);
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: var(--ms-primary);
+      color: var(--ms-white);
+    }
+  }
+}
