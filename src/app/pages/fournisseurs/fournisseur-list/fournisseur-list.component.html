@@ -1,1 +1,107 @@
-<p>fournisseur-list works!</p>
+<!-- Liste des fournisseurs MacSpace -->
+<div class="page-container">
+
+  <!-- En-tête -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Fournisseurs</h1>
+      <p class="page-subtitle">Gérez vos fournisseurs de produits de sécurité</p>
+    </div>
+    <button class="btn-primary" (click)="nouveauFournisseur()">
+      <span class="material-icons">add</span>
+      Nouveau fournisseur
+    </button>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Barre de recherche -->
+  <div class="ms-card search-bar">
+    <span class="material-icons search-icon">search</span>
+    <input
+      type="text"
+      placeholder="Rechercher un fournisseur par nom, email, téléphone..."
+      (input)="onRecherche($event)"
+    />
+    <span class="results-count">
+      {{ fournisseursFiltres.length }} résultat(s)
+    </span>
+  </div>
+
+  <!-- Chargement -->
+  <div class="loading" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p>Chargement des fournisseurs...</p>
+  </div>
+
+  <!-- Etat vide -->
+  <div class="empty-state ms-card"
+    *ngIf="!isLoading && fournisseursFiltres.length === 0">
+    <span class="material-icons">local_shipping</span>
+    <h3>Aucun fournisseur trouvé</h3>
+    <p>Commencez par ajouter votre premier fournisseur</p>
+    <button class="btn-primary" (click)="nouveauFournisseur()">
+      <span class="material-icons">add</span>
+      Nouveau fournisseur
+    </button>
+  </div>
+
+  <!-- Tableau -->
+  <div class="ms-card table-container"
+    *ngIf="!isLoading && fournisseursFiltres.length > 0">
+    <table class="ms-table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Téléphone</th>
+          <th>Ville</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let fournisseur of fournisseursFiltres">
+          <td>
+            <div class="fournisseur-name">
+              <div class="fournisseur-avatar">
+                {{ fournisseur.nom.charAt(0) }}
+              </div>
+              <div>
+                <span class="fournisseur-fullname">
+                  {{ fournisseur.nom }}
+                </span>
+                <span class="fournisseur-prenom"
+                  *ngIf="fournisseur.prenom">
+                  {{ fournisseur.prenom }}
+                </span>
+              </div>
+            </div>
+          </td>
+          <td>{{ fournisseur.email }}</td>
+          <td>{{ fournisseur.numTel || '-' }}</td>
+          <td>{{ fournisseur.adresse?.ville || '-' }}</td>
+          <td>
+            <div class="actions">
+              <button
+                class="btn-action btn-edit"
+                (click)="modifierFournisseur(fournisseur.id!)"
+                title="Modifier">
+                <span class="material-icons">edit</span>
+              </button>
+              <button
+                class="btn-action btn-delete"
+                (click)="supprimerFournisseur(fournisseur.id!)"
+                title="Supprimer">
+                <span class="material-icons">delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

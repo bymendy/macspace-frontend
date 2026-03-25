@@ -1,1 +1,195 @@
-<p>fournisseur-form works!</p>
+<!-- Formulaire Fournisseur MacSpace -->
+<div class="page-container">
+
+  <!-- En-tête -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">
+        {{ isEditMode ? 'Modifier le fournisseur' : 'Nouveau fournisseur' }}
+      </h1>
+      <p class="page-subtitle">
+        {{ isEditMode ? 'Modifiez les informations du fournisseur' :
+        'Ajoutez un nouveau fournisseur' }}
+      </p>
+    </div>
+    <button class="btn-secondary" (click)="annuler()">
+      Annuler
+    </button>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Formulaire -->
+  <form [formGroup]="fournisseurForm" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+
+      <!-- Informations fournisseur -->
+      <div class="ms-card">
+        <h3 class="card-title">Informations fournisseur</h3>
+
+        <div class="form-row">
+          <!-- Nom -->
+          <div class="form-group">
+            <label>Nom *</label>
+            <input
+              type="text"
+              formControlName="nom"
+              placeholder="Nom du fournisseur"
+              [class.input-error]="fournisseurForm.get('nom')?.invalid &&
+                fournisseurForm.get('nom')?.touched"
+            />
+            <span class="field-error"
+              *ngIf="fournisseurForm.get('nom')?.invalid &&
+                fournisseurForm.get('nom')?.touched">
+              Le nom est obligatoire
+            </span>
+          </div>
+
+          <!-- Prénom -->
+          <div class="form-group">
+            <label>Prénom</label>
+            <input
+              type="text"
+              formControlName="prenom"
+              placeholder="Prénom du contact"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <!-- Email -->
+          <div class="form-group">
+            <label>Email *</label>
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="email@fournisseur.fr"
+              [class.input-error]="fournisseurForm.get('email')?.invalid &&
+                fournisseurForm.get('email')?.touched"
+            />
+            <span class="field-error"
+              *ngIf="fournisseurForm.get('email')?.invalid &&
+                fournisseurForm.get('email')?.touched">
+              Un email valide est obligatoire
+            </span>
+          </div>
+
+          <!-- Téléphone -->
+          <div class="form-group">
+            <label>Téléphone *</label>
+            <input
+              type="tel"
+              formControlName="numTel"
+              placeholder="0123456789"
+              [class.input-error]="fournisseurForm.get('numTel')?.invalid &&
+                fournisseurForm.get('numTel')?.touched"
+            />
+            <span class="field-error"
+              *ngIf="fournisseurForm.get('numTel')?.invalid &&
+                fournisseurForm.get('numTel')?.touched">
+              Le téléphone est obligatoire
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Adresse -->
+      <div class="ms-card" formGroupName="adresse">
+        <h3 class="card-title">Adresse</h3>
+
+        <div class="form-group">
+          <label>Adresse *</label>
+          <input
+            type="text"
+            formControlName="adresse1"
+            placeholder="Numéro et nom de rue"
+            [class.input-error]="fournisseurForm.get('adresse.adresse1')?.invalid &&
+              fournisseurForm.get('adresse.adresse1')?.touched"
+          />
+          <span class="field-error"
+            *ngIf="fournisseurForm.get('adresse.adresse1')?.invalid &&
+              fournisseurForm.get('adresse.adresse1')?.touched">
+            L'adresse est obligatoire
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label>Complément d'adresse</label>
+          <input
+            type="text"
+            formControlName="adresse2"
+            placeholder="Appartement, bâtiment..."
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Code postal *</label>
+            <input
+              type="text"
+              formControlName="codePostal"
+              placeholder="75001"
+              [class.input-error]="fournisseurForm.get('adresse.codePostal')?.invalid &&
+                fournisseurForm.get('adresse.codePostal')?.touched"
+            />
+            <span class="field-error"
+              *ngIf="fournisseurForm.get('adresse.codePostal')?.invalid &&
+                fournisseurForm.get('adresse.codePostal')?.touched">
+              Le code postal est obligatoire
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label>Ville *</label>
+            <input
+              type="text"
+              formControlName="ville"
+              placeholder="Paris"
+              [class.input-error]="fournisseurForm.get('adresse.ville')?.invalid &&
+                fournisseurForm.get('adresse.ville')?.touched"
+            />
+            <span class="field-error"
+              *ngIf="fournisseurForm.get('adresse.ville')?.invalid &&
+                fournisseurForm.get('adresse.ville')?.touched">
+              La ville est obligatoire
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Pays</label>
+          <input
+            type="text"
+            formControlName="pays"
+            placeholder="France"
+          />
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Boutons d'action -->
+    <div class="form-actions">
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="annuler()">
+        Annuler
+      </button>
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="fournisseurForm.invalid || isLoading">
+        <span *ngIf="!isLoading">
+          {{ isEditMode ? 'Modifier' : 'Créer le fournisseur' }}
+        </span>
+        <span *ngIf="isLoading">Enregistrement...</span>
+      </button>
+    </div>
+
+  </form>
+
+</div>
