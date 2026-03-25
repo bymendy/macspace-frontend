@@ -1,1 +1,157 @@
-/* You can add global styles to this file, and also import other style files */
+// ===== Variables MacSpace =====
+:root {
+  --ms-primary: #E46C0C;
+  --ms-primary-dark: #c45a00;
+  --ms-primary-light: #f8813a;
+  --ms-dark: #1D1D1B;
+  --ms-dark-secondary: #2d2d2b;
+  --ms-white: #FFFFFF;
+  --ms-grey-light: #f5f5f5;
+  --ms-grey: #e0e0e0;
+  --ms-grey-dark: #9e9e9e;
+  --ms-success: #4caf50;
+  --ms-warning: #ff9800;
+  --ms-danger: #f44336;
+  --ms-info: #2196f3;
+
+  // Typography
+  --ms-font-family: 'Inter', 'Roboto', sans-serif;
+  --ms-font-size-base: 14px;
+  --ms-font-size-sm: 12px;
+  --ms-font-size-lg: 16px;
+  --ms-font-size-xl: 20px;
+  --ms-font-size-xxl: 24px;
+
+  // Spacing
+  --ms-spacing-xs: 4px;
+  --ms-spacing-sm: 8px;
+  --ms-spacing-md: 16px;
+  --ms-spacing-lg: 24px;
+  --ms-spacing-xl: 32px;
+
+  // Border radius
+  --ms-radius-sm: 4px;
+  --ms-radius-md: 8px;
+  --ms-radius-lg: 12px;
+
+  // Shadows
+  --ms-shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+  --ms-shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+  --ms-shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+
+  // Sidebar
+  --ms-sidebar-width: 260px;
+  --ms-header-height: 64px;
+}
+
+// ===== Reset & Base =====
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--ms-font-family);
+  font-size: var(--ms-font-size-base);
+  color: var(--ms-dark);
+  background-color: var(--ms-grey-light);
+}
+
+// ===== Scrollbar =====
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ms-grey-light);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ms-grey-dark);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ms-primary);
+}
+
+// ===== Buttons =====
+.btn-primary {
+  background-color: var(--ms-primary);
+  color: var(--ms-white);
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--ms-radius-md);
+  cursor: pointer;
+  font-size: var(--ms-font-size-base);
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--ms-primary-dark);
+  }
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--ms-primary);
+  border: 2px solid var(--ms-primary);
+  padding: 8px 20px;
+  border-radius: var(--ms-radius-md);
+  cursor: pointer;
+  font-size: var(--ms-font-size-base);
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--ms-primary);
+    color: var(--ms-white);
+  }
+}
+
+// ===== Cards =====
+.ms-card {
+  background: var(--ms-white);
+  border-radius: var(--ms-radius-lg);
+  padding: var(--ms-spacing-lg);
+  box-shadow: var(--ms-shadow-sm);
+}
+
+// ===== Badges États =====
+.badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: var(--ms-font-size-sm);
+  font-weight: 500;
+
+  &.badge-success { background: #e8f5e9; color: #2e7d32; }
+  &.badge-warning { background: #fff3e0; color: #e65100; }
+  &.badge-danger  { background: #ffebee; color: #c62828; }
+  &.badge-info    { background: #e3f2fd; color: #1565c0; }
+  &.badge-primary { background: #fff3e8; color: var(--ms-primary); }
+}
+
+// ===== Tables =====
+.ms-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    background: var(--ms-grey-light);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--ms-grey-dark);
+    font-size: var(--ms-font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--ms-grey);
+    color: var(--ms-dark);
+  }
+
+  tr:hover td {
+    background: var(--ms-grey-light);
+  }
+}
