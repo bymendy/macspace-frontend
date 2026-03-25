@@ -1,1 +1,103 @@
-<p>client-list works!</p>
+<!-- Liste des clients MacSpace -->
+<div class="page-container">
+
+  <!-- En-tête de la page -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Clients</h1>
+      <p class="page-subtitle">
+        Gérez vos clients Mac Sécurité
+      </p>
+    </div>
+    <button class="btn-primary" (click)="nouveauClient()">
+      <span class="material-icons">add</span>
+      Nouveau client
+    </button>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Barre de recherche -->
+  <div class="ms-card search-bar">
+    <span class="material-icons search-icon">search</span>
+    <input
+      type="text"
+      placeholder="Rechercher un client par nom, email, téléphone..."
+      (input)="onRecherche($event)"
+    />
+    <span class="results-count">
+      {{ clientsFiltres.length }} résultat(s)
+    </span>
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div class="loading" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p>Chargement des clients...</p>
+  </div>
+
+  <!-- Liste vide -->
+  <div class="empty-state ms-card" *ngIf="!isLoading && clientsFiltres.length === 0">
+    <span class="material-icons">people_outline</span>
+    <h3>Aucun client trouvé</h3>
+    <p>Commencez par ajouter votre premier client</p>
+    <button class="btn-primary" (click)="nouveauClient()">
+      <span class="material-icons">add</span>
+      Nouveau client
+    </button>
+  </div>
+
+  <!-- Tableau des clients -->
+  <div class="ms-card table-container" *ngIf="!isLoading && clientsFiltres.length > 0">
+    <table class="ms-table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Téléphone</th>
+          <th>Ville</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let client of clientsFiltres">
+          <td>
+            <div class="client-name">
+              <div class="client-avatar">
+                {{ client.nom.charAt(0) }}{{ client.prenom.charAt(0) }}
+              </div>
+              <div>
+                <span class="client-fullname">
+                  {{ client.nom }} {{ client.prenom }}
+                </span>
+              </div>
+            </div>
+          </td>
+          <td>{{ client.email }}</td>
+          <td>{{ client.numTel || '-' }}</td>
+          <td>{{ client.adresse?.ville || '-' }}</td>
+          <td>
+            <div class="actions">
+              <button
+                class="btn-action btn-edit"
+                (click)="modifierClient(client.id!)"
+                title="Modifier">
+                <span class="material-icons">edit</span>
+              </button>
+              <button
+                class="btn-action btn-delete"
+                (click)="supprimerClient(client.id!)"
+                title="Supprimer">
+                <span class="material-icons">delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

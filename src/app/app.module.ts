@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { routes } from './app.routes';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
+import { SharedModule } from './shared/shared.module';
 
 /**
  * Module racine de l'application MacSpace.
@@ -19,7 +20,8 @@ import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    SharedModule
   ],
   providers: [
     /* Enregistrement de l'intercepteur JWT */

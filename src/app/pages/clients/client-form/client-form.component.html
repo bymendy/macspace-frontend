@@ -1,1 +1,200 @@
-<p>client-form works!</p>
+<!-- Formulaire Client MacSpace -->
+<div class="page-container">
+
+  <!-- En-tête -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">
+        {{ isEditMode ? 'Modifier le client' : 'Nouveau client' }}
+      </h1>
+      <p class="page-subtitle">
+        {{ isEditMode ? 'Modifiez les informations du client' :
+        'Ajoutez un nouveau client Mac Sécurité' }}
+      </p>
+    </div>
+    <button class="btn-secondary" (click)="annuler()">
+      Annuler
+    </button>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Formulaire -->
+  <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+
+      <!-- Informations personnelles -->
+      <div class="ms-card">
+        <h3 class="card-title">Informations personnelles</h3>
+
+        <div class="form-row">
+          <!-- Nom -->
+          <div class="form-group">
+            <label>Nom *</label>
+            <input
+              type="text"
+              formControlName="nom"
+              placeholder="Nom du client"
+              [class.input-error]="clientForm.get('nom')?.invalid &&
+                clientForm.get('nom')?.touched"
+            />
+            <span class="field-error"
+              *ngIf="clientForm.get('nom')?.invalid &&
+                clientForm.get('nom')?.touched">
+              Le nom est obligatoire
+            </span>
+          </div>
+
+          <!-- Prénom -->
+          <div class="form-group">
+            <label>Prénom *</label>
+            <input
+              type="text"
+              formControlName="prenom"
+              placeholder="Prénom du client"
+              [class.input-error]="clientForm.get('prenom')?.invalid &&
+                clientForm.get('prenom')?.touched"
+            />
+            <span class="field-error"
+              *ngIf="clientForm.get('prenom')?.invalid &&
+                clientForm.get('prenom')?.touched">
+              Le prénom est obligatoire
+            </span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <!-- Email -->
+          <div class="form-group">
+            <label>Email *</label>
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="email@exemple.fr"
+              [class.input-error]="clientForm.get('email')?.invalid &&
+                clientForm.get('email')?.touched"
+            />
+            <span class="field-error"
+              *ngIf="clientForm.get('email')?.invalid &&
+                clientForm.get('email')?.touched">
+              Un email valide est obligatoire
+            </span>
+          </div>
+
+          <!-- Téléphone -->
+          <div class="form-group">
+            <label>Téléphone</label>
+            <input
+              type="tel"
+              formControlName="numTel"
+              placeholder="0612345678"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Adresse -->
+      <div class="ms-card" formGroupName="adresse">
+        <h3 class="card-title">Adresse</h3>
+
+        <!-- Adresse 1 -->
+        <div class="form-group">
+          <label>Adresse *</label>
+          <input
+            type="text"
+            formControlName="adresse1"
+            placeholder="Numéro et nom de rue"
+            [class.input-error]="clientForm.get('adresse.adresse1')?.invalid &&
+              clientForm.get('adresse.adresse1')?.touched"
+          />
+          <span class="field-error"
+            *ngIf="clientForm.get('adresse.adresse1')?.invalid &&
+              clientForm.get('adresse.adresse1')?.touched">
+            L'adresse est obligatoire
+          </span>
+        </div>
+
+        <!-- Adresse 2 -->
+        <div class="form-group">
+          <label>Complément d'adresse</label>
+          <input
+            type="text"
+            formControlName="adresse2"
+            placeholder="Appartement, bâtiment..."
+          />
+        </div>
+
+        <div class="form-row">
+          <!-- Code postal -->
+          <div class="form-group">
+            <label>Code postal *</label>
+            <input
+              type="text"
+              formControlName="codePostal"
+              placeholder="75001"
+              [class.input-error]="clientForm.get('adresse.codePostal')?.invalid &&
+                clientForm.get('adresse.codePostal')?.touched"
+            />
+            <span class="field-error"
+              *ngIf="clientForm.get('adresse.codePostal')?.invalid &&
+                clientForm.get('adresse.codePostal')?.touched">
+              Le code postal est obligatoire
+            </span>
+          </div>
+
+          <!-- Ville -->
+          <div class="form-group">
+            <label>Ville *</label>
+            <input
+              type="text"
+              formControlName="ville"
+              placeholder="Paris"
+              [class.input-error]="clientForm.get('adresse.ville')?.invalid &&
+                clientForm.get('adresse.ville')?.touched"
+            />
+            <span class="field-error"
+              *ngIf="clientForm.get('adresse.ville')?.invalid &&
+                clientForm.get('adresse.ville')?.touched">
+              La ville est obligatoire
+            </span>
+          </div>
+        </div>
+
+        <!-- Pays -->
+        <div class="form-group">
+          <label>Pays</label>
+          <input
+            type="text"
+            formControlName="pays"
+            placeholder="France"
+          />
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Boutons d'action -->
+    <div class="form-actions">
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="annuler()">
+        Annuler
+      </button>
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="clientForm.invalid || isLoading">
+        <span *ngIf="!isLoading">
+          {{ isEditMode ? 'Modifier' : 'Créer le client' }}
+        </span>
+        <span *ngIf="isLoading">Enregistrement...</span>
+      </button>
+    </div>
+
+  </form>
+
+</div>

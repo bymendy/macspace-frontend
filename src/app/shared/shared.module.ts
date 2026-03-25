@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { HeaderComponent } from './components/header/header.component';
+import { LayoutComponent } from './components/layout/layout.component';
 
 /**
  * Module partagé de MacSpace.
@@ -11,7 +12,8 @@ import { HeaderComponent } from './components/header/header.component';
 @NgModule({
   declarations: [
     SidebarComponent,
-    HeaderComponent
+    HeaderComponent,
+    LayoutComponent
   ],
   imports: [
     CommonModule,
@@ -19,7 +21,8 @@ import { HeaderComponent } from './components/header/header.component';
   ],
   exports: [
     SidebarComponent,
-    HeaderComponent
+    HeaderComponent,
+    LayoutComponent
   ]
 })
 export class SharedModule {}

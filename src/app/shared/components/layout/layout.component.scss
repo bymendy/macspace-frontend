@@ -1,0 +1,24 @@
+/* ===== Layout principal MacSpace ===== */
+
+.app-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* Zone principale - header + contenu */
+.main-zone {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Zone de contenu dynamique */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--ms-spacing-lg);
+  background-color: var(--ms-grey-light);
+}

@@ -1,1 +1,182 @@
-<p>dashboard works!</p>
+<!-- Dashboard MacSpace -->
+<div class="dashboard">
+
+  <!-- En-tête du dashboard -->
+  <div class="dashboard-header">
+    <div>
+      <h1 class="dashboard-title">Tableau de bord</h1>
+      <p class="dashboard-subtitle">
+        Vue d'ensemble des activités de Mac Sécurité
+      </p>
+    </div>
+    <button class="btn-primary" (click)="loadDashboardData()">
+      Actualiser
+    </button>
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div class="loading" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p>Chargement des données...</p>
+  </div>
+
+  <!-- Contenu du dashboard -->
+  <div *ngIf="!isLoading">
+
+    <!-- KPIs principaux -->
+    <div class="kpi-grid">
+
+      <!-- Clients -->
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-icon-clients">
+          <span class="material-icons">people</span>
+        </div>
+        <div class="kpi-content">
+          <span class="kpi-value">{{ totalClients }}</span>
+          <span class="kpi-label">Clients</span>
+        </div>
+      </div>
+
+      <!-- Interventions -->
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-icon-interventions">
+          <span class="material-icons">build</span>
+        </div>
+        <div class="kpi-content">
+          <span class="kpi-value">{{ totalInterventions }}</span>
+          <span class="kpi-label">Interventions</span>
+        </div>
+      </div>
+
+      <!-- Produits -->
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-icon-produits">
+          <span class="material-icons">inventory_2</span>
+        </div>
+        <div class="kpi-content">
+          <span class="kpi-value">{{ totalProduits }}</span>
+          <span class="kpi-label">Produits</span>
+        </div>
+      </div>
+
+      <!-- Fournisseurs -->
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-icon-fournisseurs">
+          <span class="material-icons">local_shipping</span>
+        </div>
+        <div class="kpi-content">
+          <span class="kpi-value">{{ totalFournisseurs }}</span>
+          <span class="kpi-label">Fournisseurs</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Statistiques interventions -->
+    <div class="stats-grid">
+
+      <!-- Etat des interventions -->
+      <div class="ms-card">
+        <h3 class="card-title">Etat des interventions</h3>
+        <div class="stats-list">
+
+          <!-- En attente -->
+          <div class="stat-item">
+            <div class="stat-info">
+              <span class="stat-dot stat-dot-warning"></span>
+              <span class="stat-label">En attente</span>
+            </div>
+            <div class="stat-right">
+              <span class="stat-value">{{ interventionsEnAttente }}</span>
+              <div class="stat-bar">
+                <div
+                  class="stat-bar-fill stat-bar-warning"
+                  [style.width.%]="totalInterventions > 0 ?
+                    (interventionsEnAttente / totalInterventions * 100) : 0">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- En cours -->
+          <div class="stat-item">
+            <div class="stat-info">
+              <span class="stat-dot stat-dot-info"></span>
+              <span class="stat-label">En cours</span>
+            </div>
+            <div class="stat-right">
+              <span class="stat-value">{{ interventionsEnCours }}</span>
+              <div class="stat-bar">
+                <div
+                  class="stat-bar-fill stat-bar-info"
+                  [style.width.%]="totalInterventions > 0 ?
+                    (interventionsEnCours / totalInterventions * 100) : 0">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Terminées -->
+          <div class="stat-item">
+            <div class="stat-info">
+              <span class="stat-dot stat-dot-success"></span>
+              <span class="stat-label">Terminées</span>
+            </div>
+            <div class="stat-right">
+              <span class="stat-value">{{ interventionsTerminees }}</span>
+              <div class="stat-bar">
+                <div
+                  class="stat-bar-fill stat-bar-success"
+                  [style.width.%]="totalInterventions > 0 ?
+                    (interventionsTerminees / totalInterventions * 100) : 0">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Dernières interventions -->
+      <div class="ms-card">
+        <h3 class="card-title">Dernières interventions</h3>
+        <div class="empty-state"
+          *ngIf="dernieresInterventions.length === 0">
+          <span class="material-icons">build_circle</span>
+          <p>Aucune intervention enregistrée</p>
+        </div>
+        <table class="ms-table"
+          *ngIf="dernieresInterventions.length > 0">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Technicien</th>
+              <th>Etat</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let intervention of dernieresInterventions">
+              <td>
+                <span class="intervention-code">
+                  {{ intervention.code }}
+                </span>
+              </td>
+              <td>
+                {{ intervention.technicien?.nom }}
+                {{ intervention.technicien?.prenom }}
+              </td>
+              <td>
+                <span [class]="getBadgeClass(intervention.etatIntervention)">
+                  {{ getEtatLabel(intervention.etatIntervention) }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
