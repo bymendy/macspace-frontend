@@ -1,1 +1,102 @@
-<p>utilisateur-list works!</p>
+<!-- Liste des utilisateurs MacSpace -->
+<div class="page-container">
+
+  <!-- En-tête -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Utilisateurs</h1>
+      <p class="page-subtitle">
+        Gérez les utilisateurs et techniciens Mac Sécurité
+      </p>
+    </div>
+    <!-- Bouton ajout réservé aux ADMIN -->
+    <button
+      class="btn-primary"
+      *ngIf="isAdmin"
+      (click)="nouvelUtilisateur()">
+      <span class="material-icons">add</span>
+      Nouvel utilisateur
+    </button>
+  </div>
+
+  <!-- Messages -->
+  <!-- <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+  <div class="success-message" *ngIf="successMessage">
+    <span class="material-icons">check_circle</span>
+    {{ successMessage }}
+  </div> -->
+
+  <!-- Barre de recherche -->
+  <div class="ms-card search-bar">
+    <span class="material-icons search-icon">search</span>
+    <input
+      type="text"
+      placeholder="Rechercher par nom, email, fonction..."
+      (input)="onRecherche($event)"
+    />
+    <span class="results-count">
+      {{ utilisateursFiltres.length }} résultat(s)
+    </span>
+  </div>
+
+  <!-- Chargement -->
+  <div class="loading" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p>Chargement des utilisateurs...</p>
+  </div>
+
+  <!-- Etat vide -->
+  <div class="empty-state ms-card"
+    *ngIf="!isLoading && utilisateursFiltres.length === 0">
+    <span class="material-icons">manage_accounts</span>
+    <h3>Aucun utilisateur trouvé</h3>
+    <p>Aucun utilisateur ne correspond à votre recherche</p>
+  </div>
+
+  <!-- Grille utilisateurs -->
+  <div class="utilisateurs-grid"
+    *ngIf="!isLoading && utilisateursFiltres.length > 0">
+
+    <div class="utilisateur-card ms-card"
+      *ngFor="let utilisateur of utilisateursFiltres">
+
+      <!-- Avatar et infos -->
+      <div class="utilisateur-header">
+        <div class="utilisateur-avatar">
+          {{ getInitiales(utilisateur) }}
+        </div>
+        <div class="utilisateur-info">
+          <span class="utilisateur-nom">
+            {{ utilisateur.nom }} {{ utilisateur.prenom }}
+          </span>
+          <span class="utilisateur-email">
+            {{ utilisateur.email }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Fonction -->
+      <div class="utilisateur-fonction">
+        <span [class]="getFonctionBadgeClass(utilisateur.fonction || '')">
+          {{ utilisateur.fonction || 'Non définie' }}
+        </span>
+      </div>
+
+      <!-- Actions réservées aux ADMIN -->
+      <div class="utilisateur-actions" *ngIf="isAdmin">
+        <button
+          class="btn-action btn-delete"
+          (click)="supprimerUtilisateur(utilisateur.id!)"
+          title="Supprimer">
+          <span class="material-icons">delete</span>
+          Supprimer
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

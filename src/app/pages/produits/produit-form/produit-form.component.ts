@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProduitService } from '../../../core/services/produit.service';
 import { CategorieService } from '../../../core/services/categorie.service';
 import { FournisseurService } from '../../../core/services/fournisseur.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { Produit } from '../../../shared/models/produit';
 import { Categorie } from '../../../shared/models/categorie';
 import { Fournisseur } from '../../../shared/models/fournisseur';
@@ -30,9 +31,6 @@ export class ProduitFormComponent implements OnInit {
   /** Identifiant du produit en modification */
   produitId: number | null = null;
 
-  /** Message d'erreur */
-  errorMessage = '';
-
   /** Liste des catégories */
   categories: Categorie[] = [];
 
@@ -44,6 +42,7 @@ export class ProduitFormComponent implements OnInit {
     private produitService: ProduitService,
     private categorieService: CategorieService,
     private fournisseurService: FournisseurService,
+    private notificationService: NotificationService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -58,7 +57,6 @@ export class ProduitFormComponent implements OnInit {
       fournisseurId: ['', [Validators.required]]
     });
   }
-
   /**
    * Charge les catégories, fournisseurs et le produit si modification.
    */
@@ -73,29 +71,22 @@ export class ProduitFormComponent implements OnInit {
       this.loadProduit(this.produitId);
     }
   }
-
   /**
    * Charge toutes les catégories.
    */
   loadCategories(): void {
     this.categorieService.findAll().subscribe({
-      next: (categories) => {
-        this.categories = categories;
-      }
+      next: (categories) => { this.categories = categories; }
     });
   }
-
   /**
    * Charge tous les fournisseurs.
    */
   loadFournisseurs(): void {
     this.fournisseurService.findAll().subscribe({
-      next: (fournisseurs) => {
-        this.fournisseurs = fournisseurs;
-      }
+      next: (fournisseurs) => { this.fournisseurs = fournisseurs; }
     });
   }
-
   /**
    * Charge un produit existant pour modification.
    *
@@ -117,12 +108,11 @@ export class ProduitFormComponent implements OnInit {
         this.isLoading = false;
       },
       error: () => {
-        this.errorMessage = 'Erreur lors du chargement du produit.';
+        this.notificationService.error('Erreur lors du chargement du produit.');
         this.isLoading = false;
       }
     });
   }
-
   /**
    * Calcule automatiquement le prix TTC.
    */
@@ -136,7 +126,6 @@ export class ProduitFormComponent implements OnInit {
       });
     }
   }
-
   /**
    * Soumet le formulaire pour créer ou modifier un produit.
    */
@@ -144,7 +133,6 @@ export class ProduitFormComponent implements OnInit {
     if (this.produitForm.invalid) return;
 
     this.isLoading = true;
-    this.errorMessage = '';
 
     const formValue = this.produitForm.value;
 
@@ -174,15 +162,17 @@ export class ProduitFormComponent implements OnInit {
 
     this.produitService.save(produit).subscribe({
       next: () => {
+        this.notificationService.success(
+          this.isEditMode ? 'Produit modifié avec succès.' : 'Produit créé avec succès.'
+        );
         this.router.navigate(['/produits']);
       },
       error: () => {
-        this.errorMessage = 'Erreur lors de la sauvegarde du produit.';
+        this.notificationService.error('Erreur lors de la sauvegarde du produit.');
         this.isLoading = false;
       }
     });
   }
-
   /**
    * Annule et retourne à la liste des produits.
    */

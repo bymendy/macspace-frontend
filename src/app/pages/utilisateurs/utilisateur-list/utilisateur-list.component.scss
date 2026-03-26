@@ -1,0 +1,231 @@
+/* ===== Liste Utilisateurs MacSpace ===== */
+
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ===== En-tête ===== */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--ms-spacing-xl);
+
+  .page-title {
+    font-size: var(--ms-font-size-xxl);
+    font-weight: 700;
+    color: var(--ms-dark);
+    margin-bottom: 4px;
+  }
+
+  .page-subtitle {
+    color: var(--ms-grey-dark);
+    font-size: var(--ms-font-size-base);
+  }
+}
+
+/* ===== Messages ===== */
+.error-message {
+  background-color: #ffebee;
+  border-left: 4px solid var(--ms-danger);
+  padding: 12px 16px;
+  border-radius: var(--ms-radius-sm);
+  margin-bottom: var(--ms-spacing-lg);
+  color: #c62828;
+  font-size: 14px;
+}
+
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-spacing-sm);
+  background-color: #e8f5e9;
+  border-left: 4px solid var(--ms-success);
+  padding: 12px 16px;
+  border-radius: var(--ms-radius-sm);
+  margin-bottom: var(--ms-spacing-lg);
+  color: #2e7d32;
+  font-size: 14px;
+
+  .material-icons { font-size: 18px; }
+}
+
+/* ===== Barre de recherche ===== */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-spacing-md);
+  margin-bottom: var(--ms-spacing-lg);
+  padding: var(--ms-spacing-md) var(--ms-spacing-lg);
+
+  .search-icon {
+    color: var(--ms-grey-dark);
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: var(--ms-font-size-base);
+    color: var(--ms-dark);
+    background: transparent;
+    &::placeholder { color: var(--ms-grey-dark); }
+  }
+
+  .results-count {
+    font-size: var(--ms-font-size-sm);
+    color: var(--ms-grey-dark);
+    white-space: nowrap;
+  }
+}
+
+/* ===== Chargement ===== */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px;
+  gap: var(--ms-spacing-md);
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--ms-grey);
+    border-top-color: var(--ms-primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  p { color: var(--ms-grey-dark); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== Etat vide ===== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  gap: var(--ms-spacing-md);
+  text-align: center;
+
+  .material-icons { font-size: 64px; color: var(--ms-grey); }
+  h3 { font-size: var(--ms-font-size-xl); font-weight: 600; color: var(--ms-dark); }
+  p { color: var(--ms-grey-dark); }
+}
+
+/* ===== Grille utilisateurs ===== */
+.utilisateurs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--ms-spacing-lg);
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* ===== Carte utilisateur ===== */
+.utilisateur-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-spacing-md);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--ms-shadow-md);
+  }
+
+  /* En-tête carte */
+  .utilisateur-header {
+    display: flex;
+    align-items: center;
+    gap: var(--ms-spacing-md);
+
+    .utilisateur-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--ms-primary), #f8813a);
+      color: var(--ms-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .utilisateur-info {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+
+      .utilisateur-nom {
+        font-weight: 600;
+        color: var(--ms-dark);
+        font-size: var(--ms-font-size-base);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .utilisateur-email {
+        font-size: var(--ms-font-size-sm);
+        color: var(--ms-grey-dark);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  /* Fonction */
+  .utilisateur-fonction {
+    padding-top: var(--ms-spacing-sm);
+    border-top: 1px solid var(--ms-grey);
+  }
+
+  /* Actions */
+  .utilisateur-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    .btn-action {
+      display: flex;
+      align-items: center;
+      gap: var(--ms-spacing-sm);
+      padding: 6px 12px;
+      border: none;
+      border-radius: var(--ms-radius-sm);
+      cursor: pointer;
+      font-size: var(--ms-font-size-sm);
+      font-weight: 500;
+      transition: all 0.2s ease;
+
+      .material-icons { font-size: 16px; }
+
+      &.btn-delete {
+        background-color: #ffebee;
+        color: var(--ms-danger);
+
+        &:hover {
+          background-color: var(--ms-danger);
+          color: var(--ms-white);
+        }
+      }
+    }
+  }
+}
+
+/* ===== Animations ===== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

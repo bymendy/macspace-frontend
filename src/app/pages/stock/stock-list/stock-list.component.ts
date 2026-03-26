@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StockService } from '../../../core/services/stock.service';
 import { ProduitService } from '../../../core/services/produit.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { MvtStk, TypeMvtStk, SourceMvtStk } from '../../../shared/models/mvt-stk';
 import { Produit } from '../../../shared/models/produit';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -57,6 +58,7 @@ export class StockListComponent implements OnInit {
   constructor(
     private stockService: StockService,
     private produitService: ProduitService,
+    private notificationService: NotificationService,
     private fb: FormBuilder
   ) {
     /* Initialisation du formulaire */
@@ -162,7 +164,7 @@ export class StockListComponent implements OnInit {
 
     operation.subscribe({
       next: () => {
-        this.successMessage = 'Mouvement de stock enregistré avec succès.';
+        this.notificationService.success('Mouvement de stock enregistré avec succès.');
         this.showForm = false;
         this.mouvementForm.reset({
           typeMvt: TypeMvtStk.ENTREE,
@@ -178,7 +180,7 @@ export class StockListComponent implements OnInit {
         this.isLoading = false;
       },
       error: () => {
-        this.errorMessage = 'Erreur lors de l enregistrement du mouvement.';
+        this.notificationService.error('Erreur lors de l enregistrement du mouvement.');
         this.isLoading = false;
       }
     });

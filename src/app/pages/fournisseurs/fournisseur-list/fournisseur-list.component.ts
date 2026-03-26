@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FournisseurService } from '../../../core/services/fournisseur.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { Fournisseur } from '../../../shared/models/fournisseur';
 
 /**
@@ -22,21 +23,17 @@ export class FournisseurListComponent implements OnInit {
   /** Indicateur de chargement */
   isLoading = true;
 
-  /** Message d'erreur */
-  errorMessage = '';
-
   constructor(
     private fournisseurService: FournisseurService,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
-
   /**
    * Charge la liste des fournisseurs au démarrage.
    */
   ngOnInit(): void {
     this.loadFournisseurs();
   }
-
   /**
    * Charge tous les fournisseurs depuis l'API.
    */
@@ -49,12 +46,11 @@ export class FournisseurListComponent implements OnInit {
         this.isLoading = false;
       },
       error: () => {
-        this.errorMessage = 'Erreur lors du chargement des fournisseurs.';
+        this.notificationService.error('Erreur lors du chargement des fournisseurs.');
         this.isLoading = false;
       }
     });
   }
-
   /**
    * Filtre les fournisseurs selon le terme de recherche.
    */
@@ -66,30 +62,30 @@ export class FournisseurListComponent implements OnInit {
       (f.numTel && f.numTel.includes(terme))
     );
   }
-
   /**
    * Navigue vers le formulaire de création.
    */
   nouveauFournisseur(): void {
     this.router.navigate(['/fournisseurs/nouveau']);
   }
-
   /**
    * Navigue vers le formulaire de modification.
    */
   modifierFournisseur(id: number): void {
     this.router.navigate(['/fournisseurs/modifier', id]);
   }
-
   /**
    * Supprime un fournisseur après confirmation.
    */
   supprimerFournisseur(id: number): void {
     if (confirm('Voulez-vous vraiment supprimer ce fournisseur ?')) {
       this.fournisseurService.delete(id).subscribe({
-        next: () => this.loadFournisseurs(),
+        next: () => {
+          this.notificationService.success('Fournisseur supprimé avec succès.');
+          this.loadFournisseurs();
+        },
         error: () => {
-          this.errorMessage = 'Impossible de supprimer ce fournisseur.';
+          this.notificationService.error('Impossible de supprimer ce fournisseur.');
         }
       });
     }

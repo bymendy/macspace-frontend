@@ -1,0 +1,159 @@
+/* ===== Formulaire Utilisateur MacSpace ===== */
+
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--ms-spacing-xl);
+
+  .page-title {
+    font-size: var(--ms-font-size-xxl);
+    font-weight: 700;
+    color: var(--ms-dark);
+    margin-bottom: 4px;
+  }
+
+  .page-subtitle {
+    color: var(--ms-grey-dark);
+    font-size: var(--ms-font-size-base);
+  }
+}
+
+.error-message {
+  background-color: #ffebee;
+  border-left: 4px solid var(--ms-danger);
+  padding: 12px 16px;
+  border-radius: var(--ms-radius-sm);
+  margin-bottom: var(--ms-spacing-lg);
+  color: #c62828;
+  font-size: 14px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ms-spacing-lg);
+  margin-bottom: var(--ms-spacing-lg);
+  animation: fadeInUp 0.4s ease-out;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card-title {
+  font-size: var(--ms-font-size-lg);
+  font-weight: 600;
+  color: var(--ms-dark);
+  margin-bottom: var(--ms-spacing-lg);
+  padding-bottom: var(--ms-spacing-md);
+  border-bottom: 1px solid var(--ms-grey);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ms-spacing-md);
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  margin-bottom: var(--ms-spacing-md);
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ms-dark);
+    margin-bottom: 6px;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--ms-grey);
+    border-radius: var(--ms-radius-md);
+    font-size: 14px;
+    color: var(--ms-dark);
+    background-color: var(--ms-white);
+    transition: border-color 0.2s ease;
+    outline: none;
+
+    &:focus { border-color: var(--ms-primary); }
+    &.input-error { border-color: var(--ms-danger); }
+    &::placeholder { color: var(--ms-grey-dark); }
+  }
+
+  select { cursor: pointer; }
+
+  /* Champ mot de passe */
+  .password-input {
+    position: relative;
+
+    input { padding-right: 100px; }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--ms-primary);
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 500;
+
+      &:hover { text-decoration: underline; }
+    }
+  }
+
+  .field-error {
+    display: block;
+    color: var(--ms-danger);
+    font-size: 12px;
+    margin-top: 4px;
+  }
+}
+
+.info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ms-spacing-sm);
+  background-color: #e3f2fd;
+  padding: var(--ms-spacing-md);
+  border-radius: var(--ms-radius-md);
+  margin-top: var(--ms-spacing-md);
+
+  .material-icons {
+    color: var(--ms-info);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  p {
+    color: #1565c0;
+    font-size: var(--ms-font-size-sm);
+    line-height: 1.5;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ms-spacing-md);
+  padding-top: var(--ms-spacing-md);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

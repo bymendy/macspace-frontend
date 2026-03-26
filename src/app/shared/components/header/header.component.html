@@ -1,11 +1,71 @@
 <!-- Header principal MacSpace -->
 <header class="header">
+
+  <!-- Partie gauche - Breadcrumb -->
   <div class="header-left">
-    <span class="page-title">MacSpace</span>
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <span
+        class="breadcrumb-home"
+        (click)="navigateTo('/dashboard')">
+        <span class="material-icons">home</span>
+      </span>
+
+      <ng-container *ngFor="let item of breadcrumbs; let last = last">
+        <span class="breadcrumb-separator">
+          <span class="material-icons">chevron_right</span>
+        </span>
+        <span
+          class="breadcrumb-item"
+          [class.breadcrumb-active]="last"
+          (click)="!last && navigateTo(item.url)">
+          {{ item.label }}
+        </span>
+      </ng-container>
+    </nav>
+
   </div>
+
+  <!-- Partie droite - Utilisateur connecté -->
   <div class="header-right">
+
+    <!-- Infos utilisateur -->
+    <div class="user-info" *ngIf="utilisateurConnecte">
+
+      <!-- Fonction badge -->
+      <span
+        class="fonction-badge"
+        [class]="getFonctionBadgeClass(utilisateurConnecte.fonction || '')">
+        {{ utilisateurConnecte.fonction }}
+      </span>
+
+      <!-- Nom complet -->
+      <div class="user-details">
+        <span class="user-nom">
+          {{ utilisateurConnecte.nom }} {{ utilisateurConnecte.prenom }}
+        </span>
+        <span class="user-email">
+          {{ utilisateurConnecte.email }}
+        </span>
+      </div>
+
+      <!-- Avatar -->
+      <div class="user-avatar">
+        {{ initiales }}
+      </div>
+
+    </div>
+
+    <!-- Séparateur -->
+    <div class="separator"></div>
+
+    <!-- Bouton déconnexion -->
     <button class="btn-logout" (click)="logout()">
-      Déconnexion
+      <span class="material-icons">logout</span>
+      <span class="logout-text">Déconnexion</span>
     </button>
+
   </div>
+
 </header>

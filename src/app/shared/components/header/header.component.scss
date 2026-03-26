@@ -1,4 +1,5 @@
-/* Header MacSpace */
+/* ===== Header MacSpace ===== */
+
 .header {
   height: var(--ms-header-height);
   background-color: var(--ms-white);
@@ -8,27 +9,185 @@
   justify-content: space-between;
   padding: 0 var(--ms-spacing-lg);
   box-shadow: var(--ms-shadow-sm);
+  flex-shrink: 0;
+}
 
-  .page-title {
-    font-size: var(--ms-font-size-lg);
-    font-weight: 600;
-    color: var(--ms-dark);
-  }
+/* ===== Partie gauche - Breadcrumb ===== */
+.header-left {
+  flex: 1;
+  overflow: hidden;
+}
 
-  .btn-logout {
-    background: none;
-    border: 1.5px solid var(--ms-primary);
-    color: var(--ms-primary);
-    padding: 8px 16px;
-    border-radius: var(--ms-radius-md);
+/* ===== Breadcrumb ===== */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow: hidden;
+
+  /* Icone home */
+  .breadcrumb-home {
+    display: flex;
+    align-items: center;
+    color: var(--ms-grey-dark);
     cursor: pointer;
-    font-size: var(--ms-font-size-sm);
-    font-weight: 500;
+    padding: 4px;
+    border-radius: var(--ms-radius-sm);
     transition: all 0.2s ease;
+    flex-shrink: 0;
 
     &:hover {
-      background-color: var(--ms-primary);
-      color: var(--ms-white);
+      color: var(--ms-primary);
+      background-color: #fff3e8;
     }
+
+    .material-icons { font-size: 18px; }
+  }
+
+  /* Séparateur */
+  .breadcrumb-separator {
+    display: flex;
+    align-items: center;
+    color: var(--ms-grey);
+    flex-shrink: 0;
+
+    .material-icons { font-size: 16px; }
+  }
+
+  /* Item breadcrumb */
+  .breadcrumb-item {
+    font-size: var(--ms-font-size-sm);
+    color: var(--ms-grey-dark);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: var(--ms-radius-sm);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:hover:not(.breadcrumb-active) {
+      color: var(--ms-primary);
+      background-color: #fff3e8;
+    }
+
+    /* Item actif - page courante */
+    &.breadcrumb-active {
+      color: var(--ms-dark);
+      font-weight: 600;
+      cursor: default;
+    }
+  }
+}
+
+/* ===== Partie droite ===== */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-spacing-lg);
+  flex-shrink: 0;
+}
+
+/* ===== Infos utilisateur ===== */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-spacing-md);
+}
+
+/* ===== Badge fonction ===== */
+.fonction-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: var(--ms-font-size-sm);
+  font-weight: 600;
+
+  &.badge-admin {
+    background-color: #ffebee;
+    color: var(--ms-danger);
+  }
+
+  &.badge-manager {
+    background-color: #e3f2fd;
+    color: var(--ms-info);
+  }
+
+  &.badge-technicien {
+    background-color: #e8f5e9;
+    color: var(--ms-success);
+  }
+
+  &.badge-default {
+    background-color: var(--ms-grey-light);
+    color: var(--ms-grey-dark);
+  }
+}
+
+/* ===== Détails utilisateur ===== */
+.user-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  .user-nom {
+    font-size: var(--ms-font-size-base);
+    font-weight: 600;
+    color: var(--ms-dark);
+    line-height: 1.2;
+  }
+
+  .user-email {
+    font-size: var(--ms-font-size-sm);
+    color: var(--ms-grey-dark);
+  }
+}
+
+/* ===== Avatar utilisateur ===== */
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ms-primary), #f8813a);
+  color: var(--ms-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ===== Séparateur ===== */
+.separator {
+  width: 1px;
+  height: 32px;
+  background-color: var(--ms-grey);
+}
+
+/* ===== Bouton déconnexion ===== */
+.btn-logout {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-spacing-sm);
+  background: none;
+  border: 1.5px solid var(--ms-grey);
+  color: var(--ms-grey-dark);
+  padding: 8px 16px;
+  border-radius: var(--ms-radius-md);
+  cursor: pointer;
+  font-size: var(--ms-font-size-sm);
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  .material-icons { font-size: 18px; }
+
+  &:hover {
+    border-color: var(--ms-danger);
+    color: var(--ms-danger);
+    background-color: #ffebee;
+  }
+
+  @media (max-width: 768px) {
+    .logout-text { display: none; }
   }
 }

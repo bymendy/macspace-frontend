@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClientService } from '../../../core/services/client.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { Client } from '../../../shared/models/client';
 
 /**
@@ -26,16 +27,14 @@ export class ClientFormComponent implements OnInit {
   /** Identifiant du client en modification */
   clientId: number | null = null;
 
-  /** Message d'erreur */
-  errorMessage = '';
-
   constructor(
     private fb: FormBuilder,
     private clientService: ClientService,
+    private notificationService: NotificationService,
     private router: Router,
     private route: ActivatedRoute
   ) {
-    /* Initialisation du formulaire */
+/* Initialisation du formulaire */
     this.clientForm = this.fb.group({
       nom: ['', [Validators.required]],
       prenom: ['', [Validators.required]],
@@ -50,7 +49,6 @@ export class ClientFormComponent implements OnInit {
       })
     });
   }
-
   /**
    * Vérifie si on est en mode modification et charge le client.
    */
@@ -62,7 +60,6 @@ export class ClientFormComponent implements OnInit {
       this.loadClient(this.clientId);
     }
   }
-
   /**
    * Charge un client existant pour modification.
    *
@@ -76,12 +73,11 @@ export class ClientFormComponent implements OnInit {
         this.isLoading = false;
       },
       error: () => {
-        this.errorMessage = 'Erreur lors du chargement du client.';
+        this.notificationService.error('Erreur lors du chargement du client.');
         this.isLoading = false;
       }
     });
   }
-
   /**
    * Soumet le formulaire pour créer ou modifier un client.
    */
@@ -89,7 +85,6 @@ export class ClientFormComponent implements OnInit {
     if (this.clientForm.invalid) return;
 
     this.isLoading = true;
-    this.errorMessage = '';
 
     const client: Client = {
       ...this.clientForm.value,
@@ -103,15 +98,17 @@ export class ClientFormComponent implements OnInit {
 
     this.clientService.save(client).subscribe({
       next: () => {
+        this.notificationService.success(
+          this.isEditMode ? 'Client modifié avec succès.' : 'Client créé avec succès.'
+        );
         this.router.navigate(['/clients']);
       },
       error: () => {
-        this.errorMessage = 'Erreur lors de la sauvegarde du client.';
+        this.notificationService.error('Erreur lors de la sauvegarde du client.');
         this.isLoading = false;
       }
     });
   }
-
   /**
    * Annule et retourne à la liste des clients.
    */

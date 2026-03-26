@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProduitService } from '../../../core/services/produit.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { Produit } from '../../../shared/models/produit';
 
 /**
@@ -23,24 +24,17 @@ export class ProduitListComponent implements OnInit {
   /** Indicateur de chargement */
   isLoading = true;
 
-  /** Terme de recherche */
-  recherche = '';
-
-  /** Message d'erreur */
-  errorMessage = '';
-
   constructor(
     private produitService: ProduitService,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
-
   /**
    * Charge la liste des produits au démarrage.
    */
   ngOnInit(): void {
     this.loadProduits();
   }
-
   /**
    * Charge tous les produits depuis l'API.
    */
@@ -53,12 +47,11 @@ export class ProduitListComponent implements OnInit {
         this.isLoading = false;
       },
       error: () => {
-        this.errorMessage = 'Erreur lors du chargement des produits.';
+        this.notificationService.error('Erreur lors du chargement des produits.');
         this.isLoading = false;
       }
     });
   }
-
   /**
    * Filtre les produits selon le terme de recherche.
    *
@@ -66,21 +59,18 @@ export class ProduitListComponent implements OnInit {
    */
   onRecherche(event: Event): void {
     const terme = (event.target as HTMLInputElement).value.toLowerCase();
-    this.recherche = terme;
     this.produitsFiltres = this.produits.filter(produit =>
       produit.codeProduit.toLowerCase().includes(terme) ||
       produit.designation.toLowerCase().includes(terme) ||
       (produit.category?.designation.toLowerCase().includes(terme))
     );
   }
-
   /**
    * Navigue vers le formulaire de création d'un produit.
    */
   nouveauProduit(): void {
     this.router.navigate(['/produits/nouveau']);
   }
-
   /**
    * Navigue vers le formulaire de modification d'un produit.
    *
@@ -89,7 +79,6 @@ export class ProduitListComponent implements OnInit {
   modifierProduit(id: number): void {
     this.router.navigate(['/produits/modifier', id]);
   }
-
   /**
    * Supprime un produit après confirmation.
    *
@@ -99,10 +88,11 @@ export class ProduitListComponent implements OnInit {
     if (confirm('Voulez-vous vraiment supprimer ce produit ?')) {
       this.produitService.delete(id).subscribe({
         next: () => {
+          this.notificationService.success('Produit supprimé avec succès.');
           this.loadProduits();
         },
         error: () => {
-          this.errorMessage = 'Impossible de supprimer ce produit.';
+          this.notificationService.error('Impossible de supprimer ce produit.');
         }
       });
     }

@@ -30,7 +30,17 @@ export class UtilisateurService {
   findById(id: number): Observable<Utilisateur> {
     return this.http.get<Utilisateur>(`${this.apiUrl}/${id}`);
   }
-
+  /**
+ * Récupère un utilisateur par son email.
+ *
+ * @param email L'email de l'utilisateur
+ * @returns Observable de l'utilisateur trouvé
+ */
+  findByEmail(email: string): Observable<Utilisateur> {
+    return this.http.get<Utilisateur>(
+      `${this.apiUrl}/find/${encodeURIComponent(email)}`
+    );
+  }
   /**
    * Crée ou modifie un utilisateur.
    */

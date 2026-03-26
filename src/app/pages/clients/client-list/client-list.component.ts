@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ClientService } from '../../../core/services/client.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { Client } from '../../../shared/models/client';
 
 /**
  * Composant de la liste des clients MacSpace.
- * Affiche tous les clients avec options de recherche et actions.
  */
 @Component({
   selector: 'app-client-list',
@@ -23,14 +23,9 @@ export class ClientListComponent implements OnInit {
   /** Indicateur de chargement */
   isLoading = true;
 
-  /** Terme de recherche */
-  recherche = '';
-
-  /** Message d'erreur */
-  errorMessage = '';
-
   constructor(
     private clientService: ClientService,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
 
@@ -53,7 +48,7 @@ export class ClientListComponent implements OnInit {
         this.isLoading = false;
       },
       error: () => {
-        this.errorMessage = 'Erreur lors du chargement des clients.';
+        this.notificationService.error('Erreur lors du chargement des clients.');
         this.isLoading = false;
       }
     });
@@ -66,7 +61,6 @@ export class ClientListComponent implements OnInit {
    */
   onRecherche(event: Event): void {
     const terme = (event.target as HTMLInputElement).value.toLowerCase();
-    this.recherche = terme;
     this.clientsFiltres = this.clients.filter(client =>
       client.nom.toLowerCase().includes(terme) ||
       client.prenom.toLowerCase().includes(terme) ||
@@ -100,10 +94,11 @@ export class ClientListComponent implements OnInit {
     if (confirm('Voulez-vous vraiment supprimer ce client ?')) {
       this.clientService.delete(id).subscribe({
         next: () => {
+          this.notificationService.success('Client supprimé avec succès.');
           this.loadClients();
         },
         error: () => {
-          this.errorMessage = 'Impossible de supprimer ce client.';
+          this.notificationService.error('Impossible de supprimer ce client.');
         }
       });
     }

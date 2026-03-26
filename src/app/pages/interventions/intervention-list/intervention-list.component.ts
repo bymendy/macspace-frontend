@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { InterventionService } from '../../../core/services/intervention.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { Intervention, EtatIntervention } from '../../../shared/models/intervention';
 
 /**
@@ -22,9 +23,6 @@ export class InterventionListComponent implements OnInit {
   /** Indicateur de chargement */
   isLoading = true;
 
-  /** Message d'erreur */
-  errorMessage = '';
-
   /** Filtre par état */
   filtreEtat = 'TOUS';
 
@@ -39,16 +37,15 @@ export class InterventionListComponent implements OnInit {
 
   constructor(
     private interventionService: InterventionService,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
-
   /**
    * Charge la liste des interventions au démarrage.
    */
   ngOnInit(): void {
     this.loadInterventions();
   }
-
   /**
    * Charge toutes les interventions depuis l'API.
    */
@@ -61,12 +58,11 @@ export class InterventionListComponent implements OnInit {
         this.isLoading = false;
       },
       error: () => {
-        this.errorMessage = 'Erreur lors du chargement des interventions.';
+        this.notificationService.error('Erreur lors du chargement des interventions.');
         this.isLoading = false;
       }
     });
   }
-
   /**
    * Filtre les interventions par terme de recherche.
    */
@@ -82,7 +78,6 @@ export class InterventionListComponent implements OnInit {
     this.filtreEtat = etat;
     this.appliquerFiltres('');
   }
-
   /**
    * Applique les filtres recherche et état.
    */
@@ -99,35 +94,34 @@ export class InterventionListComponent implements OnInit {
       return matchTerme && matchEtat;
     });
   }
-
   /**
    * Navigue vers le formulaire de création.
    */
   nouvelleIntervention(): void {
     this.router.navigate(['/interventions/nouvelle']);
   }
-
   /**
    * Navigue vers le formulaire de modification.
    */
   modifierIntervention(id: number): void {
     this.router.navigate(['/interventions/modifier', id]);
   }
-
   /**
    * Supprime une intervention après confirmation.
    */
   supprimerIntervention(id: number): void {
     if (confirm('Voulez-vous vraiment supprimer cette intervention ?')) {
       this.interventionService.delete(id).subscribe({
-        next: () => this.loadInterventions(),
+        next: () => {
+          this.notificationService.success('Intervention supprimée avec succès.');
+          this.loadInterventions();
+        },
         error: () => {
-          this.errorMessage = 'Impossible de supprimer cette intervention.';
+          this.notificationService.error('Impossible de supprimer cette intervention.');
         }
       });
     }
   }
-
   /**
    * Retourne la classe CSS du badge selon l'état.
    */
@@ -140,7 +134,6 @@ export class InterventionListComponent implements OnInit {
       default: return 'badge';
     }
   }
-
   /**
    * Formate la date de l'intervention.
    */
