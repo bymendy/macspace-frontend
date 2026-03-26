@@ -3,12 +3,14 @@ import { ClientService } from '../../../core/services/client.service';
 import { InterventionService } from '../../../core/services/intervention.service';
 import { ProduitService } from '../../../core/services/produit.service';
 import { FournisseurService } from '../../../core/services/fournisseur.service';
+import { StockService } from '../../../core/services/stock.service';
 import { Intervention } from '../../../shared/models/intervention';
 import { forkJoin } from 'rxjs';
+import { ChartData, ChartOptions } from 'chart.js';
 
 /**
  * Composant du tableau de bord principal de MacSpace.
- * Affiche les KPIs et statistiques en temps réel.
+ * Affiche les KPIs, statistiques et graphiques en temps réel.
  */
 @Component({
   selector: 'app-dashboard',
@@ -35,14 +37,88 @@ export class DashboardComponent implements OnInit {
   /** Interventions terminées */
   interventionsTerminees = 0;
 
+  /** Interventions annulées */
+  interventionsAnnulees = 0;
+
   /** Dernières interventions */
   dernieresInterventions: Intervention[] = [];
+
+  /** Données graphique interventions par état (Doughnut) */
+  interventionsChartData: ChartData<'doughnut'> = {
+    labels: ['En attente', 'En cours', 'Terminées', 'Annulées'],
+    datasets: [{
+      data: [0, 0, 0, 0],
+      backgroundColor: [
+        '#ff9800',
+        '#2196f3',
+        '#4caf50',
+        '#f44336'
+      ],
+      borderWidth: 0,
+      hoverOffset: 4
+    }]
+  };
+
+  /** Options graphique doughnut */
+  doughnutChartOptions: ChartOptions<'doughnut'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          padding: 20,
+          font: { size: 13 }
+        }
+      }
+    }
+  };
+
+  /** Données graphique stock par produit (Bar) */
+  stockChartData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [{
+      label: 'Stock disponible',
+      data: [],
+      backgroundColor: '#E46C0C',
+      borderRadius: 6,
+      hoverBackgroundColor: '#c45a00'
+    }]
+  };
+
+  /** Options graphique bar */
+  barChartOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: '#f0f0f0'
+        },
+        ticks: {
+          stepSize: 1
+        }
+      },
+      x: {
+        grid: {
+          display: false
+        }
+      }
+    }
+  };
 
   constructor(
     private clientService: ClientService,
     private interventionService: InterventionService,
     private produitService: ProduitService,
-    private fournisseurService: FournisseurService
+    private fournisseurService: FournisseurService,
+    private stockService: StockService
   ) {}
 
   /**
@@ -78,16 +154,74 @@ export class DashboardComponent implements OnInit {
           .filter(i => i.etatIntervention as any === 'En cours').length;
         this.interventionsTerminees = data.interventions
           .filter(i => i.etatIntervention as any === 'Terminée').length;
+        this.interventionsAnnulees = data.interventions
+          .filter(i => i.etatIntervention as any === 'Annulée').length;
+
+        /* Mise à jour graphique doughnut */
+        this.interventionsChartData = {
+          ...this.interventionsChartData,
+          datasets: [{
+            ...this.interventionsChartData.datasets[0],
+            data: [
+              this.interventionsEnAttente,
+              this.interventionsEnCours,
+              this.interventionsTerminees,
+              this.interventionsAnnulees
+            ]
+          }]
+        };
 
         /* 5 dernières interventions */
         this.dernieresInterventions = data.interventions
           .slice(-5)
           .reverse();
 
+        /* Charger le stock des produits pour le graphique */
+        this.loadStockProduits(data.produits);
+
         this.isLoading = false;
       },
       error: () => {
         this.isLoading = false;
+      }
+    });
+  }
+
+  /**
+   * Charge le stock réel de chaque produit pour le graphique bar.
+   *
+   * @param produits La liste des produits
+   */
+  loadStockProduits(produits: any[]): void {
+    const labels: string[] = [];
+    const stocks: number[] = [];
+    let loaded = 0;
+
+    produits.forEach(produit => {
+      if (produit.id) {
+        this.stockService.stockReelProduit(produit.id).subscribe({
+          next: (stock) => {
+            labels.push(produit.codeProduit);
+            stocks.push(stock);
+            loaded++;
+
+            /* Mettre à jour le graphique quand tous les stocks sont chargés */
+            if (loaded === produits.length) {
+              this.stockChartData = {
+                labels: labels,
+                datasets: [{
+                  label: 'Stock disponible',
+                  data: stocks,
+                  backgroundColor: stocks.map(s =>
+                    s <= 0 ? '#f44336' : s <= 5 ? '#ff9800' : '#E46C0C'
+                  ),
+                  borderRadius: 6,
+                  hoverBackgroundColor: '#c45a00'
+                }]
+              };
+            }
+          }
+        });
       }
     });
   }

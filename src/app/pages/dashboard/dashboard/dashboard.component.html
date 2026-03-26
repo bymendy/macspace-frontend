@@ -72,7 +72,36 @@
 
     </div>
 
-    <!-- Statistiques interventions -->
+    <!-- Graphiques -->
+    <div class="charts-grid">
+
+      <!-- Graphique Doughnut — Interventions par état -->
+      <div class="ms-card chart-card">
+        <h3 class="card-title">Interventions par état</h3>
+        <div class="chart-container">
+          <canvas baseChart
+            [data]="interventionsChartData"
+            [options]="doughnutChartOptions"
+            type="doughnut">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Graphique Bar — Stock par produit -->
+      <div class="ms-card chart-card">
+        <h3 class="card-title">Stock par produit</h3>
+        <div class="chart-container">
+          <canvas baseChart
+            [data]="stockChartData"
+            [options]="barChartOptions"
+            type="bar">
+          </canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Statistiques interventions + Dernières interventions -->
     <div class="stats-grid">
 
       <!-- Etat des interventions -->
@@ -134,6 +163,24 @@
             </div>
           </div>
 
+          <!-- Annulées -->
+          <div class="stat-item">
+            <div class="stat-info">
+              <span class="stat-dot stat-dot-danger"></span>
+              <span class="stat-label">Annulées</span>
+            </div>
+            <div class="stat-right">
+              <span class="stat-value">{{ interventionsAnnulees }}</span>
+              <div class="stat-bar">
+                <div
+                  class="stat-bar-fill stat-bar-danger"
+                  [style.width.%]="totalInterventions > 0 ?
+                    (interventionsAnnulees / totalInterventions * 100) : 0">
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -150,6 +197,7 @@
           <thead>
             <tr>
               <th>Code</th>
+              <th>Date</th>
               <th>Technicien</th>
               <th>Etat</th>
             </tr>
@@ -162,12 +210,16 @@
                 </span>
               </td>
               <td>
+                {{ intervention.dateIntervention ?
+                  (intervention.dateIntervention | date:'dd/MM/yyyy') : '-' }}
+              </td>
+              <td>
                 {{ intervention.technicien?.nom }}
                 {{ intervention.technicien?.prenom }}
               </td>
               <td>
                 <span [class]="getBadgeClass(intervention.etatIntervention)">
-                  {{ getEtatLabel(intervention.etatIntervention) }}
+                  {{ intervention.etatIntervention }}
                 </span>
               </td>
             </tr>

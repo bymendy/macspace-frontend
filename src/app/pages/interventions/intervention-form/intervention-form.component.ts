@@ -6,10 +6,10 @@ import { InterventionService } from '../../../core/services/intervention.service
 import { UtilisateurService } from '../../../core/services/utilisateur.service';
 import { ProduitService } from '../../../core/services/produit.service';
 import { StockService } from '../../../core/services/stock.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { Intervention, EtatIntervention, LigneIntervention } from '../../../shared/models/intervention';
 import { Utilisateur } from '../../../shared/models/utilisateur';
 import { Produit } from '../../../shared/models/produit';
-
 /**
  * Composant formulaire de création et modification d'une intervention MacSpace.
  * Gère les lignes de produits utilisés avec décompte du stock.
@@ -59,6 +59,7 @@ export class InterventionFormComponent implements OnInit {
     private utilisateurService: UtilisateurService,
     private produitService: ProduitService,
     private stockService: StockService,
+    private notificationService: NotificationService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -135,7 +136,7 @@ export class InterventionFormComponent implements OnInit {
         }
       },
       error: () => {
-        this.errorMessage = 'Erreur lors du chargement des données.';
+        this.notificationService.error('Erreur lors du chargement des données.');
         this.isLoading = false;
       }
     });
@@ -189,7 +190,7 @@ export class InterventionFormComponent implements OnInit {
         this.isLoading = false;
       },
       error: () => {
-        this.errorMessage = 'Erreur lors du chargement de l intervention.';
+        this.notificationService.error('Erreur lors du chargement de l intervention.');
         this.isLoading = false;
       }
     });
@@ -261,7 +262,6 @@ export class InterventionFormComponent implements OnInit {
     if (this.interventionForm.invalid) return;
 
     this.isLoading = true;
-    this.errorMessage = '';
 
     const formValue = this.interventionForm.value;
 
@@ -305,10 +305,17 @@ export class InterventionFormComponent implements OnInit {
 
     this.interventionService.save(intervention).subscribe({
       next: () => {
+        this.notificationService.success(
+          this.isEditMode ?
+            'Intervention modifiée avec succès.' :
+            'Intervention créée avec succès.'
+        );
         this.router.navigate(['/interventions']);
       },
       error: () => {
-        this.errorMessage = 'Erreur lors de la sauvegarde de l intervention.';
+        this.notificationService.error(
+          'Erreur lors de la sauvegarde de l intervention.'
+        );
         this.isLoading = false;
       }
     });

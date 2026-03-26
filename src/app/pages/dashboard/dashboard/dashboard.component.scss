@@ -260,7 +260,34 @@
     font-size: var(--ms-font-size-base);
   }
 }
+/* ===== Graphiques ===== */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--ms-spacing-lg);
+  margin-bottom: var(--ms-spacing-xl);
+  animation: fadeInUp 0.5s ease-out 0.4s both;
 
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-card {
+  .chart-container {
+    height: 280px;
+    position: relative;
+  }
+}
+
+/* ===== Stat dot danger ===== */
+.stat-dot-danger {
+  background-color: var(--ms-danger) !important;
+}
+
+.stat-bar-danger {
+  background-color: var(--ms-danger) !important;
+}
 /* ===== Animations ===== */
 @keyframes fadeInUp {
   from {
