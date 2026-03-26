@@ -49,7 +49,7 @@
 
         <!-- Date -->
         <div class="form-group">
-          <label>Date d intervention *</label>
+          <label>Date intervention *</label>
           <input
             type="date"
             formControlName="dateIntervention"
@@ -94,7 +94,7 @@
 
       </div>
 
-      <!-- Problématique -->
+      <!-- Détails -->
       <div class="ms-card">
         <h3 class="card-title">Détails</h3>
 
@@ -104,17 +104,130 @@
           <textarea
             formControlName="problematique"
             placeholder="Décrivez la problématique rencontrée..."
-            rows="6">
+            rows="5">
           </textarea>
         </div>
 
-        <!-- Info -->
-        <div class="info-box">
+        <!-- Info stock -->
+        <div class="info-box"
+          *ngIf="!decompterStock">
           <span class="material-icons">info</span>
           <p>
-            Les lignes d intervention (produits utilisés)
-            pourront être ajoutées après la création.
+            Les produits utilisés décompteront le stock uniquement
+            si l'état est <strong>En cours</strong> ou
+            <strong>Terminée</strong>.
           </p>
+        </div>
+
+        <!-- Alerte stock -->
+        <div class="alert-box" *ngIf="decompterStock">
+          <span class="material-icons">warning</span>
+          <p>
+            Les produits ajoutés seront
+            <strong>décomptés du stock</strong>
+            car l'intervention est {{ etatActuel }}.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Section produits utilisés -->
+    <div class="ms-card produits-section">
+      <div class="produits-header">
+        <h3 class="card-title">Produits utilisés</h3>
+        <button
+          type="button"
+          class="btn-add-ligne"
+          (click)="ajouterLigne()">
+          <span class="material-icons">add</span>
+          Ajouter un produit
+        </button>
+      </div>
+
+      <!-- Etat vide -->
+      <div class="produits-empty"
+        *ngIf="ligneInterventions.length === 0">
+        <span class="material-icons">inventory_2</span>
+        <p>Aucun produit ajouté — cliquez sur "Ajouter un produit"</p>
+      </div>
+
+      <!-- Lignes de produits -->
+      <div class="lignes-container"
+        *ngIf="ligneInterventions.length > 0">
+
+        <!-- En-tête tableau -->
+       <!-- En-tête tableau -->
+        <div class="ligne-header">
+          <span>Produit</span>
+          <span>Quantité</span>
+          <span>Stock dispo</span>
+          <span>Prix HT</span>
+          <span>Action</span>
+        </div>
+
+        <!-- Lignes -->
+        <div
+          class="ligne-item"
+          *ngFor="let ligne of ligneInterventions.controls; let i = index"
+          [formGroup]="$any(ligne)">
+
+          <!-- Sélection produit -->
+          <div class="form-group">
+            <select formControlName="produitId">
+              <option value="">Sélectionner un produit</option>
+              <option
+                *ngFor="let produit of produits"
+                [value]="produit.id"
+                [disabled]="isRupture(produit.id!)">
+                {{ produit.codeProduit }} - {{ produit.designation }}
+                {{ isRupture(produit.id!) ? '(Rupture de stock)' : '' }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Quantité -->
+          <div class="form-group">
+            <input
+              type="number"
+              formControlName="quantite"
+              min="1"
+              [max]="getStockProduit($any(ligne).get('produitId')?.value)"
+              placeholder="1"
+            />
+          </div>
+
+          <!-- Stock disponible -->
+          <div class="stock-disponible">
+            <ng-container *ngIf="getProduitSelectionne(i)">
+              <span
+                class="stock-badge"
+                [class.stock-ok]="getStockProduit(getProduitSelectionne(i)!.id!) > 0"
+                [class.stock-rupture]="getStockProduit(getProduitSelectionne(i)!.id!) <= 0">
+                {{ getStockProduit(getProduitSelectionne(i)!.id!) }} en stock
+              </span>
+            </ng-container>
+            <span *ngIf="!getProduitSelectionne(i)" class="stock-empty-label">-</span>
+          </div>
+
+          <!-- Prix HT -->
+          <div class="prix-ht">
+            <span *ngIf="getProduitSelectionne(i)">
+              {{ getProduitSelectionne(i)?.prixUnitaireHt | number:'1.2-2' }} €
+            </span>
+            <span *ngIf="!getProduitSelectionne(i)">-</span>
+          </div>
+
+          <!-- Supprimer -->
+          <button
+            type="button"
+            class="btn-remove-ligne"
+            (click)="supprimerLigne(i)"
+            title="Supprimer">
+            <span class="material-icons">delete</span>
+          </button>
+
         </div>
 
       </div>
@@ -134,7 +247,7 @@
         class="btn-primary"
         [disabled]="interventionForm.invalid || isLoading">
         <span *ngIf="!isLoading">
-          {{ isEditMode ? 'Modifier' : 'Créer une intervention' }}
+          {{ isEditMode ? 'Modifier' : 'Créer l intervention' }}
         </span>
         <span *ngIf="isLoading">Enregistrement...</span>
       </button>

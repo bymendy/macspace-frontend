@@ -145,6 +145,215 @@
   padding-top: var(--ms-spacing-md);
 }
 
+/* ===== Section produits utilisés ===== */
+
+.produits-section {
+  margin-top: var(--ms-spacing-lg);
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.produits-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--ms-spacing-lg);
+  padding-bottom: var(--ms-spacing-md);
+  border-bottom: 1px solid var(--ms-grey);
+
+  .card-title {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  /* Bouton ajouter ligne */
+  .btn-add-ligne {
+    display: flex;
+    align-items: center;
+    gap: var(--ms-spacing-sm);
+    background-color: #e8f5e9;
+    color: var(--ms-success);
+    border: 1.5px solid var(--ms-success);
+    padding: 8px 16px;
+    border-radius: var(--ms-radius-md);
+    cursor: pointer;
+    font-size: var(--ms-font-size-sm);
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: var(--ms-success);
+      color: var(--ms-white);
+    }
+
+    .material-icons { font-size: 18px; }
+  }
+}
+
+/* ===== Etat vide produits ===== */
+.produits-empty {
+  display: flex;
+  align-items: center;
+  gap: var(--ms-spacing-md);
+  padding: var(--ms-spacing-lg);
+  background-color: var(--ms-grey-light);
+  border-radius: var(--ms-radius-md);
+  color: var(--ms-grey-dark);
+
+  .material-icons {
+    font-size: 24px;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: var(--ms-font-size-sm);
+  }
+}
+
+/* ===== Lignes de produits ===== */
+.lignes-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ms-spacing-sm);
+}
+
+/* En-tête des colonnes */
+.ligne-header {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr 40px;
+  gap: var(--ms-spacing-md);
+  padding: 8px var(--ms-spacing-md);
+  background-color: var(--ms-grey-light);
+  border-radius: var(--ms-radius-sm);
+
+  span {
+    font-size: var(--ms-font-size-sm);
+    font-weight: 600;
+    color: var(--ms-grey-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+/* Ligne de produit */
+.ligne-item {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr 40px;
+  gap: var(--ms-spacing-md);
+  align-items: center;
+  padding: var(--ms-spacing-sm) var(--ms-spacing-md);
+  border: 1px solid var(--ms-grey);
+  border-radius: var(--ms-radius-md);
+  background-color: var(--ms-white);
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: var(--ms-primary);
+  }
+
+  .form-group {
+    margin-bottom: 0;
+  }
+
+  /* Prix HT */
+  .prix-ht {
+    font-weight: 600;
+    color: var(--ms-dark);
+    font-size: var(--ms-font-size-base);
+  }
+
+/* ===== Badge stock disponible ===== */
+.stock-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: var(--ms-font-size-sm);
+  font-weight: 600;
+
+  &.stock-ok {
+    background-color: #e8f5e9;
+    color: var(--ms-success);
+  }
+
+  &.stock-rupture {
+    background-color: #ffebee;
+    color: var(--ms-danger);
+  }
+}
+
+.stock-empty-label {
+  color: var(--ms-grey-dark);
+  font-size: var(--ms-font-size-sm);
+}
+  /* Bouton supprimer ligne */
+  .btn-remove-ligne {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: var(--ms-radius-sm);
+    background-color: #ffebee;
+    color: var(--ms-danger);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: var(--ms-danger);
+      color: var(--ms-white);
+    }
+
+    .material-icons { font-size: 16px; }
+  }
+}
+
+/* ===== Info box ===== */
+.info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ms-spacing-sm);
+  background-color: #e3f2fd;
+  padding: var(--ms-spacing-md);
+  border-radius: var(--ms-radius-md);
+  margin-top: var(--ms-spacing-md);
+
+  .material-icons {
+    color: var(--ms-info);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  p {
+    color: #1565c0;
+    font-size: var(--ms-font-size-sm);
+    line-height: 1.5;
+  }
+}
+
+/* ===== Alerte box ===== */
+.alert-box {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ms-spacing-sm);
+  background-color: #fff3e0;
+  padding: var(--ms-spacing-md);
+  border-radius: var(--ms-radius-md);
+  margin-top: var(--ms-spacing-md);
+  border-left: 4px solid var(--ms-warning);
+
+  .material-icons {
+    color: var(--ms-warning);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  p {
+    color: #e65100;
+    font-size: var(--ms-font-size-sm);
+    line-height: 1.5;
+  }
+}
 /* ===== Animations ===== */
 @keyframes fadeInUp {
   from {
