@@ -27,6 +27,9 @@ export class ClientFormComponent implements OnInit {
   /** Identifiant du client en modification */
   clientId: number | null = null;
 
+  /** Message d'erreur */
+  errorMessage = '';
+  
   constructor(
     private fb: FormBuilder,
     private clientService: ClientService,

@@ -92,8 +92,9 @@
           <td>
             <div class="technicien-info" *ngIf="intervention.technicien">
               <div class="technicien-avatar">
-                {{ intervention.technicien.nom?.charAt(0) }}
-                {{ intervention.technicien.prenom?.charAt(0) }}
+                {{ intervention.technicien?.nom?.charAt(0) }}
+                {{ intervention.technicien?.prenom?.charAt(0) }}
+
               </div>
               <span>
                 {{ intervention.technicien.nom }}
