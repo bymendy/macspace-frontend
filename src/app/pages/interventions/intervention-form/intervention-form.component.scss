@@ -234,7 +234,81 @@
     letter-spacing: 0.5px;
   }
 }
+/* ===== Recherche produit avec autocomplétion ===== */
+.produit-search-container {
+  position: relative;
 
+  input {
+    width: 100%;
+  }
+
+  /* Liste déroulante */
+  .produit-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid var(--ms-grey);
+    border-radius: var(--ms-radius-sm);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+
+    .produit-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--ms-grey-light);
+      transition: background 0.15s;
+
+      &:hover {
+        background-color: #fff8f0;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &.produit-rupture {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      .produit-code {
+        font-weight: 600;
+        color: var(--ms-primary);
+        font-size: 13px;
+        min-width: 80px;
+      }
+
+      .produit-nom {
+        flex: 1;
+        font-size: 13px;
+        color: var(--ms-dark);
+      }
+
+      .produit-stock {
+        font-size: 12px;
+        padding: 2px 8px;
+        border-radius: 12px;
+
+        &.stock-ok {
+          background: #e8f5e9;
+          color: #2e7d32;
+        }
+
+        &.stock-rupture {
+          background: #ffebee;
+          color: #c62828;
+        }
+      }
+    }
+  }
+}
 /* Ligne de produit */
 .ligne-item {
   display: grid;

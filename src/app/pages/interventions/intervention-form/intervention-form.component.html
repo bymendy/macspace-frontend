@@ -173,18 +173,34 @@
           *ngFor="let ligne of ligneInterventions.controls; let i = index"
           [formGroup]="$any(ligne)">
 
-          <!-- Sélection produit -->
-          <div class="form-group">
-            <select formControlName="produitId">
-              <option value="">Sélectionner un produit</option>
-              <option
-                *ngFor="let produit of produits"
-                [value]="produit.id"
-                [disabled]="isRupture(produit.id!)">
-                {{ produit.codeProduit }} - {{ produit.designation }}
-                {{ isRupture(produit.id!) ? '(Rupture de stock)' : '' }}
-              </option>
-            </select>
+          <!-- Recherche produit avec autocomplétion -->
+          <div class="form-group produit-search-container">
+            <input
+              type="text"
+              [value]="rechercheProduit[i]"
+              (input)="onRechercheProduit($any($event.target).value, i)"
+              placeholder="Rechercher un produit..."
+              autocomplete="off"
+            />
+            <!-- Liste déroulante résultats -->
+            <div class="produit-dropdown"
+              *ngIf="produitsFiltres[i] && produitsFiltres[i].length > 0 
+              && rechercheProduit[i] && rechercheProduit[i].length > 0
+              && dropdownOuvert[i]">
+              <div
+                class="produit-option"
+                *ngFor="let produit of produitsFiltres[i]"
+                (click)="selectionnerProduit(produit, i)"
+                [class.produit-rupture]="isRupture(produit.id!)">
+                <span class="produit-code">{{ produit.codeProduit }}</span>
+                <span class="produit-nom">{{ produit.designation }}</span>
+                <span class="produit-stock"
+                  [class.stock-ok]="!isRupture(produit.id!)"
+                  [class.stock-rupture]="isRupture(produit.id!)">
+                  {{ getStockProduit(produit.id!) }} en stock
+                </span>
+              </div>
+            </div>
           </div>
 
           <!-- Quantité -->

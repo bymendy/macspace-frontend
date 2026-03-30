@@ -10,9 +10,11 @@ import { NotificationService } from '../../../core/services/notification.service
 import { Intervention, EtatIntervention, LigneIntervention } from '../../../shared/models/intervention';
 import { Utilisateur } from '../../../shared/models/utilisateur';
 import { Produit } from '../../../shared/models/produit';
+
 /**
  * Composant formulaire de création et modification d'une intervention MacSpace.
  * Gère les lignes de produits utilisés avec décompte du stock.
+ * Le décompte du stock est géré côté backend selon l'état de l'intervention.
  */
 @Component({
   selector: 'app-intervention-form',
@@ -44,6 +46,15 @@ export class InterventionFormComponent implements OnInit {
 
   /** Stock réel par produit - clé = idProduit, valeur = stock */
   stockParProduit: Map<number, number> = new Map();
+
+  /** Terme de recherche par ligne */
+  rechercheProduit: string[] = [];
+
+  /** Liste filtrée de produits par ligne */
+  produitsFiltres: Produit[][] = [];
+
+  /** Contrôle l'ouverture de la dropdown par ligne */
+  dropdownOuvert: boolean[] = [];
 
   /** Etats disponibles */
   etats = [
@@ -90,6 +101,7 @@ export class InterventionFormComponent implements OnInit {
 
   /**
    * Vérifie si le stock doit être décompté selon l'état.
+   * Utilisé pour l'affichage du message informatif dans le HTML.
    */
   get decompterStock(): boolean {
     const etat = this.etatActuel;
@@ -101,12 +113,10 @@ export class InterventionFormComponent implements OnInit {
 
   /**
    * Charge toutes les données nécessaires en parallèle avec forkJoin.
-   * Garantit que produits et techniciens sont chargés avant l'intervention.
    */
   ngOnInit(): void {
     const id = this.route.snapshot.params['id'];
 
-    /* Charger techniciens et produits en parallèle */
     forkJoin({
       techniciens: this.utilisateurService.findAll(),
       produits: this.produitService.findAll()
@@ -114,6 +124,10 @@ export class InterventionFormComponent implements OnInit {
       next: (data) => {
         this.techniciens = data.techniciens;
         this.produits = data.produits;
+
+        /* Initialiser les tableaux de recherche */
+        this.produitsFiltres = [];
+        this.rechercheProduit = [];
 
         /* Charger le stock de chaque produit */
         data.produits.forEach(produit => {
@@ -133,6 +147,8 @@ export class InterventionFormComponent implements OnInit {
           this.loadIntervention(this.interventionId);
         } else {
           this.isLoading = false;
+          this.dropdownOuvert.push(false);
+
         }
       },
       error: () => {
@@ -144,16 +160,12 @@ export class InterventionFormComponent implements OnInit {
 
   /**
    * Charge une intervention existante pour modification.
-   * Vide les lignes existantes avant de les recharger.
-   *
-   * @param id L'identifiant de l'intervention
    */
   loadIntervention(id: number): void {
     this.interventionService.findById(id).subscribe({
       next: (intervention) => {
         const date = intervention.dateIntervention
-          ? new Date(intervention.dateIntervention)
-              .toISOString().split('T')[0]
+          ? new Date(intervention.dateIntervention).toISOString().split('T')[0]
           : '';
 
         /* Mapper l'état français vers l'enum */
@@ -181,9 +193,18 @@ export class InterventionFormComponent implements OnInit {
         if (intervention.ligneInterventions &&
             intervention.ligneInterventions.length > 0) {
           intervention.ligneInterventions.forEach(ligne => {
+
+            /* Ajouter la ligne au formulaire */
             this.ligneInterventions.push(
               this.createLigneForm(ligne.produit?.id, ligne.quantite)
             );
+
+            /* Initialiser la recherche avec le produit existant */
+            const produit = this.produits.find(p => p.id === ligne.produit?.id);
+            this.rechercheProduit.push(
+              produit ? `${produit.codeProduit} - ${produit.designation}` : ''
+            );
+            this.produitsFiltres.push([...this.produits]);
           });
         }
 
@@ -198,9 +219,6 @@ export class InterventionFormComponent implements OnInit {
 
   /**
    * Crée un FormGroup pour une ligne d'intervention.
-   *
-   * @param produitId L'identifiant du produit
-   * @param quantite La quantité utilisée
    */
   createLigneForm(produitId?: number, quantite?: number): FormGroup {
     return this.fb.group({
@@ -210,25 +228,54 @@ export class InterventionFormComponent implements OnInit {
   }
 
   /**
-   * Ajoute une nouvelle ligne de produit.
+   * Ajoute une nouvelle ligne de produit avec sa recherche.
    */
   ajouterLigne(): void {
-    this.ligneInterventions.push(this.createLigneForm());
+      this.ligneInterventions.push(this.createLigneForm());
+    this.rechercheProduit.push('');
+    this.produitsFiltres.push([...this.produits]);
+    this.dropdownOuvert.push(false); // ← ajouter un contrôle d'ouverture pour la nouvelle ligne
   }
 
   /**
-   * Supprime une ligne de produit.
-   *
-   * @param index L'index de la ligne à supprimer
+   * Supprime une ligne et sa recherche associée.
    */
   supprimerLigne(index: number): void {
     this.ligneInterventions.removeAt(index);
+    this.rechercheProduit.splice(index, 1);
+    this.produitsFiltres.splice(index, 1);
+    this.dropdownOuvert.splice(index, 1); // ← ajouter
+
+  }
+
+  /**
+   * Filtre les produits selon le terme de recherche.
+   */
+  onRechercheProduit(terme: string, index: number): void {
+    this.rechercheProduit[index] = terme;
+    this.ligneInterventions.at(index).get('produitId')?.setValue('');
+    const termeLower = terme.toLowerCase();
+    this.produitsFiltres[index] = this.produits.filter(p =>
+      p.codeProduit?.toLowerCase().includes(termeLower) ||
+      p.designation?.toLowerCase().includes(termeLower)
+    );
+    /* Ouvrir la dropdown si on tape quelque chose */
+    this.dropdownOuvert[index] = terme.length > 0;
+  }
+
+  /**
+   * Sélectionne un produit dans la liste filtrée.
+   */
+  selectionnerProduit(produit: Produit, index: number): void {
+    this.ligneInterventions.at(index).get('produitId')?.setValue(produit.id);
+    this.rechercheProduit[index] =
+      `${produit.codeProduit} - ${produit.designation}`;
+    this.produitsFiltres[index] = [];
+    this.dropdownOuvert[index] = false; // ← ferme la dropdown
   }
 
   /**
    * Retourne le produit sélectionné pour une ligne.
-   *
-   * @param index L'index de la ligne
    */
   getProduitSelectionne(index: number): Produit | undefined {
     const produitId = this.ligneInterventions.at(index).get('produitId')?.value;
@@ -237,9 +284,6 @@ export class InterventionFormComponent implements OnInit {
 
   /**
    * Retourne le stock réel d'un produit.
-   *
-   * @param produitId L'identifiant du produit
-   * @returns Le stock réel ou 0 si non trouvé
    */
   getStockProduit(produitId: number): number {
     return this.stockParProduit.get(Number(produitId)) || 0;
@@ -247,37 +291,30 @@ export class InterventionFormComponent implements OnInit {
 
   /**
    * Vérifie si un produit est en rupture de stock.
-   *
-   * @param produitId L'identifiant du produit
-   * @returns true si le stock est à 0 ou négatif
    */
   isRupture(produitId: number): boolean {
     return this.getStockProduit(Number(produitId)) <= 0;
   }
 
   /**
-   * Soumet le formulaire pour créer ou modifier une intervention.
+   * Soumet le formulaire.
+   * Les lignes sont toujours envoyées — le backend gère le stock.
    */
   onSubmit(): void {
     if (this.interventionForm.invalid) return;
 
     this.isLoading = true;
-
     const formValue = this.interventionForm.value;
 
     const technicienSelectionne = this.techniciens.find(
       t => t.id === Number(formValue.technicienId)
     );
 
-    /* Construction des lignes d'intervention */
+    /* Construction des lignes */
     const lignes: LigneIntervention[] = [];
-
-    /* Ajouter les lignes uniquement si l'état décompte le stock */
-    if (this.decompterStock && formValue.ligneInterventions.length > 0) {
+    if (formValue.ligneInterventions.length > 0) {
       formValue.ligneInterventions.forEach((ligne: any) => {
-        const produit = this.produits.find(
-          p => p.id === Number(ligne.produitId)
-        );
+        const produit = this.produits.find(p => p.id === Number(ligne.produitId));
         if (produit) {
           lignes.push({
             produit: produit,
@@ -298,7 +335,6 @@ export class InterventionFormComponent implements OnInit {
       idEntreprise: Number(localStorage.getItem('id_entreprise'))
     };
 
-    /* Ajout de l'id en mode modification */
     if (this.isEditMode && this.interventionId) {
       intervention.id = this.interventionId;
     }
@@ -313,9 +349,7 @@ export class InterventionFormComponent implements OnInit {
         this.router.navigate(['/interventions']);
       },
       error: () => {
-        this.notificationService.error(
-          'Erreur lors de la sauvegarde de l intervention.'
-        );
+        this.notificationService.error('Erreur lors de la sauvegarde de l intervention.');
         this.isLoading = false;
       }
     });

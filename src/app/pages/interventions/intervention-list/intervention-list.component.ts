@@ -6,6 +6,7 @@ import { Intervention, EtatIntervention } from '../../../shared/models/intervent
 
 /**
  * Composant de la liste des interventions MacSpace.
+ * Compatible Web (tableau) et Mobile Ionic (ion-list)
  */
 @Component({
   selector: 'app-intervention-list',
@@ -23,10 +24,10 @@ export class InterventionListComponent implements OnInit {
   /** Indicateur de chargement */
   isLoading = true;
 
-  /** Filtre par état */
+  /** Filtre par état actif */
   filtreEtat = 'TOUS';
 
-  /** Etats disponibles */
+  /** Etats disponibles pour les filtres */
   etats = [
     { value: 'TOUS', label: 'Tous les états' },
     { value: 'En attente', label: 'En attente' },
@@ -40,12 +41,14 @@ export class InterventionListComponent implements OnInit {
     private notificationService: NotificationService,
     private router: Router
   ) {}
+
   /**
    * Charge la liste des interventions au démarrage.
    */
   ngOnInit(): void {
     this.loadInterventions();
   }
+
   /**
    * Charge toutes les interventions depuis l'API.
    */
@@ -63,6 +66,7 @@ export class InterventionListComponent implements OnInit {
       }
     });
   }
+
   /**
    * Filtre les interventions par terme de recherche.
    */
@@ -78,8 +82,9 @@ export class InterventionListComponent implements OnInit {
     this.filtreEtat = etat;
     this.appliquerFiltres('');
   }
+
   /**
-   * Applique les filtres recherche et état.
+   * Applique les filtres recherche et état combinés.
    */
   appliquerFiltres(terme: string): void {
     this.interventionsFiltrees = this.interventions.filter(i => {
@@ -94,18 +99,21 @@ export class InterventionListComponent implements OnInit {
       return matchTerme && matchEtat;
     });
   }
+
   /**
-   * Navigue vers le formulaire de création.
+   * Navigue vers le formulaire de création d'une intervention.
    */
   nouvelleIntervention(): void {
     this.router.navigate(['/interventions/nouvelle']);
   }
+
   /**
-   * Navigue vers le formulaire de modification.
+   * Navigue vers le formulaire de modification d'une intervention.
    */
   modifierIntervention(id: number): void {
     this.router.navigate(['/interventions/modifier', id]);
   }
+
   /**
    * Supprime une intervention après confirmation.
    */
@@ -122,6 +130,7 @@ export class InterventionListComponent implements OnInit {
       });
     }
   }
+
   /**
    * Retourne la classe CSS du badge selon l'état.
    */
@@ -134,11 +143,40 @@ export class InterventionListComponent implements OnInit {
       default: return 'badge';
     }
   }
+
   /**
-   * Formate la date de l'intervention.
+   * Formate la date de l'intervention en français.
    */
   formatDate(date: string): string {
     if (!date) return '-';
     return new Date(date).toLocaleDateString('fr-FR');
+  }
+
+  /**
+   * Retourne l'icône Ionic selon l'état de l'intervention
+   * Utilisé dans la version mobile (ion-list)
+   */
+  getIonicIcon(etat: string): string {
+    switch (etat) {
+      case 'En attente': return 'time-outline';
+      case 'En cours': return 'construct-outline';
+      case 'Terminée': return 'checkmark-circle-outline';
+      case 'Annulée': return 'close-circle-outline';
+      default: return 'help-outline';
+    }
+  }
+
+  /**
+   * Retourne la couleur Ionic selon l'état de l'intervention
+   * Utilisé dans la version mobile (ion-list)
+   */
+  getIonicColor(etat: string): string {
+    switch (etat) {
+      case 'En attente': return 'warning';
+      case 'En cours': return 'primary';
+      case 'Terminée': return 'success';
+      case 'Annulée': return 'danger';
+      default: return 'medium';
+    }
   }
 }

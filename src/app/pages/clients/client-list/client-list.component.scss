@@ -221,7 +221,69 @@
     }
   }
 }
+/* ===== Responsive Desktop/Mobile ===== */
 
+/* Desktop — tableau visible, liste Ionic cachée */
+.desktop-only {
+  display: block;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+/* Mobile — liste Ionic visible, tableau caché */
+.mobile-only {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+/* ===== Ionic Searchbar — style MacSpace ===== */
+ion-searchbar {
+  --background: transparent;
+  --border-radius: 0;
+  --box-shadow: none;
+  --color: var(--ms-dark);
+  --placeholder-color: var(--ms-grey-dark);
+  flex: 1;
+  padding: 0;
+}
+
+/* ===== Ionic Spinner ===== */
+ion-spinner {
+  width: 40px;
+  height: 40px;
+}
+
+/* ===== Ionic List mobile ===== */
+ion-list {
+  background: transparent;
+
+  ion-item {
+    --background: white;
+    --border-radius: 8px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+
+    .client-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--ms-primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      margin-right: 12px;
+    }
+  }
+}
 /* ===== Animations ===== */
 @keyframes fadeInUp {
   from {
