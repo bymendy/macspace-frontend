@@ -428,6 +428,159 @@
     line-height: 1.5;
   }
 }
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablette (768px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+
+  .page-header .page-title {
+    font-size: var(--ms-font-size-xl);
+  }
+
+  .form-grid {
+    gap: var(--ms-spacing-md);
+  }
+
+  .ligne-header,
+  .ligne-item {
+    grid-template-columns: 2fr 1fr 1fr 1fr 40px;
+    gap: var(--ms-spacing-sm);
+  }
+}
+
+/* Mobile (< 768px) */
+@media (max-width: 768px) {
+
+  /* En-tête */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--ms-spacing-md);
+    margin-bottom: var(--ms-spacing-lg);
+
+    .page-title { font-size: var(--ms-font-size-lg); }
+    .page-subtitle { font-size: var(--ms-font-size-sm); }
+
+    .btn-secondary {
+      width: 100%;
+      text-align: center;
+      justify-content: center;
+    }
+  }
+
+  /* Grille formulaire — 1 colonne */
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: var(--ms-spacing-lg);
+    margin-bottom: var(--ms-spacing-lg);
+  }
+
+  /* Cartes — plus de padding */
+  .ms-card {
+    padding: var(--ms-spacing-lg);
+    margin-bottom: var(--ms-spacing-md);
+  }
+
+  /* Groupe de champs */
+  .form-group {
+    margin-bottom: var(--ms-spacing-lg);
+
+    label { font-size: 13px; }
+
+    input, select, textarea {
+      font-size: 16px; /* Évite zoom iOS */
+      padding: 12px 14px;
+    }
+
+    textarea { min-height: 100px; }
+  }
+
+  /* Info box et alert box */
+  .info-box, .alert-box {
+    margin-top: var(--ms-spacing-lg);
+    padding: var(--ms-spacing-md);
+  }
+
+  /* Section produits */
+  .produits-section {
+    margin-top: var(--ms-spacing-xl);
+  }
+
+  .produits-header {
+    margin-bottom: var(--ms-spacing-lg);
+
+    .btn-add-ligne {
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+  }
+
+  /* En-tête colonnes — masquer stock dispo */
+  .ligne-header {
+    grid-template-columns: 2fr 80px 80px 40px;
+    gap: var(--ms-spacing-sm);
+
+    span:nth-child(3) { display: none; }
+  }
+
+  /* Ligne produit — masquer stock dispo */
+  .ligne-item {
+    grid-template-columns: 2fr 80px 80px 40px;
+    gap: var(--ms-spacing-sm);
+    padding: var(--ms-spacing-sm);
+
+    .stock-disponible { display: none; }
+
+    .btn-remove-ligne {
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  /* Boutons action */
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: var(--ms-spacing-sm);
+    margin-top: var(--ms-spacing-lg);
+    padding-top: var(--ms-spacing-lg);
+
+    .btn-primary,
+    .btn-secondary {
+      width: 100%;
+      text-align: center;
+      justify-content: center;
+      padding: 16px;
+      font-size: 16px;
+    }
+  }
+}
+
+/* Petit mobile (< 480px) */
+@media (max-width: 480px) {
+
+  /* Masquer aussi le prix HT */
+  .ligne-header {
+    grid-template-columns: 1fr 70px 40px;
+    span:nth-child(4) { display: none; }
+  }
+
+  .ligne-item {
+    grid-template-columns: 1fr 70px 40px;
+    .prix-ht { display: none; }
+  }
+
+  /* Dropdown produit */
+  .produit-dropdown {
+    .produit-nom {
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100px;
+    }
+  }
+}
 /* ===== Animations ===== */
 @keyframes fadeInUp {
   from {

@@ -164,3 +164,41 @@
   background: rgba(255, 255, 255, 0.1);
   border-radius: 2px;
 }
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablette (768px - 1024px) — sidebar réduite automatiquement */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .sidebar {
+    width: 64px;
+
+    .sidebar-logo { display: none; }
+    .nav-label { display: none; }
+    .sidebar-footer .logout-btn .nav-label { display: none; }
+  }
+}
+
+/* Mobile (< 768px) — sidebar cachée par défaut */
+@media (max-width: 768px) {
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease, width 0.3s ease;
+    width: var(--ms-sidebar-width) !important;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+
+    /* Sidebar ouverte sur mobile */
+    &.mobile-open {
+      transform: translateX(0);
+    }
+
+    /* Toujours afficher les labels sur mobile */
+    .nav-label { display: block !important; }
+    .sidebar-logo { display: block !important; }
+    .sidebar-footer .logout-btn .nav-label { display: block !important; }
+  }
+}

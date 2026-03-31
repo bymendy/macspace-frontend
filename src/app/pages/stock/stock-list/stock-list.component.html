@@ -31,16 +31,27 @@
       <div class="form-grid">
 
         <!-- Produit -->
-        <div class="form-group">
-          <label>Produit *</label>
-          <select
-            formControlName="produitId"
-            (change)="onProduitChange($event)">
-            <option value="">Sélectionner un produit</option>
-            <option *ngFor="let produit of produits" [value]="produit.id">
-              {{ produit.codeProduit }} - {{ produit.designation }}
-            </option>
-          </select>
+        <!-- Recherche produit avec autocomplétion -->
+        <div class="form-group produit-search-container">
+          <label>Sélectionner un produit</label>
+          <input
+            type="text"
+            [value]="rechercheProduit"
+            (input)="onRechercheProduit($any($event.target).value)"
+            placeholder="Rechercher un produit par code ou désignation..."
+            autocomplete="off"
+          />
+          <!-- Liste déroulante résultats -->
+          <div class="produit-dropdown"
+            *ngIf="produitsFiltres.length > 0 && dropdownOuvert">
+            <div
+              class="produit-option"
+              *ngFor="let produit of produitsFiltres"
+              (click)="selectionnerProduit(produit)">
+              <span class="produit-code">{{ produit.codeProduit }}</span>
+              <span class="produit-nom">{{ produit.designation }}</span>
+            </div>
+          </div>
         </div>
 
         <!-- Type de mouvement -->
@@ -157,7 +168,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let mvt of mouvements">
+        <tr *ngFor="let mvt of mouvementsPage">
           <td>{{ formatDate(mvt.dateMvt || '') }}</td>
           <td>
             <span class="produit-code">
@@ -181,6 +192,37 @@
         </tr>
       </tbody>
     </table>
+    <!-- PAGINATION -->
+    <div class="pagination-container"
+      *ngIf="!isLoading && totalPages > 1">
+
+      <span class="pagination-info">
+        {{ debutPage }}-{{ finPage }} sur {{ mouvements.length }}
+      </span>
+
+      <div class="pagination-controls">
+
+        <button class="page-btn"
+          [disabled]="pageCourante === 1"
+          (click)="allerPage(pageCourante - 1)">
+          <span class="material-icons">chevron_left</span>
+        </button>
+
+        <button *ngFor="let page of pages"
+          class="page-btn"
+          [class.page-active]="pageCourante === page"
+          (click)="allerPage(page)">
+          {{ page }}
+        </button>
+
+        <button class="page-btn"
+          [disabled]="pageCourante === totalPages"
+          (click)="allerPage(pageCourante + 1)">
+          <span class="material-icons">chevron_right</span>
+        </button>
+
+      </div>
+    </div>
   </div>
 
 </div>

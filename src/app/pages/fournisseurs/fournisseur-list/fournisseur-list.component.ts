@@ -6,6 +6,7 @@ import { Fournisseur } from '../../../shared/models/fournisseur';
 
 /**
  * Composant de la liste des fournisseurs MacSpace.
+ * Pagination : 15 lignes par page
  */
 @Component({
   selector: 'app-fournisseur-list',
@@ -23,26 +24,27 @@ export class FournisseurListComponent implements OnInit {
   /** Indicateur de chargement */
   isLoading = true;
 
+  /** ===== PAGINATION ===== */
+  pageCourante = 1;
+  lignesParPage = 15;
+
   constructor(
     private fournisseurService: FournisseurService,
     private notificationService: NotificationService,
     private router: Router
   ) {}
-  /**
-   * Charge la liste des fournisseurs au démarrage.
-   */
+
   ngOnInit(): void {
     this.loadFournisseurs();
   }
-  /**
-   * Charge tous les fournisseurs depuis l'API.
-   */
+
   loadFournisseurs(): void {
     this.isLoading = true;
     this.fournisseurService.findAll().subscribe({
       next: (fournisseurs) => {
         this.fournisseurs = fournisseurs;
         this.fournisseursFiltres = fournisseurs;
+        this.pageCourante = 1;
         this.isLoading = false;
       },
       error: () => {
@@ -51,9 +53,7 @@ export class FournisseurListComponent implements OnInit {
       }
     });
   }
-  /**
-   * Filtre les fournisseurs selon le terme de recherche.
-   */
+
   onRecherche(event: Event): void {
     const terme = (event.target as HTMLInputElement).value.toLowerCase();
     this.fournisseursFiltres = this.fournisseurs.filter(f =>
@@ -61,22 +61,48 @@ export class FournisseurListComponent implements OnInit {
       f.email.toLowerCase().includes(terme) ||
       (f.numTel && f.numTel.includes(terme))
     );
+    this.pageCourante = 1;
   }
-  /**
-   * Navigue vers le formulaire de création.
-   */
+
+  // ===== PAGINATION =====
+
+  get fournisseursPage(): Fournisseur[] {
+    const debut = (this.pageCourante - 1) * this.lignesParPage;
+    return this.fournisseursFiltres.slice(debut, debut + this.lignesParPage);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.fournisseursFiltres.length / this.lignesParPage);
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  allerPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.pageCourante = page;
+    }
+  }
+
+  get debutPage(): number {
+    return (this.pageCourante - 1) * this.lignesParPage + 1;
+  }
+
+  get finPage(): number {
+    return Math.min(this.pageCourante * this.lignesParPage, this.fournisseursFiltres.length);
+  }
+
+  // ===== ACTIONS =====
+
   nouveauFournisseur(): void {
     this.router.navigate(['/fournisseurs/nouveau']);
   }
-  /**
-   * Navigue vers le formulaire de modification.
-   */
+
   modifierFournisseur(id: number): void {
     this.router.navigate(['/fournisseurs/modifier', id]);
   }
-  /**
-   * Supprime un fournisseur après confirmation.
-   */
+
   supprimerFournisseur(id: number): void {
     if (confirm('Voulez-vous vraiment supprimer ce fournisseur ?')) {
       this.fournisseurService.delete(id).subscribe({

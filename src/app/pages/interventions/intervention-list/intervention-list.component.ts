@@ -7,6 +7,7 @@ import { Intervention, EtatIntervention } from '../../../shared/models/intervent
 /**
  * Composant de la liste des interventions MacSpace.
  * Compatible Web (tableau) et Mobile Ionic (ion-list)
+ * Pagination : 15 lignes par page
  */
 @Component({
   selector: 'app-intervention-list',
@@ -26,6 +27,13 @@ export class InterventionListComponent implements OnInit {
 
   /** Filtre par état actif */
   filtreEtat = 'TOUS';
+
+  /** ===== PAGINATION ===== */
+  /** Page courante */
+  pageCourante = 1;
+
+  /** Nombre de lignes par page */
+  lignesParPage = 15;
 
   /** Etats disponibles pour les filtres */
   etats = [
@@ -58,6 +66,7 @@ export class InterventionListComponent implements OnInit {
       next: (interventions) => {
         this.interventions = interventions;
         this.interventionsFiltrees = interventions;
+        this.pageCourante = 1;
         this.isLoading = false;
       },
       error: () => {
@@ -85,6 +94,7 @@ export class InterventionListComponent implements OnInit {
 
   /**
    * Applique les filtres recherche et état combinés.
+   * Remet la pagination à la page 1.
    */
   appliquerFiltres(terme: string): void {
     this.interventionsFiltrees = this.interventions.filter(i => {
@@ -98,7 +108,62 @@ export class InterventionListComponent implements OnInit {
 
       return matchTerme && matchEtat;
     });
+    /* Revenir à la page 1 après filtrage */
+    this.pageCourante = 1;
   }
+
+  // ===== PAGINATION =====
+
+  /**
+   * Retourne les interventions de la page courante.
+   */
+  get interventionsPage(): Intervention[] {
+    const debut = (this.pageCourante - 1) * this.lignesParPage;
+    const fin = debut + this.lignesParPage;
+    return this.interventionsFiltrees.slice(debut, fin);
+  }
+
+  /**
+   * Retourne le nombre total de pages.
+   */
+  get totalPages(): number {
+    return Math.ceil(this.interventionsFiltrees.length / this.lignesParPage);
+  }
+
+  /**
+   * Retourne la liste des numéros de pages.
+   */
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  /**
+   * Navigue vers une page spécifique.
+   */
+  allerPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.pageCourante = page;
+    }
+  }
+
+  /**
+   * Retourne l'index de début de la page courante.
+   */
+  get debutPage(): number {
+    return (this.pageCourante - 1) * this.lignesParPage + 1;
+  }
+
+  /**
+   * Retourne l'index de fin de la page courante.
+   */
+  get finPage(): number {
+    return Math.min(
+      this.pageCourante * this.lignesParPage,
+      this.interventionsFiltrees.length
+    );
+  }
+
+  // ===== ACTIONS =====
 
   /**
    * Navigue vers le formulaire de création d'une intervention.
@@ -153,8 +218,7 @@ export class InterventionListComponent implements OnInit {
   }
 
   /**
-   * Retourne l'icône Ionic selon l'état de l'intervention
-   * Utilisé dans la version mobile (ion-list)
+   * Retourne l'icône Ionic selon l'état de l'intervention.
    */
   getIonicIcon(etat: string): string {
     switch (etat) {
@@ -167,8 +231,7 @@ export class InterventionListComponent implements OnInit {
   }
 
   /**
-   * Retourne la couleur Ionic selon l'état de l'intervention
-   * Utilisé dans la version mobile (ion-list)
+   * Retourne la couleur Ionic selon l'état de l'intervention.
    */
   getIonicColor(etat: string): string {
     switch (etat) {

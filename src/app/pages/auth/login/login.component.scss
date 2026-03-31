@@ -10,17 +10,39 @@
 /* ===== Panneau gauche - Branding ===== */
 .login-branding {
   flex: 1;
+  /* Image de fond qui couvre tout l'espace */
   background-color: var(--ms-dark);
   background-image: url('https://res.cloudinary.com/dwdkltr38/image/upload/v1774450026/macsecurite_macspace_banner_cnaklp.jpg');
-    background-size: contain no-repeat;
+  background-size: cover;        /* Couvre tout l'espace */
+  background-position: center;   /* Centré */
+  background-repeat: no-repeat;
+  position: relative;            /* Pour l'overlay */
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 48px;
 
+  /* ===== OVERLAY sombre pour lisibilité du texte ===== */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.75) 0%,
+      rgba(0, 0, 0, 0.50) 100%
+    );
+    z-index: 0;
+  }
+
+  /* Contenu au dessus de l'overlay */
   .branding-content {
     max-width: 420px;
-    
+    position: relative;
+    z-index: 1;
   }
 
   /* Logo */
@@ -46,7 +68,7 @@
   /* Sous-titre */
   .branding-subtitle {
     font-size: 16px;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.85);
     line-height: 1.6;
     margin-bottom: 48px;
   }
@@ -61,7 +83,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255, 255, 255, 0.9);
       font-size: 15px;
 
       .feature-dot {
@@ -83,49 +105,50 @@
   align-items: center;
   justify-content: center;
   padding: 48px;
+  overflow-y: auto; /* Scroll si contenu trop long sur mobile */
 
   .login-form-container {
     width: 100%;
     max-width: 380px;
   }
 
-/* En-tête */
-.form-header {
-  margin-bottom: 32px;
+  /* En-tête */
+  .form-header {
+    margin-bottom: 32px;
 
-  /* Logo et nom */
-  .form-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
+    /* Logo et nom */
+    .form-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
 
-    .form-logo-img {
-      height: 40px;
-      width: auto;
-      object-fit: contain;
+      .form-logo-img {
+        height: 40px;
+        width: auto;
+        object-fit: contain;
+      }
+
+      .logo-text {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--ms-dark);
+        letter-spacing: 1px;
+      }
     }
 
-    .logo-text {
-      font-size: 20px;
+    h2 {
+      font-size: 28px;
       font-weight: 700;
       color: var(--ms-dark);
-      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      color: var(--ms-grey-dark);
+      font-size: 14px;
     }
   }
-
-  h2 {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--ms-dark);
-    margin-bottom: 8px;
-  }
-
-  p {
-    color: var(--ms-grey-dark);
-    font-size: 14px;
-  }
-}
 
   /* Message d'erreur */
   .error-message {
@@ -160,6 +183,7 @@
       background-color: var(--ms-white);
       transition: border-color 0.2s ease;
       outline: none;
+      box-sizing: border-box;
 
       &:focus {
         border-color: var(--ms-primary);
@@ -245,46 +269,143 @@
   }
 }
 
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
+/* ===== RESPONSIVE ===== */
+
+/* Tablette (768px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
   .login-branding {
-    display: none;
+    padding: 32px;
+
+    .branding-content {
+      max-width: 320px;
+    }
+
+    .branding-title {
+      font-size: 26px;
+    }
+
+    .branding-subtitle {
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+
+    .logo .logo-img {
+      height: 50px;
+    }
   }
 
   .login-form-panel {
-    width: 100%;
-    padding: 32px 24px;
+    width: 420px;
+    padding: 32px;
   }
 }
 
-/* ===== Animations ===== */
+/* Mobile (< 768px) */
+@media (max-width: 768px) {
 
-/* Animation du panneau gauche - glissement depuis la gauche */
+  .login-page {
+    flex-direction: column;
+  }
+
+  /* Branding réduit en bandeau en haut sur mobile */
+  .login-branding {
+    flex: none;
+    height: 200px;
+    padding: 24px;
+    justify-content: flex-start;
+    align-items: flex-end;
+
+    .branding-content {
+      max-width: 100%;
+    }
+
+    /* Cacher les features sur mobile */
+    .branding-features {
+      display: none;
+    }
+
+    /* Cacher le sous-titre sur mobile */
+    .branding-subtitle {
+      display: none;
+    }
+
+    .logo {
+      margin-bottom: 12px;
+
+      .logo-img {
+        height: 40px;
+      }
+    }
+
+    .branding-title {
+      font-size: 20px;
+      margin-bottom: 0;
+    }
+  }
+
+  /* Formulaire prend tout l'espace restant */
+  .login-form-panel {
+    flex: 1;
+    width: 100%;
+    padding: 24px 20px;
+    align-items: flex-start;
+    padding-top: 32px;
+
+    .login-form-container {
+      max-width: 100%;
+    }
+
+    .form-header {
+      margin-bottom: 24px;
+
+      h2 {
+        font-size: 22px;
+      }
+    }
+  }
+}
+
+/* Très petit mobile (< 375px) */
+@media (max-width: 375px) {
+  .login-branding {
+    height: 160px;
+
+    .branding-title {
+      font-size: 16px;
+    }
+  }
+
+  .login-form-panel {
+    padding: 20px 16px;
+
+    .form-header h2 {
+      font-size: 20px;
+    }
+  }
+}
+
+/* ===== ANIMATIONS ===== */
+
 .login-branding {
   animation: slideInLeft 0.6s ease-out;
 }
 
-/* Animation du panneau droit - glissement depuis la droite */
 .login-form-panel {
   animation: slideInRight 0.6s ease-out;
 }
 
-/* Animation du logo dans le formulaire */
 .form-logo {
   animation: fadeInDown 0.5s ease-out 0.3s both;
 }
 
-/* Animation du titre */
 .form-header h2 {
   animation: fadeInDown 0.5s ease-out 0.4s both;
 }
 
-/* Animation du sous-titre */
 .form-header p {
   animation: fadeInDown 0.5s ease-out 0.5s both;
 }
 
-/* Animation des champs */
 .form-group:nth-child(1) {
   animation: fadeInUp 0.5s ease-out 0.5s both;
 }
@@ -293,93 +414,42 @@
   animation: fadeInUp 0.5s ease-out 0.6s both;
 }
 
-/* Animation du bouton */
 .btn-login {
   animation: fadeInUp 0.5s ease-out 0.7s both;
 }
 
-/* Animation des features dans le branding */
-.feature-item:nth-child(1) {
-  animation: fadeInLeft 0.5s ease-out 0.4s both;
-}
-.feature-item:nth-child(2) {
-  animation: fadeInLeft 0.5s ease-out 0.5s both;
-}
-.feature-item:nth-child(3) {
-  animation: fadeInLeft 0.5s ease-out 0.6s both;
-}
-.feature-item:nth-child(4) {
-  animation: fadeInLeft 0.5s ease-out 0.7s both;
-}
+.feature-item:nth-child(1) { animation: fadeInLeft 0.5s ease-out 0.4s both; }
+.feature-item:nth-child(2) { animation: fadeInLeft 0.5s ease-out 0.5s both; }
+.feature-item:nth-child(3) { animation: fadeInLeft 0.5s ease-out 0.6s both; }
+.feature-item:nth-child(4) { animation: fadeInLeft 0.5s ease-out 0.7s both; }
 
-/* Animation du titre branding */
-.branding-title {
-  animation: fadeInLeft 0.5s ease-out 0.2s both;
-}
+.branding-title { animation: fadeInLeft 0.5s ease-out 0.2s both; }
+.branding-subtitle { animation: fadeInLeft 0.5s ease-out 0.3s both; }
+.logo { animation: fadeInLeft 0.5s ease-out 0.1s both; }
 
-/* Animation du sous-titre branding */
-.branding-subtitle {
-  animation: fadeInLeft 0.5s ease-out 0.3s both;
-}
-
-/* Animation du logo branding */
-.logo {
-  animation: fadeInLeft 0.5s ease-out 0.1s both;
-}
-
-/* ===== Keyframes ===== */
+/* ===== KEYFRAMES ===== */
 
 @keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
 }

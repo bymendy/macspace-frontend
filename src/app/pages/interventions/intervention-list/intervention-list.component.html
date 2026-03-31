@@ -82,7 +82,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let intervention of interventionsFiltrees">
+        <tr *ngFor="let intervention of interventionsPage">
           <td>
             <span class="intervention-code">
               {{ intervention.code }}
@@ -132,6 +132,48 @@
         </tr>
       </tbody>
     </table>
+    <!-- ==========================================
+     PAGINATION
+     ========================================== -->
+      <div class="pagination-container"
+        *ngIf="!isLoading && totalPages > 1">
+
+        <!-- Infos -->
+        <span class="pagination-info">
+          {{ debutPage }}-{{ finPage }} sur {{ interventionsFiltrees.length }}
+        </span>
+
+        <!-- Boutons -->
+        <div class="pagination-controls">
+
+          <!-- Précédent -->
+          <button
+            class="page-btn"
+            [disabled]="pageCourante === 1"
+            (click)="allerPage(pageCourante - 1)">
+            <span class="material-icons">chevron_left</span>
+          </button>
+
+          <!-- Numéros de pages -->
+          <button
+            *ngFor="let page of pages"
+            class="page-btn"
+            [class.page-active]="pageCourante === page"
+            (click)="allerPage(page)">
+            {{ page }}
+          </button>
+
+          <!-- Suivant -->
+          <button
+            class="page-btn"
+            [disabled]="pageCourante === totalPages"
+            (click)="allerPage(pageCourante + 1)">
+            <span class="material-icons">chevron_right</span>
+          </button>
+
+        </div>
+      </div>
   </div>
+  
 
 </div>

@@ -9,6 +9,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 /**
  * Composant de gestion des mouvements de stock MacSpace.
  * Affiche les mouvements et permet d'en créer de nouveaux.
+ * Pagination : 10 lignes par page
+ * Recherche produit avec autocomplétion
  */
 @Component({
   selector: 'app-stock-list',
@@ -22,6 +24,9 @@ export class StockListComponent implements OnInit {
 
   /** Liste des produits */
   produits: Produit[] = [];
+
+  /** Liste filtrée de produits pour l'autocomplétion */
+  produitsFiltres: Produit[] = [];
 
   /** Produit sélectionné */
   produitSelectionne: Produit | null = null;
@@ -47,6 +52,19 @@ export class StockListComponent implements OnInit {
   /** Formulaire de mouvement */
   mouvementForm: FormGroup;
 
+  /** Terme de recherche produit */
+  rechercheProduit = '';
+
+  /** Contrôle l'ouverture de la dropdown */
+  dropdownOuvert = false;
+
+  /** ===== PAGINATION ===== */
+  /** Page courante */
+  pageCourante = 1;
+
+  /** Nombre de lignes par page */
+  lignesParPage = 10;
+
   /** Types de mouvements disponibles */
   typesMouvement = [
     { value: TypeMvtStk.ENTREE, label: 'Entrée de stock' },
@@ -61,7 +79,6 @@ export class StockListComponent implements OnInit {
     private notificationService: NotificationService,
     private fb: FormBuilder
   ) {
-    /* Initialisation du formulaire */
     this.mouvementForm = this.fb.group({
       produitId: ['', [Validators.required]],
       typeMvt: [TypeMvtStk.ENTREE, [Validators.required]],
@@ -78,18 +95,67 @@ export class StockListComponent implements OnInit {
   }
 
   /**
-   * Charge tous les produits.
+   * Charge tous les produits et initialise la liste filtrée.
    */
   loadProduits(): void {
     this.produitService.findAll().subscribe({
       next: (produits) => {
         this.produits = produits;
+        this.produitsFiltres = produits;
       }
     });
   }
 
   /**
-   * Charge les mouvements d'un produit sélectionné.
+   * Filtre les produits selon le terme de recherche.
+   * Réinitialise le produit sélectionné si on retape.
+   */
+  onRechercheProduit(terme: string): void {
+    this.rechercheProduit = terme;
+    this.produitSelectionne = null;
+    this.stockReel = null;
+    this.mouvements = [];
+    const termeLower = terme.toLowerCase();
+    this.produitsFiltres = this.produits.filter(p =>
+      p.codeProduit?.toLowerCase().includes(termeLower) ||
+      p.designation?.toLowerCase().includes(termeLower)
+    );
+    this.dropdownOuvert = terme.length > 0;
+  }
+
+  /**
+   * Sélectionne un produit dans la liste filtrée.
+   * Charge automatiquement le stock et les mouvements.
+   */
+  selectionnerProduit(produit: Produit): void {
+    this.produitSelectionne = produit;
+    this.rechercheProduit = `${produit.codeProduit} - ${produit.designation}`;
+    this.dropdownOuvert = false;
+    this.produitsFiltres = [];
+
+    if (produit.id) {
+      this.isLoading = true;
+
+      /* Charger le stock réel */
+      this.stockService.stockReelProduit(produit.id).subscribe({
+        next: (stock) => { this.stockReel = stock; }
+      });
+
+      /* Charger les mouvements */
+      this.stockService.findAllByProduit(produit.id).subscribe({
+        next: (mouvements) => {
+          this.mouvements = mouvements.reverse();
+          this.pageCourante = 1;
+          this.isLoading = false;
+        },
+        error: () => { this.isLoading = false; }
+      });
+    }
+  }
+
+  /**
+   * Charge les mouvements d'un produit sélectionné via select.
+   * Conservé pour le formulaire de nouveau mouvement.
    */
   onProduitChange(event: Event): void {
     const idProduit = Number((event.target as HTMLSelectElement).value);
@@ -101,21 +167,17 @@ export class StockListComponent implements OnInit {
 
     this.isLoading = true;
 
-    /* Charger le stock réel et les mouvements */
     this.stockService.stockReelProduit(idProduit).subscribe({
-      next: (stock) => {
-        this.stockReel = stock;
-      }
+      next: (stock) => { this.stockReel = stock; }
     });
 
     this.stockService.findAllByProduit(idProduit).subscribe({
       next: (mouvements) => {
         this.mouvements = mouvements.reverse();
+        this.pageCourante = 1;
         this.isLoading = false;
       },
-      error: () => {
-        this.isLoading = false;
-      }
+      error: () => { this.isLoading = false; }
     });
   }
 
@@ -143,7 +205,6 @@ export class StockListComponent implements OnInit {
       idEntreprise: Number(localStorage.getItem('id_entreprise'))
     };
 
-    /* Appel du service selon le type de mouvement */
     let operation;
     switch (formValue.typeMvt) {
       case TypeMvtStk.ENTREE:
@@ -170,8 +231,7 @@ export class StockListComponent implements OnInit {
           typeMvt: TypeMvtStk.ENTREE,
           sourceMvt: SourceMvtStk.INTERVENTION
         });
-
-        /* Recharger les données du produit */
+        /* Recharger si produit sélectionné */
         if (produit?.id) {
           this.onProduitChange({
             target: { value: produit.id }
@@ -185,6 +245,59 @@ export class StockListComponent implements OnInit {
       }
     });
   }
+
+  // ===== PAGINATION =====
+
+  /**
+   * Retourne les mouvements de la page courante.
+   */
+  get mouvementsPage(): MvtStk[] {
+    const debut = (this.pageCourante - 1) * this.lignesParPage;
+    const fin = debut + this.lignesParPage;
+    return this.mouvements.slice(debut, fin);
+  }
+
+  /**
+   * Retourne le nombre total de pages.
+   */
+  get totalPages(): number {
+    return Math.ceil(this.mouvements.length / this.lignesParPage);
+  }
+
+  /**
+   * Retourne la liste des numéros de pages.
+   */
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  /**
+   * Navigue vers une page spécifique.
+   */
+  allerPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.pageCourante = page;
+    }
+  }
+
+  /**
+   * Retourne l'index de début de la page courante.
+   */
+  get debutPage(): number {
+    return (this.pageCourante - 1) * this.lignesParPage + 1;
+  }
+
+  /**
+   * Retourne l'index de fin de la page courante.
+   */
+  get finPage(): number {
+    return Math.min(
+      this.pageCourante * this.lignesParPage,
+      this.mouvements.length
+    );
+  }
+
+  // ===== HELPERS =====
 
   /**
    * Retourne la classe CSS du badge selon le type de mouvement.

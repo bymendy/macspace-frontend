@@ -6,6 +6,7 @@ import { Client } from '../../../shared/models/client';
 
 /**
  * Composant de la liste des clients MacSpace.
+ * Pagination : 15 lignes par page
  */
 @Component({
   selector: 'app-client-list',
@@ -22,6 +23,13 @@ export class ClientListComponent implements OnInit {
 
   /** Indicateur de chargement */
   isLoading = true;
+
+  /** ===== PAGINATION ===== */
+  /** Page courante */
+  pageCourante = 1;
+
+  /** Nombre de lignes par page */
+  lignesParPage = 15;
 
   constructor(
     private clientService: ClientService,
@@ -45,6 +53,7 @@ export class ClientListComponent implements OnInit {
       next: (clients) => {
         this.clients = clients;
         this.clientsFiltres = clients;
+        this.pageCourante = 1;
         this.isLoading = false;
       },
       error: () => {
@@ -56,8 +65,7 @@ export class ClientListComponent implements OnInit {
 
   /**
    * Filtre les clients selon le terme de recherche.
-   *
-   * @param event L'événement de saisie
+   * Remet la pagination à la page 1.
    */
   onRecherche(event: Event): void {
     const terme = (event.target as HTMLInputElement).value.toLowerCase();
@@ -67,7 +75,61 @@ export class ClientListComponent implements OnInit {
       client.email.toLowerCase().includes(terme) ||
       (client.numTel && client.numTel.includes(terme))
     );
+    this.pageCourante = 1;
   }
+
+  // ===== PAGINATION =====
+
+  /**
+   * Retourne les clients de la page courante.
+   */
+  get clientsPage(): Client[] {
+    const debut = (this.pageCourante - 1) * this.lignesParPage;
+    const fin = debut + this.lignesParPage;
+    return this.clientsFiltres.slice(debut, fin);
+  }
+
+  /**
+   * Retourne le nombre total de pages.
+   */
+  get totalPages(): number {
+    return Math.ceil(this.clientsFiltres.length / this.lignesParPage);
+  }
+
+  /**
+   * Retourne la liste des numéros de pages.
+   */
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  /**
+   * Navigue vers une page spécifique.
+   */
+  allerPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.pageCourante = page;
+    }
+  }
+
+  /**
+   * Retourne l'index de début de la page courante.
+   */
+  get debutPage(): number {
+    return (this.pageCourante - 1) * this.lignesParPage + 1;
+  }
+
+  /**
+   * Retourne l'index de fin de la page courante.
+   */
+  get finPage(): number {
+    return Math.min(
+      this.pageCourante * this.lignesParPage,
+      this.clientsFiltres.length
+    );
+  }
+
+  // ===== ACTIONS =====
 
   /**
    * Navigue vers le formulaire de création d'un client.
@@ -78,8 +140,6 @@ export class ClientListComponent implements OnInit {
 
   /**
    * Navigue vers le formulaire de modification d'un client.
-   *
-   * @param id L'identifiant du client
    */
   modifierClient(id: number): void {
     this.router.navigate(['/clients/modifier', id]);
@@ -87,8 +147,6 @@ export class ClientListComponent implements OnInit {
 
   /**
    * Supprime un client après confirmation.
-   *
-   * @param id L'identifiant du client
    */
   supprimerClient(id: number): void {
     if (confirm('Voulez-vous vraiment supprimer ce client ?')) {

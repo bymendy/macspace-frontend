@@ -63,7 +63,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let produit of produitsFiltres">
+        <tr *ngFor="let produit of produitsPage">
           <td>
             <span class="produit-code">{{ produit.codeProduit }}</span>
           </td>
@@ -105,6 +105,37 @@
         </tr>
       </tbody>
     </table>
+    <!-- PAGINATION -->
+      <div class="pagination-container"
+        *ngIf="!isLoading && totalPages > 1">
+
+        <span class="pagination-info">
+          {{ debutPage }}-{{ finPage }} sur {{ produitsFiltres.length }}
+        </span>
+
+        <div class="pagination-controls">
+
+          <button class="page-btn"
+            [disabled]="pageCourante === 1"
+            (click)="allerPage(pageCourante - 1)">
+            <span class="material-icons">chevron_left</span>
+          </button>
+
+          <button *ngFor="let page of pages"
+            class="page-btn"
+            [class.page-active]="pageCourante === page"
+            (click)="allerPage(page)">
+            {{ page }}
+          </button>
+
+          <button class="page-btn"
+            [disabled]="pageCourante === totalPages"
+            (click)="allerPage(pageCourante + 1)">
+            <span class="material-icons">chevron_right</span>
+          </button>
+
+        </div>
+      </div>
   </div>
 
 </div>

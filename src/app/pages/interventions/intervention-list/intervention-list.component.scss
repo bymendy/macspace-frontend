@@ -31,6 +31,34 @@
 
     .material-icons { font-size: 18px; }
   }
+
+  /* Tablette */
+  @media (max-width: 1024px) {
+    .page-title {
+      font-size: var(--ms-font-size-xl);
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--ms-spacing-md);
+    margin-bottom: var(--ms-spacing-lg);
+
+    .page-title {
+      font-size: var(--ms-font-size-lg);
+    }
+
+    .page-subtitle {
+      font-size: var(--ms-font-size-sm);
+    }
+
+    .btn-primary {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 }
 
 /* ===== Message d'erreur ===== */
@@ -75,6 +103,17 @@
       background: transparent;
 
       &::placeholder { color: var(--ms-grey-dark); }
+
+      /* Mobile — évite zoom iOS */
+      @media (max-width: 768px) {
+        font-size: 16px;
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      min-width: 100%;
+      padding: var(--ms-spacing-sm) var(--ms-spacing-md);
     }
   }
 
@@ -106,7 +145,32 @@
         color: var(--ms-white);
         font-weight: 500;
       }
+
+      /* Mobile — plus grand pour le tactile */
+      @media (max-width: 768px) {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
     }
+
+    /* Mobile — scroll horizontal pour les filtres */
+    @media (max-width: 768px) {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      width: 100%;
+      padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: var(--ms-spacing-sm);
   }
 }
 
@@ -115,6 +179,12 @@
   font-size: var(--ms-font-size-sm);
   color: var(--ms-grey-dark);
   margin-bottom: var(--ms-spacing-md);
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    font-size: 11px;
+    margin-bottom: var(--ms-spacing-sm);
+  }
 }
 
 /* ===== Chargement ===== */
@@ -136,6 +206,11 @@
   }
 
   p { color: var(--ms-grey-dark); }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    padding: 40px 20px;
+  }
 }
 
 @keyframes spin {
@@ -176,6 +251,20 @@
       color: var(--ms-white);
     }
   }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    padding: 32px 16px;
+
+    .material-icons { font-size: 48px; }
+
+    h3 { font-size: var(--ms-font-size-lg); }
+
+    .btn-primary {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 }
 
 /* ===== Tableau ===== */
@@ -183,6 +272,12 @@
   padding: 0;
   overflow: hidden;
   animation: fadeInUp 0.4s ease-out;
+
+  /* Tablette — scroll horizontal */
+  @media (max-width: 1024px) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* ===== Code intervention ===== */
@@ -212,6 +307,15 @@
     font-weight: 600;
     flex-shrink: 0;
   }
+
+  /* Tablette */
+  @media (max-width: 1024px) {
+    .technicien-avatar {
+      width: 28px;
+      height: 28px;
+      font-size: 10px;
+    }
+  }
 }
 
 /* ===== Problématique ===== */
@@ -223,6 +327,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
+
+  /* Tablette */
+  @media (max-width: 1024px) {
+    max-width: 150px;
+  }
 }
 
 /* ===== Actions ===== */
@@ -263,8 +372,105 @@
       }
     }
   }
+
+  /* Mobile — boutons plus grands */
+  @media (max-width: 768px) {
+    .btn-action {
+      width: 36px;
+      height: 36px;
+
+      .material-icons { font-size: 18px; }
+    }
+  }
+}
+/* ===== Alternance couleur lignes tableau ===== */
+.ms-table {
+  tbody {
+    tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    tr:nth-child(odd) {
+      background-color: var(--ms-white);
+    }
+
+    tr:hover {
+      background-color: rgba(228, 108, 12, 0.12) !important;
+      transition: background-color 0.2s ease;
+    }
+  }
 }
 
+/* ===== Pagination ===== */
+.pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--ms-spacing-md) var(--ms-spacing-lg);
+  border-top: 1px solid var(--ms-grey);
+  margin-top: var(--ms-spacing-sm);
+
+  .pagination-info {
+    font-size: var(--ms-font-size-sm);
+    color: var(--ms-grey-dark);
+  }
+
+  .pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--ms-spacing-sm);
+
+    .page-btn {
+      min-width: 36px;
+      height: 36px;
+      border: 1.5px solid var(--ms-grey);
+      background: var(--ms-white);
+      border-radius: var(--ms-radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ms-dark);
+      transition: all 0.2s ease;
+      padding: 0 8px;
+
+      &:hover:not(:disabled) {
+        border-color: var(--ms-primary);
+        color: var(--ms-primary);
+      }
+
+      &.page-active {
+        background-color: var(--ms-primary);
+        border-color: var(--ms-primary);
+        color: var(--ms-white);
+        font-weight: 600;
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .material-icons {
+        font-size: 18px;
+      }
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: var(--ms-spacing-sm);
+    padding: var(--ms-spacing-md);
+
+    .pagination-controls {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+}
 /* ===== Animations ===== */
 @keyframes fadeInUp {
   from {

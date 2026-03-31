@@ -23,6 +23,36 @@
     color: var(--ms-grey-dark);
     font-size: var(--ms-font-size-base);
   }
+
+  /* Tablette */
+  @media (max-width: 1024px) {
+    .page-title {
+      font-size: var(--ms-font-size-xl);
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--ms-spacing-md);
+    margin-bottom: var(--ms-spacing-lg);
+
+    .page-title {
+      font-size: var(--ms-font-size-lg);
+    }
+
+    .page-subtitle {
+      font-size: var(--ms-font-size-sm);
+    }
+
+    /* Bouton annuler pleine largeur sur mobile */
+    .btn-secondary {
+      width: 100%;
+      text-align: center;
+      justify-content: center;
+    }
+  }
 }
 
 /* ===== Message d'erreur ===== */
@@ -44,8 +74,15 @@
   margin-bottom: var(--ms-spacing-lg);
   animation: fadeInUp 0.4s ease-out;
 
+  /* Tablette */
+  @media (max-width: 1024px) {
+    gap: var(--ms-spacing-md);
+  }
+
+  /* Mobile */
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: var(--ms-spacing-sm);
   }
 }
 
@@ -57,6 +94,12 @@
   margin-bottom: var(--ms-spacing-lg);
   padding-bottom: var(--ms-spacing-md);
   border-bottom: 1px solid var(--ms-grey);
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    font-size: var(--ms-font-size-base);
+    margin-bottom: var(--ms-spacing-md);
+  }
 }
 
 /* ===== Ligne de formulaire ===== */
@@ -65,7 +108,14 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--ms-spacing-md);
 
-  @media (max-width: 576px) {
+  /* Tablette petite */
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: var(--ms-spacing-sm);
+  }
+
+  /* Petit mobile */
+  @media (max-width: 375px) {
     grid-template-columns: 1fr;
   }
 }
@@ -92,6 +142,7 @@
     background-color: var(--ms-white);
     transition: border-color 0.2s ease;
     outline: none;
+    box-sizing: border-box;
 
     &:focus {
       border-color: var(--ms-primary);
@@ -104,6 +155,12 @@
     &::placeholder {
       color: var(--ms-grey-dark);
     }
+
+    /* Mobile — plus grand pour le tactile */
+    @media (max-width: 768px) {
+      padding: 12px 14px;
+      font-size: 16px; /* Évite le zoom auto sur iOS */
+    }
   }
 
   .field-error {
@@ -111,6 +168,15 @@
     color: var(--ms-danger);
     font-size: 12px;
     margin-top: 4px;
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    margin-bottom: var(--ms-spacing-sm);
+
+    label {
+      font-size: 13px;
+    }
   }
 }
 
@@ -120,6 +186,20 @@
   justify-content: flex-end;
   gap: var(--ms-spacing-md);
   padding-top: var(--ms-spacing-md);
+
+  /* Mobile — boutons pleine largeur */
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+    gap: var(--ms-spacing-sm);
+
+    .btn-primary,
+    .btn-secondary {
+      width: 100%;
+      text-align: center;
+      justify-content: center;
+      padding: 14px;
+    }
+  }
 }
 
 /* ===== Animations ===== */

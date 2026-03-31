@@ -7,6 +7,7 @@ import { Produit } from '../../../shared/models/produit';
 /**
  * Composant de la liste des produits MacSpace.
  * Affiche tous les produits avec options de recherche et actions.
+ * Pagination : 15 lignes par page
  */
 @Component({
   selector: 'app-produit-list',
@@ -24,17 +25,26 @@ export class ProduitListComponent implements OnInit {
   /** Indicateur de chargement */
   isLoading = true;
 
+  /** ===== PAGINATION ===== */
+  /** Page courante */
+  pageCourante = 1;
+
+  /** Nombre de lignes par page */
+  lignesParPage = 15;
+
   constructor(
     private produitService: ProduitService,
     private notificationService: NotificationService,
     private router: Router
   ) {}
+
   /**
    * Charge la liste des produits au démarrage.
    */
   ngOnInit(): void {
     this.loadProduits();
   }
+
   /**
    * Charge tous les produits depuis l'API.
    */
@@ -44,6 +54,7 @@ export class ProduitListComponent implements OnInit {
       next: (produits) => {
         this.produits = produits;
         this.produitsFiltres = produits;
+        this.pageCourante = 1;
         this.isLoading = false;
       },
       error: () => {
@@ -52,10 +63,10 @@ export class ProduitListComponent implements OnInit {
       }
     });
   }
+
   /**
    * Filtre les produits selon le terme de recherche.
-   *
-   * @param event L'événement de saisie
+   * Remet la pagination à la page 1.
    */
   onRecherche(event: Event): void {
     const terme = (event.target as HTMLInputElement).value.toLowerCase();
@@ -64,25 +75,78 @@ export class ProduitListComponent implements OnInit {
       produit.designation.toLowerCase().includes(terme) ||
       (produit.category?.designation.toLowerCase().includes(terme))
     );
+    this.pageCourante = 1;
   }
+
+  // ===== PAGINATION =====
+
+  /**
+   * Retourne les produits de la page courante.
+   */
+  get produitsPage(): Produit[] {
+    const debut = (this.pageCourante - 1) * this.lignesParPage;
+    const fin = debut + this.lignesParPage;
+    return this.produitsFiltres.slice(debut, fin);
+  }
+
+  /**
+   * Retourne le nombre total de pages.
+   */
+  get totalPages(): number {
+    return Math.ceil(this.produitsFiltres.length / this.lignesParPage);
+  }
+
+  /**
+   * Retourne la liste des numéros de pages.
+   */
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  /**
+   * Navigue vers une page spécifique.
+   */
+  allerPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.pageCourante = page;
+    }
+  }
+
+  /**
+   * Retourne l'index de début de la page courante.
+   */
+  get debutPage(): number {
+    return (this.pageCourante - 1) * this.lignesParPage + 1;
+  }
+
+  /**
+   * Retourne l'index de fin de la page courante.
+   */
+  get finPage(): number {
+    return Math.min(
+      this.pageCourante * this.lignesParPage,
+      this.produitsFiltres.length
+    );
+  }
+
+  // ===== ACTIONS =====
+
   /**
    * Navigue vers le formulaire de création d'un produit.
    */
   nouveauProduit(): void {
     this.router.navigate(['/produits/nouveau']);
   }
+
   /**
    * Navigue vers le formulaire de modification d'un produit.
-   *
-   * @param id L'identifiant du produit
    */
   modifierProduit(id: number): void {
     this.router.navigate(['/produits/modifier', id]);
   }
+
   /**
    * Supprime un produit après confirmation.
-   *
-   * @param id L'identifiant du produit
    */
   supprimerProduit(id: number): void {
     if (confirm('Voulez-vous vraiment supprimer ce produit ?')) {
