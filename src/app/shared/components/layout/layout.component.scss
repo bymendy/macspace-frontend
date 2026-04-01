@@ -1,10 +1,10 @@
 /* ===== Layout principal MacSpace ===== */
-
 .app-layout {
   display: flex;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  position: relative;
 }
 
 /* Zone principale - header + contenu */
@@ -13,6 +13,14 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-width: 0;
+}
+
+/* Wrapper header + bouton hamburger */
+.header-wrapper {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 /* Zone de contenu dynamique */
@@ -21,4 +29,81 @@
   overflow-y: auto;
   padding: var(--ms-spacing-lg);
   background-color: var(--ms-grey-light);
+}
+
+/* ===== Bouton hamburger — caché sur desktop ===== */
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 var(--ms-spacing-md);
+  color: var(--ms-dark);
+  flex-shrink: 0;
+
+  .material-icons { font-size: 24px; }
+}
+
+/* ===== Overlay mobile ===== */
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  &.active {
+    opacity: 1;
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablette (768px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+
+  .main-content {
+    padding: var(--ms-spacing-md);
+  }
+}
+
+/* Mobile (< 768px) */
+@media (max-width: 768px) {
+
+  /* Bouton hamburger visible */
+  .hamburger-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--ms-header-height);
+    border-right: 1px solid var(--ms-grey);
+  }
+
+  /* Overlay visible */
+  .mobile-overlay {
+    display: block;
+    pointer-events: none;
+
+    &.active {
+      pointer-events: all;
+    }
+  }
+
+  /* Contenu — padding réduit */
+  .main-content {
+    padding: var(--ms-spacing-md);
+  }
+}
+
+/* Petit mobile */
+@media (max-width: 375px) {
+
+  .main-content {
+    padding: var(--ms-spacing-sm);
+  }
 }

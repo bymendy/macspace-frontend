@@ -18,41 +18,13 @@ export class SidebarComponent {
 
   /** Liens de navigation */
   navItems = [
-    {
-      label: 'Dashboard',
-      route: '/dashboard',
-      icon: 'dashboard'
-    },
-    {
-      label: 'Interventions',
-      route: '/interventions',
-      icon: 'build'
-    },
-    {
-      label: 'Clients',
-      route: '/clients',
-      icon: 'people'
-    },
-    {
-      label: 'Produits',
-      route: '/produits',
-      icon: 'inventory_2'
-    },
-    {
-      label: 'Stock',
-      route: '/stock',
-      icon: 'warehouse'
-    },
-    {
-      label: 'Fournisseurs',
-      route: '/fournisseurs',
-      icon: 'local_shipping'
-    },
-    {
-      label: 'Utilisateurs',
-      route: '/utilisateurs',
-      icon: 'manage_accounts'
-    }
+    { label: 'Dashboard',     route: '/dashboard',    icon: 'dashboard' },
+    { label: 'Interventions', route: '/interventions', icon: 'build' },
+    { label: 'Clients',       route: '/clients',       icon: 'people' },
+    { label: 'Produits',      route: '/produits',      icon: 'inventory_2' },
+    { label: 'Stock',         route: '/stock',         icon: 'warehouse' },
+    { label: 'Fournisseurs',  route: '/fournisseurs',  icon: 'local_shipping' },
+    { label: 'Utilisateurs',  route: '/utilisateurs',  icon: 'manage_accounts' }
   ];
 
   constructor(
@@ -76,11 +48,18 @@ export class SidebarComponent {
 
   /**
    * Vérifie si la route est active.
-   *
-   * @param route La route à vérifier
-   * @returns true si la route est active
    */
   isActive(route: string): boolean {
     return this.router.url === route;
+  }
+
+  /**
+   * Ferme la sidebar sur mobile après navigation.
+   * La sidebar se ferme via l'overlay du layout.
+   */
+  onNavClick(): void {
+    if (window.innerWidth <= 768) {
+      this.isCollapsed = false;
+    }
   }
 }

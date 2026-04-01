@@ -191,3 +191,89 @@
     .logout-text { display: none; }
   }
 }
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablette (768px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+
+  .header {
+    padding: 0 var(--ms-spacing-md);
+  }
+
+  /* Masquer email sur tablette */
+  .user-details .user-email {
+    display: none;
+  }
+
+  /* Masquer badge fonction sur tablette */
+  .fonction-badge {
+    display: none;
+  }
+
+  .header-right {
+    gap: var(--ms-spacing-md);
+  }
+}
+
+/* Mobile (< 768px) */
+@media (max-width: 768px) {
+
+  .header {
+    padding: 0 var(--ms-spacing-sm);
+    gap: var(--ms-spacing-sm);
+  }
+
+  /* Breadcrumb — afficher seulement la page courante */
+  .breadcrumb {
+    .breadcrumb-item:not(.breadcrumb-active) {
+      display: none;
+    }
+
+    /* Masquer les séparateurs sauf le dernier */
+    .breadcrumb-separator:not(:last-of-type) {
+      display: none;
+    }
+  }
+
+  /* Masquer détails utilisateur */
+  .user-details { display: none; }
+
+  /* Masquer badge fonction */
+  .fonction-badge { display: none; }
+
+  /* Masquer séparateur */
+  .separator { display: none; }
+
+  /* Header right compact */
+  .header-right {
+    gap: var(--ms-spacing-sm);
+  }
+
+  /* User info compact */
+  .user-info {
+    gap: var(--ms-spacing-sm);
+  }
+
+  /* Bouton déconnexion — icône seulement */
+  .btn-logout {
+    padding: 8px;
+    border-radius: 50%;
+    border: none;
+
+    .logout-text { display: none; }
+    .material-icons { font-size: 20px; }
+
+    &:hover {
+      background-color: #ffebee;
+      color: var(--ms-danger);
+    }
+  }
+
+  /* Avatar légèrement plus grand pour le tactile */
+  .user-avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 14px;
+  }
+}

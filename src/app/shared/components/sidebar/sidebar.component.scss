@@ -181,22 +181,37 @@
 /* Mobile (< 768px) — sidebar cachée par défaut */
 @media (max-width: 768px) {
 
-  .sidebar {
+  /* :host cible l'élément app-sidebar lui-même */
+  :host {
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
+    height: 100vh;
     transform: translateX(-100%);
-    transition: transform 0.3s ease, width 0.3s ease;
-    width: var(--ms-sidebar-width) !important;
+    transition: transform 0.3s ease;
     box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+  }
 
-    /* Sidebar ouverte sur mobile */
-    &.mobile-open {
-      transform: translateX(0);
+  /* Classe ajoutée par le layout quand menu ouvert */
+  :host.mobile-open {
+    transform: translateX(0);
+  }
+
+  .sidebar {
+    width: var(--ms-sidebar-width) !important;
+    height: 100vh;
+
+    /* ===== Sidebar réduite sur mobile — icônes seulement ===== */
+    &.collapsed {
+      width: 64px !important;
+
+      .nav-label { display: none !important; }
+      .sidebar-logo { display: none !important; }
+      .sidebar-footer .logout-btn .nav-label { display: none !important; }
     }
 
-    /* Toujours afficher les labels sur mobile */
+    /* Toujours afficher les labels quand non réduite */
     .nav-label { display: block !important; }
     .sidebar-logo { display: block !important; }
     .sidebar-footer .logout-btn .nav-label { display: block !important; }

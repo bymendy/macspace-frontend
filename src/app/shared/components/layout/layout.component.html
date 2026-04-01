@@ -1,20 +1,36 @@
 <!-- Layout principal MacSpace -->
 <div class="app-layout">
 
+  <!-- Overlay mobile — fond sombre quand menu ouvert -->
+  <div class="mobile-overlay"
+    [class.active]="menuMobileOuvert"
+    (click)="fermerMenuMobile()">
+  </div>
+
   <!-- Barre de navigation latérale -->
-  <app-sidebar></app-sidebar>
+  <app-sidebar
+    [class.mobile-open]="menuMobileOuvert"
+    (click)="$event.stopPropagation()">
+  </app-sidebar>
 
   <!-- Zone principale -->
   <div class="main-zone">
 
     <!-- Header -->
-    <app-header></app-header>
+    <div class="header-wrapper">
+      <!-- Bouton hamburger — visible uniquement sur mobile -->
+      <button class="hamburger-btn" (click)="toggleMenuMobile()">
+        <span class="material-icons">
+          {{ menuMobileOuvert ? 'close' : 'menu' }}
+        </span>
+      </button>
+      <app-header></app-header>
+    </div>
 
     <!-- Contenu dynamique -->
-    <main class="main-content">
+    <main class="main-content" (click)="fermerMenuMobile()">
       <router-outlet></router-outlet>
     </main>
 
   </div>
-
 </div>
