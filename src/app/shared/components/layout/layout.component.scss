@@ -93,7 +93,25 @@
       pointer-events: all;
     }
   }
+@media (max-width: 768px) {
+  .app-layout {
+    width: 100vw;
+    overflow-x: hidden;
+  }
 
+  .main-zone {
+    width: 100vw;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .main-content {
+    padding: var(--ms-spacing-md);
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+}
   /* Contenu — padding réduit */
   .main-content {
     padding: var(--ms-spacing-md);

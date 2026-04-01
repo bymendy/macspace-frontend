@@ -201,6 +201,23 @@
   .sidebar {
     width: var(--ms-sidebar-width) !important;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    /* Navigation — prend tout l'espace disponible */
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      max-height: calc(100vh - var(--ms-header-height) - 80px);
+    }
+
+    /* Footer collé en bas */
+    .sidebar-footer {
+      margin-top: auto;
+      position: sticky;
+      bottom: 0;
+      background-color: var(--ms-dark);
+    }
 
     /* ===== Sidebar réduite sur mobile — icônes seulement ===== */
     &.collapsed {

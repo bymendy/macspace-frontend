@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -12,6 +12,7 @@ import { AppComponent } from './app.component';
 import { routes } from './app.routes';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { SharedModule } from './shared/shared.module';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 /**
  * Module racine de l'application MacSpace.
@@ -45,7 +46,13 @@ import { SharedModule } from './shared/shared.module';
       preventDuplicates: true,              // Évite les doublons
       progressBar: true,                    // Barre de progression
       closeButton: true                     // Bouton de fermeture
-    })
+    }),
+      ServiceWorkerModule.register('ngsw-worker.js', {
+        enabled: !isDevMode(),
+        // Register the ServiceWorker as soon as the application is stable
+        // or after 30 seconds (whichever comes first).
+        registrationStrategy: 'registerWhenStable:30000'
+      })
   ],
   providers: [
     {
