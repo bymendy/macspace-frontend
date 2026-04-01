@@ -1,9 +1,8 @@
 /**
  * Configuration de l'environnement de développement pour MacSpace.
- * apiUrl pointe vers l'IP locale du PC pour que le mobile puisse
- * communiquer avec le backend Spring Boot sur le réseau WiFi.
+ * apiUrl pointe vers le backend Spring Boot déployé sur Railway.
  */
 export const environment = {
   production: false,
-  apiUrl: 'http://192.168.1.84:8080/gestiondestock/v1'
+  apiUrl: 'https://gestiondestockmacspace-production.up.railway.app/gestiondestock/v1'
 };
