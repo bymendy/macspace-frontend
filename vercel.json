@@ -1,5 +1,0 @@
-{
-  "buildCommand": "ng build --configuration production",
-  "outputDirectory": "dist/macspace-frontend/browser",
-  "framework": "angular"
-}
