@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 
 /**
  * Composant racine de l'application MacSpace.
- * Gère le menu Ionic et la navigation principale.
+ * Gère le splash screen, le menu Ionic et la navigation principale.
  */
 @Component({
   selector: 'app-root',
@@ -12,15 +12,25 @@ import { MenuController } from '@ionic/angular';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
-  
+export class AppComponent implements OnInit {
+
   /** Titre de l'application */
   title = 'MacSpace';
 
+  /** Contrôle la visibilité du splash screen */
+  splashHidden = false;
+
   constructor(
-    private menuCtrl: MenuController, // Contrôleur du menu Ionic
-    private router: Router            // Service de navigation Angular
+    private menuCtrl: MenuController,
+    private router: Router
   ) {}
+
+  ngOnInit(): void {
+    /* Masque le splash screen après 2.5 secondes */
+    setTimeout(() => {
+      this.splashHidden = true;
+    }, 2500);
+  }
 
   /**
    * Ferme le menu latéral Ionic après navigation
@@ -30,16 +40,12 @@ export class AppComponent {
   }
 
   /**
-   * Déconnecte l'utilisateur :
-   * - Supprime le token JWT du localStorage
-   * - Supprime les infos utilisateur
-   * - Ferme le menu
-   * - Redirige vers la page de login
+   * Déconnecte l'utilisateur
    */
   logout() {
-    localStorage.removeItem('token');  // Supprime le token JWT
-    localStorage.removeItem('user');   // Supprime les infos utilisateur
-    this.menuCtrl.close('main-menu'); // Ferme le menu
-    this.router.navigate(['/auth/login']); // Redirige vers login
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.menuCtrl.close('main-menu');
+    this.router.navigate(['/auth/login']);
   }
 }
