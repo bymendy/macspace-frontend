@@ -1,0 +1,117 @@
+<!-- Page d'accueil MacSpace — Landing Page -->
+<div class="landing-page">
+
+  <!-- Image de fond avec filtre -->
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+
+  <!-- Header avec infos rapides -->
+  <header class="header">
+    <div class="header-logo">
+      <img
+        src="https://res.cloudinary.com/dwdkltr38/image/upload/v1774436630/macsecurite_logo_macspace_zpv1mj.png"
+        alt="Mac Sécurité"
+        class="logo-img"
+      />
+    </div>
+
+    <div class="header-stats">
+      <div class="stat-item">
+        <div class="stat-dot"></div>
+        <span class="stat-label">Statut</span>
+        <span class="stat-value">En ligne</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Version</span>
+        <span class="stat-value">1.0.0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Plateforme</span>
+        <span class="stat-value">Web + Mobile</span>
+      </div>
+    </div>
+
+    <div class="header-badge">
+      <div class="badge-dot"></div>
+      PWA disponible
+    </div>
+  </header>
+
+  <!-- Contenu principal -->
+  <div class="hero-content">
+
+    <!-- Panneau gauche — Branding -->
+    <div class="hero-left">
+      <div class="hero-tag">Mac Sécurité — Solution métier</div>
+
+      <h1 class="hero-title">
+        Gérez vos<br/>
+        installations<br/>
+        <span class="title-accent">de sécurité.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        MacSpace centralise vos interventions, clients, stocks et fournisseurs
+        dans une interface moderne, accessible depuis n'importe quel appareil.
+      </p>
+
+      <div class="hero-actions">
+        <!-- Bouton secondaire — Se connecter -->
+        <button class="btn-secondary" (click)="goToLogin()">
+          Se connecter
+        </button>
+      </div>
+    </div>
+
+    <!-- Panneau droit — Fonctionnalités -->
+    <div class="hero-right" #featuresSection>
+      <div class="feature-card accent">
+        <div class="feature-icon">
+          <span class="material-icons">assignment</span>
+        </div>
+        <div class="feature-title">Interventions</div>
+        <div class="feature-desc">
+          Planifiez et suivez chaque intervention avec statut et historique complet.
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <span class="material-icons">people</span>
+        </div>
+        <div class="feature-title">Clients</div>
+        <div class="feature-desc">
+          Base clients complète avec contacts, historique et suivi personnalisé.
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <span class="material-icons">inventory_2</span>
+        </div>
+        <div class="feature-title">Stock & Produits</div>
+        <div class="feature-desc">
+          Gérez votre inventaire, mouvements et alertes de seuil en temps réel.
+        </div>
+      </div>
+
+      <div class="feature-card accent">
+        <div class="feature-icon">
+          <span class="material-icons">dashboard</span>
+        </div>
+        <div class="feature-title">Dashboard</div>
+        <div class="feature-desc">
+          KPIs et statistiques en temps réel pour piloter votre activité.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="hero-bottom">
+    <div class="bottom-cta">
+      Accès sécurisé —
+      <span class="bottom-url">macspace-frontend.vercel.app</span>
+    </div>
+  </div>
+</div>

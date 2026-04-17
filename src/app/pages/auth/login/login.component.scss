@@ -1,4 +1,8 @@
 /* ===== Page Login MacSpace ===== */
+$primary: #E46C0C;
+$primary-hover: #cc5f08;
+$dark: #1D1D1B;
+$white: #FFFFFF;
 
 .login-page {
   display: flex;
@@ -232,6 +236,55 @@
       margin-top: 6px;
     }
   }
+  
+    /* Boutons */
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+}
+
+/* ===== Bouton principal ===== */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: $primary;
+  color: $white;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', 'Roboto', sans-serif;
+  letter-spacing: 0.2px;
+
+  .btn-arrow {
+    transition: transform 0.2s;
+    font-size: 16px;
+  }
+
+  &:hover {
+    background: $primary-hover;
+    transform: translateY(-2px);
+
+    .btn-arrow {
+      transform: translateX(4px);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+.mt-2{
+  margin-top: 10px;
+}
+
 
   /* Bouton de connexion */
   .btn-login {
@@ -267,7 +320,7 @@
       font-size: 12px;
     }
   }
-}
+
 
 /* ===== RESPONSIVE ===== */
 

@@ -1,0 +1,447 @@
+/* ===== Landing Page MacSpace ===== */
+
+/* Variables */
+$primary: #E46C0C;
+$primary-hover: #cc5f08;
+$dark: #1D1D1B;
+$white: #FFFFFF;
+
+/* ===== Conteneur principal ===== */
+.landing-page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: $dark;
+  overflow: hidden;
+  font-family: 'Inter', 'Roboto', sans-serif;
+}
+
+/* ===== Image de fond ===== */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('https://res.cloudinary.com/dwdkltr38/image/upload/v1774450026/macsecurite_macspace_banner_cnaklp.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.3);
+  z-index: 0;
+}
+
+/* ===== Filtre sombre sur l'image ===== */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.454) 0%,
+      rgba(0, 0, 0, 0.311) 100%
+    );
+  z-index: 1;
+}
+
+/* ===== Header ===== */
+.header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 48px;
+  border-bottom: 1px solid rgba($white, 0.07);
+
+  /* Logo */
+  .header-logo {
+    display: flex;
+    align-items: center;
+
+    .logo-img {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+    }
+  }
+
+  /* Stats rapides */
+  .header-stats {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .stat-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: $primary;
+        animation: pulse 2s infinite;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        color: rgba($white, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .stat-value {
+        font-size: 13px;
+        font-weight: 600;
+        color: $white;
+      }
+    }
+  }
+
+  /* Badge PWA */
+  .header-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba($primary, 0.12);
+    border: 1px solid rgba($primary, 0.3);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: $primary;
+    font-weight: 500;
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: $primary;
+      animation: pulse 2s infinite;
+    }
+  }
+}
+
+/* ===== Animation pulse ===== */
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.4); }
+}
+
+/* ===== Contenu principal ===== */
+.hero-content {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  padding: 60px 48px;
+  align-items: center;
+}
+
+/* ===== Panneau gauche — Branding ===== */
+.hero-left {
+  padding-right: 60px;
+
+  /* Tag catégorie */
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba($primary, 0.12);
+    border: 1px solid rgba($primary, 0.35);
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-size: 11px;
+    color: $primary;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  /* Titre principal */
+  .hero-title {
+    font-size: 50px;
+    font-weight: 800;
+    color: $white;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 22px;
+
+    .title-accent {
+      color: $primary;
+    }
+  }
+
+  /* Sous-titre */
+  .hero-subtitle {
+    font-size: 15px;
+    color: rgba($white, 0.55);
+    line-height: 1.75;
+    margin-bottom: 44px;
+    max-width: 400px;
+  }
+
+  /* Boutons */
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+}
+
+/* ===== Bouton principal ===== */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: $primary;
+  color: $white;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', 'Roboto', sans-serif;
+  letter-spacing: 0.2px;
+
+  .btn-arrow {
+    transition: transform 0.2s;
+    font-size: 16px;
+  }
+
+  &:hover {
+    background: $primary-hover;
+    transform: translateY(-2px);
+
+    .btn-arrow {
+      transform: translateX(4px);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* ===== Bouton secondaire ===== */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: rgba($white, 0.8);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 14px 28px;
+  border-radius: 6px;
+  border: 1px solid rgba($white, 0.15);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', 'Roboto', sans-serif;
+
+  &:hover {
+    background: rgba($white, 0.05);
+    border-color: rgba($white, 0.3);
+  }
+}
+
+/* ===== Panneau droit — Cartes fonctionnalités ===== */
+.hero-right {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ===== Carte fonctionnalité ===== */
+.feature-card {
+  background: rgba($white, 0.03);
+  border: 1px solid rgba($white, 0.07);
+  border-radius: 14px;
+  padding: 24px 20px;
+  transition: all 0.25s ease;
+
+  &:hover {
+    background: rgba($white, 0.06);
+    border-color: rgba($primary, 0.25);
+    transform: translateY(-3px);
+  }
+
+  /* Variante accentuée */
+  &.accent {
+    background: rgba($primary, 0.06);
+    border-color: rgba($primary, 0.18);
+  }
+
+  /* Icône */
+  .feature-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: rgba($primary, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+
+    .material-icons {
+      font-size: 20px;
+      color: $primary;
+    }
+  }
+
+  /* Titre carte */
+  .feature-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: $white;
+    margin-bottom: 8px;
+    letter-spacing: 0.1px;
+  }
+
+  /* Description carte */
+  .feature-desc {
+    font-size: 12px;
+    color: rgba($white, 0.45);
+    line-height: 1.65;
+  }
+}
+
+/* ===== Footer ===== */
+.hero-bottom {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 48px;
+  border-top: 1px solid rgba($white, 0.05);
+
+  .bottom-cta {
+    font-size: 12px;
+    color: rgba($white, 0.3);
+    letter-spacing: 0.5px;
+
+    .bottom-url {
+      color: $primary;
+      font-weight: 600;
+    }
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablette */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .hero-content {
+    padding: 40px 32px;
+  }
+
+  .hero-left {
+    padding-right: 32px;
+
+    .hero-title {
+      font-size: 40px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .landing-page {
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 100vh;
+    height: auto;
+    position: relative;
+  }
+
+  .hero-bg {
+    position: fixed;
+    height: 100vh;
+  }
+
+  .hero-overlay {
+    position: fixed;
+    height: 100vh;
+  }
+
+  .header {
+    padding: 16px 20px;
+    position: relative;
+    z-index: 10;
+
+    .header-stats {
+      display: none;
+    }
+  }
+
+  .hero-content {
+    grid-template-columns: 1fr;
+    padding: 40px 20px;
+    height: auto;
+  }
+
+  .hero-left {
+    padding-right: 0;
+    margin-bottom: 40px;
+
+    .hero-title {
+      font-size: 34px;
+    }
+  }
+
+  .hero-right {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hero-bottom {
+    padding: 16px 20px;
+  }
+}
+
+/* ===== Keyframes ===== */
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ===== Animations ===== */
+.header        { animation: fadeInDown  0.5s ease-out 0.1s both; }
+
+.hero-left     { animation: slideInLeft 0.6s ease-out 0.2s both; }
+.hero-tag      { animation: fadeInLeft  0.5s ease-out 0.3s both; }
+.hero-title    { animation: fadeInLeft  0.5s ease-out 0.4s both; }
+.hero-subtitle { animation: fadeInLeft  0.5s ease-out 0.5s both; }
+.hero-actions  { animation: fadeInUp    0.5s ease-out 0.6s both; }
+
+.hero-right    { animation: slideInRight 0.6s ease-out 0.3s both; }
+
+.feature-card:nth-child(1) { animation: fadeInUp 0.5s ease-out 0.4s both; }
+.feature-card:nth-child(2) { animation: fadeInUp 0.5s ease-out 0.5s both; }
+.feature-card:nth-child(3) { animation: fadeInUp 0.5s ease-out 0.6s both; }
+.feature-card:nth-child(4) { animation: fadeInUp 0.5s ease-out 0.7s both; }
+
+.hero-bottom   { animation: fadeInUp    0.5s ease-out 0.8s both; }

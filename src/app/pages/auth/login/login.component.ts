@@ -95,4 +95,10 @@ export class LoginComponent {
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
+  /**
+ * Redirige vers la landing page.
+ */
+  goToLanding(): void {
+    this.router.navigate(['/landing']);
+  }
 }

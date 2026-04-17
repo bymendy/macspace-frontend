@@ -9,11 +9,19 @@ import { LayoutComponent } from './shared/components/layout/layout.component';
  */
 export const routes: Routes = [
 
-  /* Redirection par défaut vers le dashboard */
+  /* Redirection par défaut vers le login */
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'auth/login',
     pathMatch: 'full'
+  },
+
+  /* Landing page — accessible via /landing */
+  {
+    path: 'landing',
+    loadChildren: () =>
+      import('./pages/landing/landing.module')
+        .then(m => m.LandingModule)
   },
 
   /* Route d'authentification - accessible sans token */
@@ -75,9 +83,9 @@ export const routes: Routes = [
     ]
   },
 
-  /* Route 404 - redirection vers dashboard */
+  /* Route 404 - redirection vers login */
   {
     path: '**',
-    redirectTo: 'dashboard'
+    redirectTo: 'auth/login'
   }
 ];
