@@ -24,7 +24,8 @@ export class SidebarComponent {
     { label: 'Produits',      route: '/produits',      icon: 'inventory_2' },
     { label: 'Stock',         route: '/stock',         icon: 'warehouse' },
     { label: 'Fournisseurs',  route: '/fournisseurs',  icon: 'local_shipping' },
-    { label: 'Utilisateurs',  route: '/utilisateurs',  icon: 'manage_accounts' }
+    { label: 'Utilisateurs',  route: '/utilisateurs',  icon: 'manage_accounts' },
+    { label: 'Audit Trail',   route: '/audit',         icon: 'security' }
   ];
 
   constructor(

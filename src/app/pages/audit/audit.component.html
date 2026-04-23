@@ -1,0 +1,84 @@
+<!-- Page Audit Trail MacSpace -->
+<div class="audit-page">
+  <!-- En-tête -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">
+        <span class="title-icon"></span>
+        Audit Trail
+      </h1>
+      <p class="page-subtitle">Traçabilité complète des actions utilisateurs</p>
+    </div>
+    <button class="btn-refresh" (click)="chargerLogs()">Actualiser</button>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filtres-container">
+    <div class="filtre-group">
+      <label>Entité</label>
+      <select [(ngModel)]="filtreEntite" (change)="appliquerFiltres()">
+        <option *ngFor="let e of entites" [value]="e">
+          {{ e === "tous" ? "Toutes les entités" : e }}
+        </option>
+      </select>
+    </div>
+    <div class="filtre-group">
+      <label>Action</label>
+      <select [(ngModel)]="filtreAction" (change)="appliquerFiltres()">
+        <option *ngFor="let a of actions" [value]="a">
+          {{ a === "tous" ? "Toutes les actions" : a }}
+        </option>
+      </select>
+    </div>
+    <div class="filtre-stats">
+      <span class="stats-count">{{ auditLogsFiltres.length }}</span>
+      <span class="stats-label">entrées trouvées</span>
+    </div>
+  </div>
+
+  <!-- Chargement -->
+  <div class="loading" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <span>Chargement des logs...</span>
+  </div>
+
+  <!-- Tableau des logs -->
+  <div class="table-container" *ngIf="!isLoading">
+    <table class="ms-table audit-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Date & Heure</th>
+          <th>Utilisateur</th>
+          <th>Action</th>
+          <th>Entité</th>
+          <th>Détail</th>
+          <th>IP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of auditLogsFiltres">
+          <td>{{ log.id }}</td>
+          <td class="date-cell">{{ formatDate(log.createdAt) }}</td>
+          <td class="user-cell">
+            <span class="user-avatar">
+              {{ log.utilisateurNom?.charAt(0)?.toUpperCase() }}
+            </span>
+            {{ log.utilisateurNom }}
+          </td>
+          <td>
+            <span class="badge" [ngClass]="getActionClass(log.action)">
+              {{ log.action }}
+            </span>
+          </td>
+          <td class="entite-cell">{{ log.entite }}</td>
+          <td class="detail-cell">{{ log.detail }}</td>
+          <td class="ip-cell">{{ log.ipAddress }}</td>
+        </tr>
+        <tr *ngIf="auditLogsFiltres.length === 0">
+          <td colspan="7" class="empty-state">Aucun log trouvé</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

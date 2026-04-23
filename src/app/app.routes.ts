@@ -79,6 +79,12 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./pages/utilisateurs/utilisateurs.module')
             .then(m => m.UtilisateursModule)
+      },
+      {
+        path: 'audit',
+        loadChildren: () =>
+          import('./pages/audit/audit.module')
+            .then(m => m.AuditModule)
       }
     ]
   },
