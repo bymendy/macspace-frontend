@@ -259,3 +259,49 @@
     }
   }
 }
+
+/* ===== Pagination ===== */
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--ms-grey);
+  flex-wrap: wrap;
+
+  .page-btn {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 12px;
+    border: 1.5px solid var(--ms-grey);
+    border-radius: var(--ms-radius-md);
+    background: var(--ms-white);
+    color: var(--ms-dark);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+      border-color: var(--ms-primary);
+      color: var(--ms-primary);
+    }
+
+    &.active {
+      background: var(--ms-primary);
+      border-color: var(--ms-primary);
+      color: var(--ms-white);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  .pagination-info {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--ms-grey-dark);
+  }
+}

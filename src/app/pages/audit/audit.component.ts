@@ -11,25 +11,20 @@ import { AuditLog, AuditService } from '../../core/services/audit.service';
 })
 export class AuditComponent implements OnInit {
 
-  /** Liste complète des logs */
   auditLogs: AuditLog[] = [];
-
-  /** Liste filtrée affichée */
   auditLogsFiltres: AuditLog[] = [];
+  auditLogsPage: AuditLog[] = [];
 
-  /** Filtre par entité */
   filtreEntite = 'tous';
-
-  /** Filtre par action */
   filtreAction = 'tous';
-
-  /** Indicateur de chargement */
   isLoading = false;
 
-  /** Entités disponibles */
-  entites = ['tous', 'client', 'intervention', 'produit', 'stock', 'fournisseur', 'categorie'];
+  /** Pagination */
+  pageActuelle = 1;
+  elementsParPage = 15;
+  totalPages = 0;
 
-  /** Actions disponibles */
+  entites = ['tous', 'client', 'intervention', 'produit', 'stock', 'fournisseur', 'categorie'];
   actions = ['tous', 'CREATE_UPDATE', 'READ', 'DELETE', 'ENTREE', 'SORTIE', 'CORRECTION_POS', 'CORRECTION_NEG'];
 
   constructor(private auditService: AuditService) {}
@@ -38,9 +33,6 @@ export class AuditComponent implements OnInit {
     this.chargerLogs();
   }
 
-  /**
-   * Charge tous les logs d'audit.
-   */
   chargerLogs(): void {
     this.isLoading = true;
     this.auditService.findAll().subscribe({
@@ -56,20 +48,56 @@ export class AuditComponent implements OnInit {
     });
   }
 
-  /**
-   * Applique les filtres sur les logs.
-   */
   appliquerFiltres(): void {
     this.auditLogsFiltres = this.auditLogs.filter(log => {
       const entiteOk = this.filtreEntite === 'tous' || log.entite === this.filtreEntite;
       const actionOk = this.filtreAction === 'tous' || log.action === this.filtreAction;
       return entiteOk && actionOk;
     });
+    this.pageActuelle = 1;
+    this.calculerPagination();
   }
 
-  /**
-   * Retourne la classe CSS selon l'action.
-   */
+  calculerPagination(): void {
+    this.totalPages = Math.ceil(this.auditLogsFiltres.length / this.elementsParPage);
+    this.mettreAJourPage();
+  }
+
+  mettreAJourPage(): void {
+    const debut = (this.pageActuelle - 1) * this.elementsParPage;
+    const fin = debut + this.elementsParPage;
+    this.auditLogsPage = this.auditLogsFiltres.slice(debut, fin);
+  }
+
+  pagePrecedente(): void {
+    if (this.pageActuelle > 1) {
+      this.pageActuelle--;
+      this.mettreAJourPage();
+    }
+  }
+
+  pageSuivante(): void {
+    if (this.pageActuelle < this.totalPages) {
+      this.pageActuelle++;
+      this.mettreAJourPage();
+    }
+  }
+
+  allerPage(page: number): void {
+    this.pageActuelle = page;
+    this.mettreAJourPage();
+  }
+
+  getPages(): number[] {
+    const pages: number[] = [];
+    const debut = Math.max(1, this.pageActuelle - 2);
+    const fin = Math.min(this.totalPages, this.pageActuelle + 2);
+    for (let i = debut; i <= fin; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
   getActionClass(action: string): string {
     switch (action) {
       case 'CREATE_UPDATE': return 'badge-success';
@@ -81,9 +109,6 @@ export class AuditComponent implements OnInit {
     }
   }
 
-  /**
-   * Formate la date pour l'affichage.
-   */
   formatDate(date: string): string {
     return new Date(date).toLocaleString('fr-FR');
   }

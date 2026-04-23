@@ -1,15 +1,18 @@
 <!-- Page Audit Trail MacSpace -->
 <div class="audit-page">
+
   <!-- En-tête -->
   <div class="page-header">
     <div class="header-left">
       <h1 class="page-title">
-        <span class="title-icon"></span>
+        <span class="title-icon">🔍</span>
         Audit Trail
       </h1>
       <p class="page-subtitle">Traçabilité complète des actions utilisateurs</p>
     </div>
-    <button class="btn-refresh" (click)="chargerLogs()">Actualiser</button>
+    <button class="btn-refresh" (click)="chargerLogs()">
+      Actualiser
+    </button>
   </div>
 
   <!-- Filtres -->
@@ -18,7 +21,7 @@
       <label>Entité</label>
       <select [(ngModel)]="filtreEntite" (change)="appliquerFiltres()">
         <option *ngFor="let e of entites" [value]="e">
-          {{ e === "tous" ? "Toutes les entités" : e }}
+          {{ e === 'tous' ? 'Toutes les entités' : e }}
         </option>
       </select>
     </div>
@@ -26,7 +29,7 @@
       <label>Action</label>
       <select [(ngModel)]="filtreAction" (change)="appliquerFiltres()">
         <option *ngFor="let a of actions" [value]="a">
-          {{ a === "tous" ? "Toutes les actions" : a }}
+          {{ a === 'tous' ? 'Toutes les actions' : a }}
         </option>
       </select>
     </div>
@@ -42,7 +45,7 @@
     <span>Chargement des logs...</span>
   </div>
 
-  <!-- Tableau des logs -->
+  <!-- Tableau -->
   <div class="table-container" *ngIf="!isLoading">
     <table class="ms-table audit-table">
       <thead>
@@ -57,7 +60,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let log of auditLogsFiltres">
+        <tr *ngFor="let log of auditLogsPage">
           <td>{{ log.id }}</td>
           <td class="date-cell">{{ formatDate(log.createdAt) }}</td>
           <td class="user-cell">
@@ -75,10 +78,42 @@
           <td class="detail-cell">{{ log.detail }}</td>
           <td class="ip-cell">{{ log.ipAddress }}</td>
         </tr>
-        <tr *ngIf="auditLogsFiltres.length === 0">
-          <td colspan="7" class="empty-state">Aucun log trouvé</td>
+        <tr *ngIf="auditLogsPage.length === 0">
+          <td colspan="7" class="empty-state">
+            Aucun log trouvé
+          </td>
         </tr>
       </tbody>
     </table>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="totalPages > 1">
+      <button
+        class="page-btn"
+        (click)="pagePrecedente()"
+        [disabled]="pageActuelle === 1">
+        ←
+      </button>
+
+      <button
+        *ngFor="let page of getPages()"
+        class="page-btn"
+        [class.active]="page === pageActuelle"
+        (click)="allerPage(page)">
+        {{ page }}
+      </button>
+
+      <button
+        class="page-btn"
+        (click)="pageSuivante()"
+        [disabled]="pageActuelle === totalPages">
+        →
+      </button>
+
+      <span class="pagination-info">
+        Page {{ pageActuelle }} / {{ totalPages }}
+        ({{ auditLogsFiltres.length }} entrées)
+      </span>
+    </div>
   </div>
 </div>
