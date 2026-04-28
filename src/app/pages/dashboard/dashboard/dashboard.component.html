@@ -7,7 +7,15 @@
       <h1 class="dashboard-title">Tableau de bord</h1>
       <p class="dashboard-subtitle">Vue d'ensemble des activités de Mac Sécurité</p>
     </div>
-    <button class="btn-primary" (click)="loadDashboardData()">Actualiser</button>
+    <div style="display: flex; gap: 12px;">
+      <button class="btn-secondary" (click)="exporterPDF()">
+        <span class="material-icons" style="font-size: 18px; vertical-align: middle; margin-right: 6px;">picture_as_pdf</span>
+        Exporter PDF
+      </button>
+      <button class="btn-primary" (click)="loadDashboardData()">
+        Actualiser
+      </button>
+    </div>
   </div>
 
   <!-- Indicateur de chargement -->
@@ -139,6 +147,67 @@
           type="bar">
         </canvas>
       </div>
+    </div>
+
+    <!-- Graphique évolution mensuelle -->
+    <div class="ms-card chart-card-full">
+      <h3 class="card-title">Évolution des interventions — 6 derniers mois</h3>
+      <div class="chart-container-large">
+        <canvas baseChart
+          [data]="evolutionChartData"
+          [options]="evolutionChartOptions"
+          type="line">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Top clients -->
+    <div class="ms-card chart-card-full">
+      <h3 class="card-title">Top 5 — Actions sur clients</h3>
+      <div class="empty-state" *ngIf="topClients.length === 0">
+        <span class="material-icons">people</span>
+        <p>Aucune donnée disponible</p>
+      </div>
+      <table class="ms-table" *ngIf="topClients.length > 0">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Utilisateur</th>
+            <th>Actions</th>
+            <th>Part</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let client of topClients; let i = index">
+            <td>
+              <span class="top-rank">{{ i + 1 }}</span>
+            </td>
+            <td>
+              <span class="client-avatar">
+                {{ client.nom?.charAt(0)?.toUpperCase() }}
+              </span>
+              {{ client.nom }}
+            </td>
+            <td>
+              <strong>{{ client.total }}</strong>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 100px; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden;">
+                  <div style="height: 100%; background: var(--ms-primary); border-radius: 4px; transition: width 0.5s ease;"
+                    [style.width.%]="topClients.length > 0 && topClients[0].total > 0 ?
+                      (client.total / topClients[0].total * 100) : 0">
+                  </div>
+                </div>
+                <span style="font-size: 12px; color: var(--ms-grey-dark); min-width: 35px;">
+                  {{ topClients.length > 0 && topClients[0].total > 0 ?
+                    (client.total / topClients[0].total * 100 | number:'1.0-0') : 0 }}%
+                </span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- Statistiques interventions + Dernières interventions -->
