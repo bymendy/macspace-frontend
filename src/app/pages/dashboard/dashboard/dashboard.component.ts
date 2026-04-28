@@ -4,6 +4,7 @@ import { InterventionService } from '../../../core/services/intervention.service
 import { ProduitService } from '../../../core/services/produit.service';
 import { FournisseurService } from '../../../core/services/fournisseur.service';
 import { StockService } from '../../../core/services/stock.service';
+import { AuditService } from '../../../core/services/audit.service';
 import { Intervention } from '../../../shared/models/intervention';
 import { forkJoin } from 'rxjs';
 import { ChartData, ChartOptions } from 'chart.js';
@@ -19,7 +20,6 @@ import { ChartData, ChartOptions } from 'chart.js';
 })
 export class DashboardComponent implements OnInit {
 
-  /** Indicateur de chargement */
   isLoading = true;
 
   /** KPIs principaux */
@@ -28,53 +28,43 @@ export class DashboardComponent implements OnInit {
   totalFournisseurs = 0;
   totalInterventions = 0;
 
-  /** Interventions en attente */
+  /** KPIs avancés — Data Manager */
+  totalAuditLogs = 0;
+  totalStockCritique = 0;
+  tauxResolution = 0;
+
+  /** Interventions par état */
   interventionsEnAttente = 0;
-
-  /** Interventions en cours */
   interventionsEnCours = 0;
-
-  /** Interventions terminées */
   interventionsTerminees = 0;
-
-  /** Interventions annulées */
   interventionsAnnulees = 0;
 
   /** Dernières interventions */
   dernieresInterventions: Intervention[] = [];
 
-  /** Données graphique interventions par état (Doughnut) */
+  /** Graphique interventions par état (Doughnut) */
   interventionsChartData: ChartData<'doughnut'> = {
     labels: ['En attente', 'En cours', 'Terminées', 'Annulées'],
     datasets: [{
       data: [0, 0, 0, 0],
-      backgroundColor: [
-        '#ff9800',
-        '#2196f3',
-        '#4caf50',
-        '#f44336'
-      ],
+      backgroundColor: ['#ff9800', '#2196f3', '#4caf50', '#f44336'],
       borderWidth: 0,
       hoverOffset: 4
     }]
   };
 
-  /** Options graphique doughnut */
   doughnutChartOptions: ChartOptions<'doughnut'> = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'bottom',
-        labels: {
-          padding: 20,
-          font: { size: 13 }
-        }
+        labels: { padding: 20, font: { size: 13 } }
       }
     }
   };
 
-  /** Données graphique stock par produit (Bar) */
+  /** Graphique stock par produit (Bar) */
   stockChartData: ChartData<'bar'> = {
     labels: [],
     datasets: [{
@@ -86,30 +76,36 @@ export class DashboardComponent implements OnInit {
     }]
   };
 
-  /** Options graphique bar */
   barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false
-      }
-    },
+    plugins: { legend: { display: false } },
     scales: {
-      y: {
-        beginAtZero: true,
-        grid: {
-          color: '#f0f0f0'
-        },
-        ticks: {
-          stepSize: 1
-        }
-      },
-      x: {
-        grid: {
-          display: false
-        }
-      }
+      y: { beginAtZero: true, grid: { color: '#f0f0f0' }, ticks: { stepSize: 1 } },
+      x: { grid: { display: false } }
+    }
+  };
+
+  /** Graphique interventions par technicien (Bar horizontal) */
+  technicienChartData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [{
+      label: 'Interventions',
+      data: [],
+      backgroundColor: '#2196f3',
+      borderRadius: 6,
+      hoverBackgroundColor: '#1565c0'
+    }]
+  };
+
+  technicienChartOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { beginAtZero: true, ticks: { stepSize: 1 } },
+      y: { grid: { display: false } }
     }
   };
 
@@ -118,19 +114,14 @@ export class DashboardComponent implements OnInit {
     private interventionService: InterventionService,
     private produitService: ProduitService,
     private fournisseurService: FournisseurService,
-    private stockService: StockService
+    private stockService: StockService,
+    private auditService: AuditService
   ) {}
 
-  /**
-   * Initialise le dashboard en chargeant toutes les données.
-   */
   ngOnInit(): void {
     this.loadDashboardData();
   }
 
-  /**
-   * Charge toutes les données du dashboard en parallèle.
-   */
   loadDashboardData(): void {
     this.isLoading = true;
 
@@ -138,16 +129,20 @@ export class DashboardComponent implements OnInit {
       clients: this.clientService.findAll(),
       interventions: this.interventionService.findAll(),
       produits: this.produitService.findAll(),
-      fournisseurs: this.fournisseurService.findAll()
+      fournisseurs: this.fournisseurService.findAll(),
+      auditLogs: this.auditService.findAll()
     }).subscribe({
       next: (data) => {
-        /* Calcul des KPIs */
+        /* KPIs principaux */
         this.totalClients = data.clients.length;
         this.totalProduits = data.produits.length;
         this.totalFournisseurs = data.fournisseurs.length;
         this.totalInterventions = data.interventions.length;
 
-        /* Calcul des interventions par état */
+        /* KPI Audit Trail */
+        this.totalAuditLogs = data.auditLogs.length;
+
+        /* Interventions par état */
         this.interventionsEnAttente = data.interventions
           .filter(i => i.etatIntervention as any === 'En attente').length;
         this.interventionsEnCours = data.interventions
@@ -157,7 +152,12 @@ export class DashboardComponent implements OnInit {
         this.interventionsAnnulees = data.interventions
           .filter(i => i.etatIntervention as any === 'Annulée').length;
 
-        /* Mise à jour graphique doughnut */
+        /* Taux de résolution */
+        this.tauxResolution = this.totalInterventions > 0
+          ? Math.round((this.interventionsTerminees / this.totalInterventions) * 100)
+          : 0;
+
+        /* Graphique doughnut */
         this.interventionsChartData = {
           ...this.interventionsChartData,
           datasets: [{
@@ -171,12 +171,13 @@ export class DashboardComponent implements OnInit {
           }]
         };
 
-        /* 5 dernières interventions */
-        this.dernieresInterventions = data.interventions
-          .slice(-5)
-          .reverse();
+        /* Graphique interventions par technicien */
+        this.calculerInterventionsParTechnicien(data.interventions);
 
-        /* Charger le stock des produits pour le graphique */
+        /* 5 dernières interventions */
+        this.dernieresInterventions = data.interventions.slice(-5).reverse();
+
+        /* Stock produits */
         this.loadStockProduits(data.produits);
 
         this.isLoading = false;
@@ -188,14 +189,39 @@ export class DashboardComponent implements OnInit {
   }
 
   /**
-   * Charge le stock réel de chaque produit pour le graphique bar.
-   *
-   * @param produits La liste des produits
+   * Calcule le nombre d'interventions par technicien.
    */
+  calculerInterventionsParTechnicien(interventions: Intervention[]): void {
+    const map = new Map<string, number>();
+
+    interventions.forEach(i => {
+      const nom = i.technicien
+        ? `${i.technicien.prenom} ${i.technicien.nom}`
+        : 'Non assigné';
+      map.set(nom, (map.get(nom) || 0) + 1);
+    });
+
+    const sorted = Array.from(map.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+
+    this.technicienChartData = {
+      labels: sorted.map(e => e[0]),
+      datasets: [{
+        label: 'Interventions',
+        data: sorted.map(e => e[1]),
+        backgroundColor: '#2196f3',
+        borderRadius: 6,
+        hoverBackgroundColor: '#1565c0'
+      }]
+    };
+  }
+
   loadStockProduits(produits: any[]): void {
     const labels: string[] = [];
     const stocks: number[] = [];
     let loaded = 0;
+    let stockCritique = 0;
 
     produits.forEach(produit => {
       if (produit.id) {
@@ -203,12 +229,13 @@ export class DashboardComponent implements OnInit {
           next: (stock) => {
             labels.push(produit.codeProduit);
             stocks.push(stock);
+            if (stock <= 5) stockCritique++;
             loaded++;
 
-            /* Mettre à jour le graphique quand tous les stocks sont chargés */
             if (loaded === produits.length) {
+              this.totalStockCritique = stockCritique;
               this.stockChartData = {
-                labels: labels,
+                labels,
                 datasets: [{
                   label: 'Stock disponible',
                   data: stocks,
@@ -226,12 +253,6 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  /**
-   * Retourne la classe CSS du badge selon l'état de l'intervention.
-   *
-   * @param etat L'état de l'intervention
-   * @returns La classe CSS du badge
-   */
   getBadgeClass(etat: string): string {
     switch (etat) {
       case 'En attente': return 'badge badge-warning';
@@ -242,12 +263,6 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  /**
-   * Retourne le libellé français de l'état de l'intervention.
-   *
-   * @param etat L'état de l'intervention
-   * @returns Le libellé français
-   */
   getEtatLabel(etat: string): string {
     switch (etat) {
       case 'EN_ATTENTE': return 'En attente';

@@ -419,6 +419,99 @@
   font-size: var(--ms-font-size-sm);
 }
 
+/* ===== KPIs avancés — Data Manager ===== */
+.kpi-grid-advanced {
+  margin-top: 16px;
+}
+
+.kpi-card-audit {
+  border-left: 3px solid #2196f3;
+
+  .kpi-icon-audit {
+    background: rgba(33, 150, 243, 0.12);
+    color: #2196f3;
+
+    .material-icons {
+      color: #2196f3;
+    }
+  }
+}
+
+.kpi-card-danger {
+  border-left: 3px solid var(--ms-danger);
+
+  .kpi-icon-danger {
+    background: rgba(244, 67, 54, 0.12);
+
+    .material-icons {
+      color: var(--ms-danger);
+    }
+  }
+}
+
+.kpi-card-success {
+  border-left: 3px solid var(--ms-success);
+
+  .kpi-icon-success {
+    background: rgba(76, 175, 80, 0.12);
+
+    .material-icons {
+      color: var(--ms-success);
+    }
+  }
+}
+
+/* ===== Graphique technicien full width ===== */
+.chart-card-full {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.chart-container-large {
+  height: 250px;
+  position: relative;
+}
+
+/* ===== Taux de résolution ===== */
+.taux-resolution {
+  margin-bottom: 20px;
+  padding: 12px;
+  background: rgba(76, 175, 80, 0.06);
+  border-radius: var(--ms-radius-md);
+
+  .taux-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+
+    .taux-label {
+      font-size: 13px;
+      color: var(--ms-grey-dark);
+    }
+
+    .taux-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ms-success);
+    }
+  }
+
+  .taux-bar {
+    height: 8px;
+    background: var(--ms-grey);
+    border-radius: 4px;
+    overflow: hidden;
+
+    .taux-bar-fill {
+      height: 100%;
+      background: var(--ms-success);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+  }
+}
+
 /* ===== Etat vide ===== */
 .empty-state {
   display: flex;

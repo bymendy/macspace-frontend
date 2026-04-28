@@ -5,13 +5,9 @@
   <div class="dashboard-header">
     <div>
       <h1 class="dashboard-title">Tableau de bord</h1>
-      <p class="dashboard-subtitle">
-        Vue d'ensemble des activités de Mac Sécurité
-      </p>
+      <p class="dashboard-subtitle">Vue d'ensemble des activités de Mac Sécurité</p>
     </div>
-    <button class="btn-primary" (click)="loadDashboardData()">
-      Actualiser
-    </button>
+    <button class="btn-primary" (click)="loadDashboardData()">Actualiser</button>
   </div>
 
   <!-- Indicateur de chargement -->
@@ -25,8 +21,6 @@
 
     <!-- KPIs principaux -->
     <div class="kpi-grid">
-
-      <!-- Clients -->
       <div class="kpi-card">
         <div class="kpi-icon kpi-icon-clients">
           <span class="material-icons">people</span>
@@ -37,7 +31,6 @@
         </div>
       </div>
 
-      <!-- Interventions -->
       <div class="kpi-card">
         <div class="kpi-icon kpi-icon-interventions">
           <span class="material-icons">build</span>
@@ -48,7 +41,6 @@
         </div>
       </div>
 
-      <!-- Produits -->
       <div class="kpi-card">
         <div class="kpi-icon kpi-icon-produits">
           <span class="material-icons">inventory_2</span>
@@ -59,7 +51,6 @@
         </div>
       </div>
 
-      <!-- Fournisseurs -->
       <div class="kpi-card">
         <div class="kpi-icon kpi-icon-fournisseurs">
           <span class="material-icons">local_shipping</span>
@@ -67,6 +58,43 @@
         <div class="kpi-content">
           <span class="kpi-value">{{ totalFournisseurs }}</span>
           <span class="kpi-label">Fournisseurs</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPIs avancés — Data Manager -->
+    <div class="kpi-grid kpi-grid-advanced">
+
+      <!-- Audit Trail -->
+      <div class="kpi-card kpi-card-audit">
+        <div class="kpi-icon kpi-icon-audit">
+          <span class="material-icons">security</span>
+        </div>
+        <div class="kpi-content">
+          <span class="kpi-value">{{ totalAuditLogs }}</span>
+          <span class="kpi-label">Actions tracées</span>
+        </div>
+      </div>
+
+      <!-- Stock critique -->
+      <div class="kpi-card kpi-card-danger">
+        <div class="kpi-icon kpi-icon-danger">
+          <span class="material-icons">warning</span>
+        </div>
+        <div class="kpi-content">
+          <span class="kpi-value">{{ totalStockCritique }}</span>
+          <span class="kpi-label">Stocks critiques</span>
+        </div>
+      </div>
+
+      <!-- Taux de résolution -->
+      <div class="kpi-card kpi-card-success">
+        <div class="kpi-icon kpi-icon-success">
+          <span class="material-icons">check_circle</span>
+        </div>
+        <div class="kpi-content">
+          <span class="kpi-value">{{ tauxResolution }}%</span>
+          <span class="kpi-label">Taux de résolution</span>
         </div>
       </div>
 
@@ -101,15 +129,39 @@
 
     </div>
 
+    <!-- Graphique interventions par technicien -->
+    <div class="ms-card chart-card-full">
+      <h3 class="card-title">Interventions par technicien</h3>
+      <div class="chart-container-large">
+        <canvas baseChart
+          [data]="technicienChartData"
+          [options]="technicienChartOptions"
+          type="bar">
+        </canvas>
+      </div>
+    </div>
+
     <!-- Statistiques interventions + Dernières interventions -->
     <div class="stats-grid">
 
-      <!-- Etat des interventions -->
+      <!-- État des interventions -->
       <div class="ms-card">
-        <h3 class="card-title">Etat des interventions</h3>
-        <div class="stats-list">
+        <h3 class="card-title">État des interventions</h3>
 
-          <!-- En attente -->
+        <!-- Taux de résolution -->
+        <div class="taux-resolution">
+          <div class="taux-header">
+            <span class="taux-label">Taux de résolution</span>
+            <span class="taux-value">{{ tauxResolution }}%</span>
+          </div>
+          <div class="taux-bar">
+            <div class="taux-bar-fill"
+              [style.width.%]="tauxResolution">
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-list">
           <div class="stat-item">
             <div class="stat-info">
               <span class="stat-dot stat-dot-warning"></span>
@@ -118,8 +170,7 @@
             <div class="stat-right">
               <span class="stat-value">{{ interventionsEnAttente }}</span>
               <div class="stat-bar">
-                <div
-                  class="stat-bar-fill stat-bar-warning"
+                <div class="stat-bar-fill stat-bar-warning"
                   [style.width.%]="totalInterventions > 0 ?
                     (interventionsEnAttente / totalInterventions * 100) : 0">
                 </div>
@@ -127,7 +178,6 @@
             </div>
           </div>
 
-          <!-- En cours -->
           <div class="stat-item">
             <div class="stat-info">
               <span class="stat-dot stat-dot-info"></span>
@@ -136,8 +186,7 @@
             <div class="stat-right">
               <span class="stat-value">{{ interventionsEnCours }}</span>
               <div class="stat-bar">
-                <div
-                  class="stat-bar-fill stat-bar-info"
+                <div class="stat-bar-fill stat-bar-info"
                   [style.width.%]="totalInterventions > 0 ?
                     (interventionsEnCours / totalInterventions * 100) : 0">
                 </div>
@@ -145,7 +194,6 @@
             </div>
           </div>
 
-          <!-- Terminées -->
           <div class="stat-item">
             <div class="stat-info">
               <span class="stat-dot stat-dot-success"></span>
@@ -154,8 +202,7 @@
             <div class="stat-right">
               <span class="stat-value">{{ interventionsTerminees }}</span>
               <div class="stat-bar">
-                <div
-                  class="stat-bar-fill stat-bar-success"
+                <div class="stat-bar-fill stat-bar-success"
                   [style.width.%]="totalInterventions > 0 ?
                     (interventionsTerminees / totalInterventions * 100) : 0">
                 </div>
@@ -163,7 +210,6 @@
             </div>
           </div>
 
-          <!-- Annulées -->
           <div class="stat-item">
             <div class="stat-info">
               <span class="stat-dot stat-dot-danger"></span>
@@ -172,42 +218,36 @@
             <div class="stat-right">
               <span class="stat-value">{{ interventionsAnnulees }}</span>
               <div class="stat-bar">
-                <div
-                  class="stat-bar-fill stat-bar-danger"
+                <div class="stat-bar-fill stat-bar-danger"
                   [style.width.%]="totalInterventions > 0 ?
                     (interventionsAnnulees / totalInterventions * 100) : 0">
                 </div>
               </div>
             </div>
           </div>
-
         </div>
       </div>
 
       <!-- Dernières interventions -->
       <div class="ms-card">
         <h3 class="card-title">Dernières interventions</h3>
-        <div class="empty-state"
-          *ngIf="dernieresInterventions.length === 0">
+        <div class="empty-state" *ngIf="dernieresInterventions.length === 0">
           <span class="material-icons">build_circle</span>
           <p>Aucune intervention enregistrée</p>
         </div>
-        <table class="ms-table"
-          *ngIf="dernieresInterventions.length > 0">
+        <table class="ms-table" *ngIf="dernieresInterventions.length > 0">
           <thead>
             <tr>
               <th>Code</th>
               <th>Date</th>
               <th>Technicien</th>
-              <th>Etat</th>
+              <th>État</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let intervention of dernieresInterventions">
               <td>
-                <span class="intervention-code">
-                  {{ intervention.code }}
-                </span>
+                <span class="intervention-code">{{ intervention.code }}</span>
               </td>
               <td>
                 {{ intervention.dateIntervention ?
@@ -230,5 +270,4 @@
     </div>
 
   </div>
-
 </div>
