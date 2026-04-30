@@ -18,14 +18,15 @@ export class SidebarComponent {
 
   /** Liens de navigation */
   navItems = [
-    { label: 'Dashboard',     route: '/dashboard',    icon: 'dashboard' },
-    { label: 'Interventions', route: '/interventions', icon: 'build' },
-    { label: 'Clients',       route: '/clients',       icon: 'people' },
-    { label: 'Produits',      route: '/produits',      icon: 'inventory_2' },
-    { label: 'Stock',         route: '/stock',         icon: 'warehouse' },
-    { label: 'Fournisseurs',  route: '/fournisseurs',  icon: 'local_shipping' },
-    { label: 'Utilisateurs',  route: '/utilisateurs',  icon: 'manage_accounts' },
-    { label: 'Audit Trail',   route: '/audit',         icon: 'security' }
+    { label: 'Dashboard',      route: '/dashboard',      icon: 'dashboard' },
+    { label: 'Interventions',  route: '/interventions',  icon: 'build' },
+    { label: 'Clients',        route: '/clients',        icon: 'people' },
+    { label: 'Produits',       route: '/produits',       icon: 'inventory_2' },
+    { label: 'Stock',          route: '/stock',          icon: 'warehouse' },
+    { label: 'Fournisseurs',   route: '/fournisseurs',   icon: 'local_shipping' },
+    { label: 'Utilisateurs',   route: '/utilisateurs',   icon: 'manage_accounts' },
+    { label: 'Audit Trail',    route: '/audit',          icon: 'security' },
+    { label: 'Data Warehouse', route: '/datawarehouse',  icon: 'analytics' }
   ];
 
   constructor(

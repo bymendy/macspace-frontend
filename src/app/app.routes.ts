@@ -85,6 +85,12 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./pages/audit/audit.module')
             .then(m => m.AuditModule)
+      },
+      {
+        path: 'datawarehouse',
+        loadChildren: () =>
+          import('./pages/datawarehouse/datawarehouse.module')
+            .then(m => m.DatawarehouseModule)
       }
     ]
   },

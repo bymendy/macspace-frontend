@@ -1,0 +1,65 @@
+/* ===== Data Warehouse MacSpace ===== */
+
+/* KPIs avancés */
+.kpi-card-success {
+  border-left: 3px solid var(--ms-success);
+
+  .kpi-icon-success {
+    background: rgba(76, 175, 80, 0.12);
+
+    .material-icons {
+      color: var(--ms-success);
+    }
+  }
+}
+
+/* Graphique full width */
+.chart-card-full {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.chart-container-large {
+  height: 250px;
+  position: relative;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-success {
+  background: rgba(76, 175, 80, 0.12);
+  color: var(--ms-success);
+}
+
+.badge-info {
+  background: rgba(33, 150, 243, 0.12);
+  color: #2196f3;
+}
+
+.badge-warning {
+  background: rgba(255, 152, 0, 0.12);
+  color: #ff9800;
+}
+
+.badge-danger {
+  background: rgba(244, 67, 54, 0.12);
+  color: var(--ms-danger);
+}
+
+/* Intervention code */
+.intervention-code {
+  font-family: monospace;
+  font-size: 12px;
+  background: var(--ms-grey);
+  padding: 2px 8px;
+  border-radius: 4px;
+}

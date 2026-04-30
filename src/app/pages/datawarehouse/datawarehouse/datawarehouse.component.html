@@ -1,0 +1,200 @@
+<!-- Data Warehouse MacSpace — Accès ADMIN uniquement -->
+<div class="dashboard">
+
+  <!-- En-tête -->
+  <div class="dashboard-header">
+    <div>
+      <h1 class="dashboard-title">Data Warehouse</h1>
+      <p class="dashboard-subtitle">
+        Analyse analytique avancée — Accès réservé aux administrateurs
+      </p>
+    </div>
+    <button class="btn-primary" (click)="loadData()">Actualiser</button>
+  </div>
+
+  <!-- Erreur accès -->
+  <div class="ms-card" *ngIf="hasError" style="text-align: center; padding: 40px;">
+    <span class="material-icons" style="font-size: 48px; color: var(--ms-danger);">lock</span>
+    <h3 style="color: var(--ms-danger); margin-top: 12px;">Accès non autorisé</h3>
+    <p style="color: var(--ms-grey-dark);">
+      Cette page est réservée aux administrateurs MacSpace.
+    </p>
+  </div>
+
+  <!-- Chargement -->
+  <div class="loading" *ngIf="isLoading && !hasError">
+    <div class="loading-spinner"></div>
+    <p>Chargement des données analytiques...</p>
+  </div>
+
+  <!-- Contenu -->
+  <div *ngIf="!isLoading && !hasError">
+
+    <!-- KPIs globaux -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-icon-interventions">
+          <span class="material-icons">build</span>
+        </div>
+        <div class="kpi-content">
+          <span class="kpi-value">{{ kpis.totalInterventions }}</span>
+          <span class="kpi-label">Interventions</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-icon-clients">
+          <span class="material-icons">engineering</span>
+        </div>
+        <div class="kpi-content">
+          <span class="kpi-value">{{ kpis.nbTechniciensActifs }}</span>
+          <span class="kpi-label">Techniciens actifs</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-card-success">
+        <div class="kpi-icon kpi-icon-success">
+          <span class="material-icons">check_circle</span>
+        </div>
+        <div class="kpi-content">
+          <span class="kpi-value">{{ kpis.tauxResolutionGlobal }}%</span>
+          <span class="kpi-label">Taux de résolution</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-icon-produits">
+          <span class="material-icons">inventory_2</span>
+        </div>
+        <div class="kpi-content">
+          <span class="kpi-value">{{ kpis.totalProduitsUtilises }}</span>
+          <span class="kpi-label">Produits utilisés</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-icon-fournisseurs">
+          <span class="material-icons">swap_vert</span>
+        </div>
+        <div class="kpi-content">
+          <span class="kpi-value">{{ kpis.totalMouvementsStock }}</span>
+          <span class="kpi-label">Mouvements stock</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Graphiques -->
+    <div class="charts-grid">
+
+      <!-- Performance techniciens -->
+      <div class="ms-card chart-card">
+        <h3 class="card-title">Performance techniciens</h3>
+        <div class="chart-container">
+          <canvas baseChart
+            [data]="technicienChartData"
+            [options]="technicienChartOptions"
+            type="bar">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Top produits utilisés -->
+      <div class="ms-card chart-card">
+        <h3 class="card-title">Top produits utilisés</h3>
+        <div class="chart-container">
+          <canvas baseChart
+            [data]="produitsChartData"
+            [options]="produitsChartOptions"
+            type="bar">
+          </canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Évolution mensuelle -->
+    <div class="ms-card chart-card-full">
+      <h3 class="card-title">Évolution des interventions par mois</h3>
+      <div class="chart-container-large">
+        <canvas baseChart
+          [data]="evolutionChartData"
+          [options]="evolutionChartOptions"
+          type="line">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Tableau performance techniciens -->
+    <div class="ms-card" style="margin-bottom: 24px;">
+      <h3 class="card-title">Détail performance techniciens</h3>
+      <table class="ms-table">
+        <thead>
+          <tr>
+            <th>Technicien</th>
+            <th>Fonction</th>
+            <th>Total</th>
+            <th>Terminées</th>
+            <th>En cours</th>
+            <th>En attente</th>
+            <th>Taux résolution</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of techniciens">
+            <td><strong>{{ t.prenom }} {{ t.nom }}</strong></td>
+            <td>{{ t.fonction }}</td>
+            <td>{{ t.nbInterventions }}</td>
+            <td><span class="badge badge-success">{{ t.nbTerminees }}</span></td>
+            <td><span class="badge badge-info">{{ t.nbEnCours }}</span></td>
+            <td><span class="badge badge-warning">{{ t.nbEnAttente }}</span></td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 80px; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden;">
+                  <div style="height: 100%; background: var(--ms-success); border-radius: 4px;"
+                    [style.width.%]="t.tauxResolution">
+                  </div>
+                </div>
+                <span>{{ t.tauxResolution }}%</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tableau produits -->
+    <div class="ms-card">
+      <h3 class="card-title">Détail produits — Mouvements de stock</h3>
+      <table class="ms-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Désignation</th>
+            <th>Catégorie</th>
+            <th>Mouvements</th>
+            <th>Entrées</th>
+            <th>Sorties</th>
+            <th>Stock net</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of produits">
+            <td><span class="intervention-code">{{ p.codeProduit }}</span></td>
+            <td>{{ p.designation }}</td>
+            <td>{{ p.categorie }}</td>
+            <td><strong>{{ p.nbMouvements }}</strong></td>
+            <td style="color: var(--ms-success);">+{{ p.totalEntrees }}</td>
+            <td style="color: var(--ms-danger);">-{{ p.totalSorties }}</td>
+            <td>
+              <span [style.color]="p.stockNet <= 5 ? 'var(--ms-danger)' :
+                p.stockNet <= 10 ? 'var(--ms-warning)' : 'var(--ms-success)'">
+                {{ p.stockNet }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

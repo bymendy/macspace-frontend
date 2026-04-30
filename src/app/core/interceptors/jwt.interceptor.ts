@@ -49,7 +49,7 @@ export class JwtInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         /* Redirection vers login en cas d'erreur d'authentification */
-        if (error.status === 401 || error.status === 403) {
+        if (error.status === 401) {
           localStorage.removeItem('access_token');
           localStorage.removeItem('id_entreprise');
           this.router.navigate(['/auth/login']);
@@ -59,3 +59,54 @@ export class JwtInterceptor implements HttpInterceptor {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
