@@ -19,7 +19,7 @@
   <!-- Navigation principale -->
   <nav class="sidebar-nav">
     <ul>
-      <li *ngFor="let item of navItems">
+      <li *ngFor="let item of filteredNavItems">
         <a
           [routerLink]="item.route"
           class="nav-item"

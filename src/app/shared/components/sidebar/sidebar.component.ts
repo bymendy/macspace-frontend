@@ -34,6 +34,15 @@ export class SidebarComponent {
     private router: Router
   ) {}
 
+  get filteredNavItems() {
+    return this.navItems.filter(item => {
+      if (item.route === '/datawarehouse') {
+        return this.authService.isAdmin();
+      }
+      return true;
+    });
+  }
+
   /**
    * Bascule l'état ouvert/réduit de la sidebar.
    */
