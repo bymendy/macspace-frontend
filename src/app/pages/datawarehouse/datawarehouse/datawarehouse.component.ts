@@ -168,8 +168,8 @@ export class DatawarehouseComponent implements OnInit {
 
         this.isLoading = false;
       },
-      error: () => {
-        this.hasError = true;
+      error: (err) => {
+        console.error('DW Error:', err);
         this.isLoading = false;
       }
     });

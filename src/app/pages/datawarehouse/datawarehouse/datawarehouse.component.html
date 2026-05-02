@@ -13,13 +13,6 @@
   </div>
 
   <!-- Erreur accès -->
-  <div class="ms-card" *ngIf="hasError" style="text-align: center; padding: 40px;">
-    <span class="material-icons" style="font-size: 48px; color: var(--ms-danger);">lock</span>
-    <h3 style="color: var(--ms-danger); margin-top: 12px;">Accès non autorisé</h3>
-    <p style="color: var(--ms-grey-dark);">
-      Cette page est réservée aux administrateurs MacSpace.
-    </p>
-  </div>
 
   <!-- Chargement -->
   <div class="loading" *ngIf="isLoading && !hasError">
@@ -28,7 +21,7 @@
   </div>
 
   <!-- Contenu -->
-  <div *ngIf="!isLoading && !hasError">
+  <div *ngIf="!isLoading">
 
     <!-- KPIs globaux -->
     <div class="kpi-grid">
