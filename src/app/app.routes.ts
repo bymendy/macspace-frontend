@@ -23,6 +23,12 @@ export const routes: Routes = [
       import('./pages/landing/landing.module')
         .then(m => m.LandingModule)
   },
+  {
+    path: 'privacy',
+    loadChildren: () =>
+      import('./pages/privacy/privacy.module')
+        .then(m => m.PrivacyModule)
+  },
 
   /* Route d'authentification - accessible sans token */
   {
