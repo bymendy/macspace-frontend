@@ -4,7 +4,22 @@
   min-height: 100vh;
   background: #f5f5f5;
 }
+/* ===== Logo cliquable ===== */
+.privacy-logo {
+  transition: all 0.3s ease;
 
+  img {
+    transition: all 0.3s ease;
+  }
+
+  &:hover {
+    transform: scale(1.05);
+
+    img {
+      filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(340deg);
+    }
+  }
+}
 /* ===== Hero Section ===== */
 .privacy-hero {
   position: relative;
