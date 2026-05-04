@@ -168,46 +168,48 @@
         <span class="material-icons">people</span>
         <p>Aucune donnée disponible</p>
       </div>
-      <table class="ms-table" *ngIf="topClients.length > 0">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Utilisateur</th>
-            <th>Actions</th>
-            <th>Part</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let client of topClients; let i = index">
-            <td>
-              <span class="top-rank">{{ i + 1 }}</span>
-            </td>
-            <td>
-              <span class="client-avatar">
-                {{ client.nom?.charAt(0)?.toUpperCase() }}
-              </span>
-              {{ client.nom }}
-            </td>
-            <td>
-              <strong>{{ client.total }}</strong>
-            </td>
-            <td>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <div style="width: 100px; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden;">
-                  <div style="height: 100%; background: var(--ms-primary); border-radius: 4px; transition: width 0.5s ease;"
-                    [style.width.%]="topClients.length > 0 && topClients[0].total > 0 ?
-                      (client.total / topClients[0].total * 100) : 0">
-                  </div>
-                </div>
-                <span style="font-size: 12px; color: var(--ms-grey-dark); min-width: 35px;">
-                  {{ topClients.length > 0 && topClients[0].total > 0 ?
-                    (client.total / topClients[0].total * 100 | number:'1.0-0') : 0 }}%
+      <div class="ms-table-wrapper">
+        <table class="ms-table" *ngIf="topClients.length > 0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Utilisateur</th>
+              <th>Actions</th>
+              <th>Part</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let client of topClients; let i = index">
+              <td>
+                <span class="top-rank">{{ i + 1 }}</span>
+              </td>
+              <td>
+                <span class="client-avatar">
+                  {{ client.nom?.charAt(0)?.toUpperCase() }}
                 </span>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                {{ client.nom }}
+              </td>
+              <td>
+                <strong>{{ client.total }}</strong>
+              </td>
+              <td>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <div style="width: 100px; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden;">
+                    <div style="height: 100%; background: var(--ms-primary); border-radius: 4px; transition: width 0.5s ease;"
+                      [style.width.%]="topClients.length > 0 && topClients[0].total > 0 ?
+                        (client.total / topClients[0].total * 100) : 0">
+                    </div>
+                  </div>
+                  <span style="font-size: 12px; color: var(--ms-grey-dark); min-width: 35px;">
+                    {{ topClients.length > 0 && topClients[0].total > 0 ?
+                      (client.total / topClients[0].total * 100 | number:'1.0-0') : 0 }}%
+                  </span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Statistiques interventions + Dernières interventions -->
@@ -304,36 +306,38 @@
           <span class="material-icons">build_circle</span>
           <p>Aucune intervention enregistrée</p>
         </div>
-        <table class="ms-table" *ngIf="dernieresInterventions.length > 0">
-          <thead>
-            <tr>
-              <th>Code</th>
-              <th>Date</th>
-              <th>Technicien</th>
-              <th>État</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let intervention of dernieresInterventions">
-              <td>
-                <span class="intervention-code">{{ intervention.code }}</span>
-              </td>
-              <td>
-                {{ intervention.dateIntervention ?
-                  (intervention.dateIntervention | date:'dd/MM/yyyy') : '-' }}
-              </td>
-              <td>
-                {{ intervention.technicien?.nom }}
-                {{ intervention.technicien?.prenom }}
-              </td>
-              <td>
-                <span [class]="getBadgeClass(intervention.etatIntervention)">
-                  {{ intervention.etatIntervention }}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="ms-table-wrapper">
+          <table class="ms-table" *ngIf="dernieresInterventions.length > 0">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Date</th>
+                <th>Technicien</th>
+                <th>État</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let intervention of dernieresInterventions">
+                <td>
+                  <span class="intervention-code">{{ intervention.code }}</span>
+                </td>
+                <td>
+                  {{ intervention.dateIntervention ?
+                    (intervention.dateIntervention | date:'dd/MM/yyyy') : '-' }}
+                </td>
+                <td>
+                  {{ intervention.technicien?.nom }}
+                  {{ intervention.technicien?.prenom }}
+                </td>
+                <td>
+                  <span [class]="getBadgeClass(intervention.etatIntervention)">
+                    {{ intervention.etatIntervention }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
     </div>

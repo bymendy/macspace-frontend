@@ -511,7 +511,34 @@
     }
   }
 }
+/* ===== Tables responsive ===== */
+.stats-grid {
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
 
+.ms-card {
+  @media (max-width: 768px) {
+    overflow: hidden;
+  }
+}
+
+.ms-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+.ms-table {
+  width: 100%;
+  min-width: 500px;
+
+  @media (max-width: 768px) {
+    display: table;
+    min-width: 480px;
+  }
+}
 /* ===== Top clients ===== */
 .top-rank {
   display: inline-flex;

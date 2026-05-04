@@ -16,7 +16,7 @@
     transform: scale(1.05);
 
     img {
-      filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(340deg);
+      filter: brightness(0) invert(45%) sepia(98%)  saturate(700%) hue-rotate(5deg) brightness(105%);
     }
   }
 }
