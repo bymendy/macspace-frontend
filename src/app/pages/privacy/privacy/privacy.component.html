@@ -4,14 +4,19 @@
   <!-- Hero section avec image de fond -->
   <div class="privacy-hero">
     <div class="privacy-overlay"></div>
+    <!-- Bouton retour -->
+    <button class="btn-back" (click)="goBack()">
+    <span class="material-icons">arrow_back</span>
+    Retour
+    </button>
     <div class="privacy-hero-content">
-      <div class="privacy-logo">
+      <div class="privacy-logo" (click)="goToLogin()" style="cursor: pointer;">
         <img
-          src="https://res.cloudinary.com/dwdkltr38/image/upload/v1774436630/macsecurite_logo_macspace_zpv1mj.png"
-          alt="MacSpace Logo"
-          class="hero-logo-img"
+            src="https://res.cloudinary.com/dwdkltr38/image/upload/v1774436630/macsecurite_logo_macspace_zpv1mj.png"
+            alt="MacSpace Logo"
+            class="hero-logo-img"
         />
-      </div>
+        </div>
       <h1 class="privacy-hero-title">Politique de Confidentialité</h1>
       <p class="privacy-hero-subtitle">
         Protection de vos données personnelles Conformité RGPD
@@ -288,8 +293,12 @@
 
   <!-- Footer -->
   <div class="privacy-footer">
-    <p>© 2026 Mac Sécurité - MacSpace v1.0 — Tous droits réservés</p>
-    <p>Conforme au Règlement (UE) 2016/679 — RGPD</p>
-  </div>
+        <button class="btn-landing" (click)="goToLanding()">
+            <span class="material-icons">home</span>
+            Retour à l'accueil
+        </button>
+        <p>© 2026 Mac Sécurité - MacSpace v1.0 — Tous droits réservés</p>
+        <p>Conforme au Règlement (UE) 2016/679 — RGPD</p>
+    </div>
 
 </div>
