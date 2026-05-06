@@ -201,6 +201,8 @@
 @media (max-width: 1024px) and (min-width: 769px) {
 
   .header {
+  width: 100%;
+  box-sizing: border-box;
     padding: 0 var(--ms-spacing-md);
   }
 
@@ -223,6 +225,8 @@
 @media (max-width: 768px) {
 
   .header {
+  width: 100%;
+  box-sizing: border-box;
     padding: 0 var(--ms-spacing-sm);
     gap: var(--ms-spacing-sm);
   }
