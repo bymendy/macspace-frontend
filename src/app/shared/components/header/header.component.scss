@@ -10,6 +10,8 @@
   padding: 0 var(--ms-spacing-lg);
   box-shadow: var(--ms-shadow-sm);
   flex-shrink: 0;
+  width: 100%;          /* ← AJOUT */
+  box-sizing: border-box; /* ← AJOUT */
 }
 
 /* ===== Partie gauche - Breadcrumb ===== */
@@ -167,7 +169,6 @@
 
 /* ===== Bouton déconnexion ===== */
 .btn-logout {
-  margin-left: auto;
   display: flex;
   align-items: center;
   gap: var(--ms-spacing-sm);
