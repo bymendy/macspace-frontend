@@ -9,11 +9,6 @@ import {
   InterventionParMois
 } from '../../../core/services/datawarehouse.service';
 
-/**
- * Composant Data Warehouse MacSpace.
- * Page analytique réservée aux administrateurs.
- * Affiche les KPIs, graphiques et tableaux issus du DW MySQL.
- */
 @Component({
   selector: 'app-datawarehouse',
   templateUrl: './datawarehouse.component.html',
@@ -23,8 +18,8 @@ export class DatawarehouseComponent implements OnInit {
 
   isLoading = true;
   hasError = false;
+  isRefreshing = false; // 🆕 état du bouton actualiser
 
-  /** KPIs globaux */
   kpis: TableauBordGlobal = {
     totalInterventions: 0,
     nbTechniciensActifs: 0,
@@ -33,12 +28,10 @@ export class DatawarehouseComponent implements OnInit {
     totalMouvementsStock: 0
   };
 
-  /** Données tableaux */
   techniciens: PerformanceTechnicien[] = [];
   produits: ProduitPlusUtilise[] = [];
   interventionsParMois: InterventionParMois[] = [];
 
-  /** Graphique performance techniciens (Bar horizontal) */
   technicienChartData: ChartData<'bar'> = {
     labels: [],
     datasets: [{
@@ -60,7 +53,6 @@ export class DatawarehouseComponent implements OnInit {
     }
   };
 
-  /** Graphique produits plus utilisés (Bar) */
   produitsChartData: ChartData<'bar'> = {
     labels: [],
     datasets: [{
@@ -81,7 +73,6 @@ export class DatawarehouseComponent implements OnInit {
     }
   };
 
-  /** Graphique évolution mensuelle (Line) */
   evolutionChartData: ChartData<'line'> = {
     labels: [],
     datasets: [{
@@ -112,6 +103,25 @@ export class DatawarehouseComponent implements OnInit {
     this.loadData();
   }
 
+  //  Méthode appelée par le bouton Actualiser
+  onActualiser(): void {
+    this.isRefreshing = true;
+    this.hasError = false;
+
+    this.dwService.initETL().subscribe({
+      next: () => {
+        // ETL terminé → on recharge les données
+        this.loadData();
+        this.isRefreshing = false;
+      },
+      error: (err) => {
+        console.error('Erreur ETL init:', err);
+        this.hasError = true;
+        this.isRefreshing = false;
+      }
+    });
+  }
+
   loadData(): void {
     this.isLoading = true;
     this.hasError = false;
@@ -123,10 +133,8 @@ export class DatawarehouseComponent implements OnInit {
       interventions: this.dwService.getInterventionsParMois()
     }).subscribe({
       next: (data) => {
-        /* KPIs */
         this.kpis = data.kpis;
 
-        /* Techniciens */
         this.techniciens = data.techniciens;
         this.technicienChartData = {
           labels: data.techniciens.map(t => `${t.prenom} ${t.nom}`),
@@ -138,7 +146,6 @@ export class DatawarehouseComponent implements OnInit {
           }]
         };
 
-        /* Produits */
         this.produits = data.produits;
         this.produitsChartData = {
           labels: data.produits.map(p => p.codeProduit),
@@ -150,7 +157,6 @@ export class DatawarehouseComponent implements OnInit {
           }]
         };
 
-        /* Évolution mensuelle */
         this.interventionsParMois = data.interventions;
         this.evolutionChartData = {
           labels: data.interventions.map(i => `${i.nomMois} ${i.annee}`),
@@ -170,6 +176,7 @@ export class DatawarehouseComponent implements OnInit {
       },
       error: (err) => {
         console.error('DW Error:', err);
+        this.hasError = true;
         this.isLoading = false;
       }
     });

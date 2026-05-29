@@ -3,9 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
-/**
- * Interfaces Data Warehouse MacSpace
- */
 export interface InterventionParMois {
   annee: number;
   nomMois: string;
@@ -45,10 +42,6 @@ export interface TableauBordGlobal {
   totalMouvementsStock: number;
 }
 
-/**
- * Service Data Warehouse MacSpace.
- * Consomme les endpoints analytiques réservés aux ADMIN.
- */
 @Injectable({
   providedIn: 'root'
 })
@@ -57,6 +50,11 @@ export class DatawarehouseService {
   private apiUrl = `${environment.apiUrl}/datawarehouse`;
 
   constructor(private http: HttpClient) {}
+
+  // 🆕 Déclenche le pipeline ETL
+  initETL(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/init`, {});
+  }
 
   getTableauBordGlobal(): Observable<TableauBordGlobal> {
     return this.http.get<TableauBordGlobal>(`${this.apiUrl}/tableau-bord-global`);

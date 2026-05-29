@@ -1,18 +1,22 @@
 <!-- Data Warehouse MacSpace — Accès ADMIN uniquement -->
 <div class="dashboard">
-
   <!-- En-tête -->
   <div class="dashboard-header">
     <div>
       <h1 class="dashboard-title">Data Warehouse</h1>
-      <p class="dashboard-subtitle">
-        Analyse analytique avancée 
-      </p>
+      <p class="dashboard-subtitle">Analyse analytique avancée</p>
     </div>
-    <button class="btn-primary" (click)="loadData()">Actualiser</button>
-  </div>
 
-  <!-- Erreur accès -->
+    <!-- ✅ Correction : onActualiser() au lieu de loadData() -->
+    <button
+      class="btn-primary"
+      (click)="onActualiser()"
+      [disabled]="isRefreshing || isLoading"
+    >
+      <span *ngIf="!isRefreshing">Actualiser</span>
+      <span *ngIf="isRefreshing">Mise à jour...</span>
+    </button>
+  </div>
 
   <!-- Chargement -->
   <div class="loading" *ngIf="isLoading && !hasError">
@@ -20,9 +24,15 @@
     <p>Chargement des données analytiques...</p>
   </div>
 
-  <!-- Contenu -->
-  <div *ngIf="!isLoading">
+  <!-- Erreur -->
+  <div class="error-message" *ngIf="hasError && !isLoading">
+    <span class="material-icons">error_outline</span>
+    <p>Erreur lors du chargement des données.</p>
+    <button class="btn-primary" (click)="onActualiser()">Réessayer</button>
+  </div>
 
+  <!-- Contenu -->
+  <div *ngIf="!isLoading && !hasError">
     <!-- KPIs globaux -->
     <div class="kpi-grid">
       <div class="kpi-card">
@@ -78,47 +88,49 @@
 
     <!-- Graphiques -->
     <div class="charts-grid">
-
-      <!-- Performance techniciens -->
       <div class="ms-card chart-card">
         <h3 class="card-title">Performance techniciens</h3>
         <div class="chart-container">
-          <canvas baseChart
+          <canvas
+            baseChart
             [data]="technicienChartData"
             [options]="technicienChartOptions"
-            type="bar">
+            type="bar"
+          >
           </canvas>
         </div>
       </div>
 
-      <!-- Top produits utilisés -->
       <div class="ms-card chart-card">
         <h3 class="card-title">Top produits utilisés</h3>
         <div class="chart-container">
-          <canvas baseChart
+          <canvas
+            baseChart
             [data]="produitsChartData"
             [options]="produitsChartOptions"
-            type="bar">
+            type="bar"
+          >
           </canvas>
         </div>
       </div>
-
     </div>
 
     <!-- Évolution mensuelle -->
     <div class="ms-card chart-card-full">
       <h3 class="card-title">Évolution des interventions par mois</h3>
       <div class="chart-container-large">
-        <canvas baseChart
+        <canvas
+          baseChart
           [data]="evolutionChartData"
           [options]="evolutionChartOptions"
-          type="line">
+          type="line"
+        >
         </canvas>
       </div>
     </div>
 
     <!-- Tableau performance techniciens -->
-    <div class="ms-card" style="margin-bottom: 24px;">
+    <div class="ms-card" style="margin-bottom: 24px">
       <h3 class="card-title">Détail performance techniciens</h3>
       <table class="ms-table">
         <thead>
@@ -134,18 +146,39 @@
         </thead>
         <tbody>
           <tr *ngFor="let t of techniciens">
-            <td><strong>{{ t.prenom }} {{ t.nom }}</strong></td>
+            <td>
+              <strong>{{ t.prenom }} {{ t.nom }}</strong>
+            </td>
             <td>{{ t.fonction }}</td>
             <td>{{ t.nbInterventions }}</td>
-            <td><span class="badge badge-success">{{ t.nbTerminees }}</span></td>
-            <td><span class="badge badge-info">{{ t.nbEnCours }}</span></td>
-            <td><span class="badge badge-warning">{{ t.nbEnAttente }}</span></td>
             <td>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <div style="width: 80px; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden;">
-                  <div style="height: 100%; background: var(--ms-success); border-radius: 4px;"
-                    [style.width.%]="t.tauxResolution">
-                  </div>
+              <span class="badge badge-success">{{ t.nbTerminees }}</span>
+            </td>
+            <td>
+              <span class="badge badge-info">{{ t.nbEnCours }}</span>
+            </td>
+            <td>
+              <span class="badge badge-warning">{{ t.nbEnAttente }}</span>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 8px">
+                <div
+                  style="
+                    width: 80px;
+                    height: 8px;
+                    background: #e0e0e0;
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <div
+                    style="
+                      height: 100%;
+                      background: var(--ms-success);
+                      border-radius: 4px;
+                    "
+                    [style.width.%]="t.tauxResolution"
+                  ></div>
                 </div>
                 <span>{{ t.tauxResolution }}%</span>
               </div>
@@ -172,15 +205,26 @@
         </thead>
         <tbody>
           <tr *ngFor="let p of produits">
-            <td><span class="intervention-code">{{ p.codeProduit }}</span></td>
+            <td>
+              <span class="intervention-code">{{ p.codeProduit }}</span>
+            </td>
             <td>{{ p.designation }}</td>
             <td>{{ p.categorie }}</td>
-            <td><strong>{{ p.nbMouvements }}</strong></td>
-            <td style="color: var(--ms-success);">+{{ p.totalEntrees }}</td>
-            <td style="color: var(--ms-danger);">-{{ p.totalSorties }}</td>
             <td>
-              <span [style.color]="p.stockNet <= 5 ? 'var(--ms-danger)' :
-                p.stockNet <= 10 ? 'var(--ms-warning)' : 'var(--ms-success)'">
+              <strong>{{ p.nbMouvements }}</strong>
+            </td>
+            <td style="color: var(--ms-success)">+{{ p.totalEntrees }}</td>
+            <td style="color: var(--ms-danger)">-{{ p.totalSorties }}</td>
+            <td>
+              <span
+                [style.color]="
+                  p.stockNet <= 5
+                    ? 'var(--ms-danger)'
+                    : p.stockNet <= 10
+                      ? 'var(--ms-warning)'
+                      : 'var(--ms-success)'
+                "
+              >
                 {{ p.stockNet }}
               </span>
             </td>
@@ -188,6 +232,5 @@
         </tbody>
       </table>
     </div>
-
   </div>
 </div>
