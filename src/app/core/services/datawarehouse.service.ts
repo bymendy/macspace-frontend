@@ -51,24 +51,41 @@ export class DatawarehouseService {
 
   constructor(private http: HttpClient) {}
 
-  // 🆕 Déclenche le pipeline ETL
-  initETL(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/init`, {});
+  /**
+   * Déclenche le pipeline ETL du Data Warehouse.
+   * Le backend retourne du text/plain — responseType: 'text' obligatoire.
+   * Sans cette option, Angular tente un parsing JSON → erreur silencieuse
+   * → loadData() jamais appelé → le DW ne se met pas à jour.
+   */
+  initETL(): Observable<string> {
+    return this.http.post(
+      `${this.apiUrl}/init`,
+      {},
+      { responseType: 'text' }
+    );
   }
 
   getTableauBordGlobal(): Observable<TableauBordGlobal> {
-    return this.http.get<TableauBordGlobal>(`${this.apiUrl}/tableau-bord-global`);
+    return this.http.get<TableauBordGlobal>(
+      `${this.apiUrl}/tableau-bord-global`
+    );
   }
 
   getInterventionsParMois(): Observable<InterventionParMois[]> {
-    return this.http.get<InterventionParMois[]>(`${this.apiUrl}/interventions-par-mois`);
+    return this.http.get<InterventionParMois[]>(
+      `${this.apiUrl}/interventions-par-mois`
+    );
   }
 
   getPerformanceTechniciens(): Observable<PerformanceTechnicien[]> {
-    return this.http.get<PerformanceTechnicien[]>(`${this.apiUrl}/performance-techniciens`);
+    return this.http.get<PerformanceTechnicien[]>(
+      `${this.apiUrl}/performance-techniciens`
+    );
   }
 
   getProduitsLesPlusUtilises(): Observable<ProduitPlusUtilise[]> {
-    return this.http.get<ProduitPlusUtilise[]>(`${this.apiUrl}/produits-plus-utilises`);
+    return this.http.get<ProduitPlusUtilise[]>(
+      `${this.apiUrl}/produits-plus-utilises`
+    );
   }
 }

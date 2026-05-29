@@ -18,7 +18,7 @@ export class DatawarehouseComponent implements OnInit {
 
   isLoading = true;
   hasError = false;
-  isRefreshing = false; // 🆕 état du bouton actualiser
+  isRefreshing = false;
 
   kpis: TableauBordGlobal = {
     totalInterventions: 0,
@@ -103,19 +103,19 @@ export class DatawarehouseComponent implements OnInit {
     this.loadData();
   }
 
-  //  Méthode appelée par le bouton Actualiser
   onActualiser(): void {
+    console.log('>>> onActualiser() déclenché');
     this.isRefreshing = true;
     this.hasError = false;
 
     this.dwService.initETL().subscribe({
-      next: () => {
-        // ETL terminé → on recharge les données
+      next: (message) => {
+        console.log('>>> ETL OK :', message);
         this.loadData();
         this.isRefreshing = false;
       },
       error: (err) => {
-        console.error('Erreur ETL init:', err);
+        console.error('>>> Erreur ETL :', err);
         this.hasError = true;
         this.isRefreshing = false;
       }
@@ -123,6 +123,7 @@ export class DatawarehouseComponent implements OnInit {
   }
 
   loadData(): void {
+    console.log('>>> loadData() déclenché');
     this.isLoading = true;
     this.hasError = false;
 
@@ -133,6 +134,8 @@ export class DatawarehouseComponent implements OnInit {
       interventions: this.dwService.getInterventionsParMois()
     }).subscribe({
       next: (data) => {
+        console.log('>>> forkJoin OK — données reçues :', data);
+
         this.kpis = data.kpis;
 
         this.techniciens = data.techniciens;
@@ -173,9 +176,10 @@ export class DatawarehouseComponent implements OnInit {
         };
 
         this.isLoading = false;
+        console.log('>>> isLoading = false — affichage mis à jour');
       },
       error: (err) => {
-        console.error('DW Error:', err);
+        console.error('>>> forkJoin Error :', err);
         this.hasError = true;
         this.isLoading = false;
       }
