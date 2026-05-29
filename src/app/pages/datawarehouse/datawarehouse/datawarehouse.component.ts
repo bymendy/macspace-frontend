@@ -133,12 +133,14 @@ export class DatawarehouseComponent implements OnInit {
       produits: this.dwService.getProduitsLesPlusUtilises(),
       interventions: this.dwService.getInterventionsParMois()
     }).subscribe({
+
+      // ✅ C'est ici que tu remplaces le bloc next
       next: (data) => {
         console.log('>>> forkJoin OK — données reçues :', data);
 
-        this.kpis = data.kpis;
+        this.kpis = { ...data.kpis };
 
-        this.techniciens = data.techniciens;
+        this.techniciens = [...data.techniciens];
         this.technicienChartData = {
           labels: data.techniciens.map(t => `${t.prenom} ${t.nom}`),
           datasets: [{
@@ -149,7 +151,7 @@ export class DatawarehouseComponent implements OnInit {
           }]
         };
 
-        this.produits = data.produits;
+        this.produits = [...data.produits];
         this.produitsChartData = {
           labels: data.produits.map(p => p.codeProduit),
           datasets: [{
@@ -160,7 +162,7 @@ export class DatawarehouseComponent implements OnInit {
           }]
         };
 
-        this.interventionsParMois = data.interventions;
+        this.interventionsParMois = [...data.interventions];
         this.evolutionChartData = {
           labels: data.interventions.map(i => `${i.nomMois} ${i.annee}`),
           datasets: [{
@@ -176,8 +178,9 @@ export class DatawarehouseComponent implements OnInit {
         };
 
         this.isLoading = false;
-        console.log('>>> isLoading = false — affichage mis à jour');
+        console.log('>>> techniciens après update :', this.techniciens);
       },
+
       error: (err) => {
         console.error('>>> forkJoin Error :', err);
         this.hasError = true;
