@@ -16,7 +16,8 @@ $white: #FFFFFF;
   flex: 1;
   /* Image de fond qui couvre tout l'espace */
   background-color: var(--ms-dark);
-  background-image: url('https://res.cloudinary.com/dwdkltr38/image/upload/v1774450026/macsecurite_macspace_banner_cnaklp.jpg');
+  background-image: url('/assets/img/macsecurite_macspace_banner.jpg');
+
   background-size: cover;        /* Couvre tout l'espace */
   background-position: center;   /* Centré */
   background-repeat: no-repeat;
